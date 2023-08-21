@@ -6808,21 +6808,40 @@ def payment_delete_details(request):
 
 
 
-# abin
+# Vendor Credits
 
 
+# def vendor_credits_home(request):
+#     v_credits=Vendor_Credits_Bills.objects.all()
+    
+#     # for r in v_credits:
+#     #     vn = r['vendor_name'].split()[1:]
+#     #     r['vend_name'] = " ".join(vn)
+#     #     cn = r['customer_name'].split()[2:]
+#     #     r['cust_name'] = " ".join(cn)
+    
+#     context={
+#         'v_credits':v_credits,
+#     }
+#     return render(request,'vendor_credits_home.html',context)
+
+
+@login_required(login_url='login')
 def vendor_credits_home(request):
-    v_credits=Vendor_Credits_Bills.objects.all()
-    
-    # for r in v_credits:
-    #     vn = r['vendor_name'].split()[1:]
-    #     r['vend_name'] = " ".join(vn)
-    #     cn = r['customer_name'].split()[2:]
-    #     r['cust_name'] = " ".join(cn)
-    
-    context={
-        'v_credits':v_credits,
-    }
+
+    company = company_details.objects.get(user = request.user)
+    recur = Vendor_Credits_Bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['company_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        
+
+    sorted_recur = sorted(recur, key=lambda r: r['company_name'],reverse=True) 
+
+    context = {
+                'company' : company,
+                'recur_bill' : sorted_recur
+            }
     return render(request,'vendor_credits_home.html',context)
 
 @login_required(login_url='login')
@@ -6857,7 +6876,10 @@ def add_vendor_credits(request):
 @login_required(login_url='login')
 def create_vendor_credit(request):
 
+  
+    
     company = company_details.objects.get(user = request.user)
+   
     # print(request.POST.get('customer').split(" ")[0])
     # cust = customer.objects.get(id=request.POST.get('customer').split(" ")[0],user = request.user)
 
@@ -6907,7 +6929,7 @@ def create_vendor_credit(request):
                     tax_amount=tax1, shipping_charge = shipping_charge,adjustment=adjustment,
                     vendor_email=vendor_email,gst_treatment=gst_treatment,vendor_name=address,
                     credit_note=credit_note,order_no=order_no,vendor_date=vendor_date,
-                    grand_total=grand_total,note=note,company=company,user = u,  )
+                    grand_total=grand_total,note=note,company_id=company.id,user = u,  )
         bills.save()
         r_bill=Vendor_Credits_Bills.objects.get(id=bills.id)
         
@@ -6938,67 +6960,22 @@ def create_vendor_credit(request):
                 it = AddItem.objects.get(user = request.user, id = element[0]).Name
                 created = Vendor_Credits_Bills_items_bills.objects.create(
                     recur_bills=r_bill,
+                    user=u,
+                    company=company,
                     item=it,
                     hsn=element[1],
                     quantity=element[2],
                     discount=element[3],
                     tax=element[4],
                     amount=element[5],
-                    rate=element[6]
+                    rate=element[6],
                 )
                 created.save()
         return redirect('vendor_credits_home')
     
-        # bills.save()
+    
 
-        # r_bill = Vendor_Credits_Bills.objects.get(id=bills.id)
-
-        # if len(request.FILES) != 0:
-        #     r_bill.document=request.FILES['file'] 
-        #     r_bill.save()
-
-        # items = request.POST.getlist("item[]")
-        # accounts = request.POST.getlist("account[]")
-        # quantity = request.POST.getlist("qty[]")
-        # rate = request.POST.getlist("rate[]")
-
-        # if (" ".join(src_supply.split(" ")[1:])) == company.state:
-        #     tax = request.POST.getlist("tax1[]")
-        # else:
-        #     tax = request.POST.getlist("tax2[]")
-
-        # discount = request.POST.getlist("discount[]")
-        # amount = request.POST.getlist("amount[]")
-
-        # print("Debugging values:")
-        # print("Items:", items)
-        # print("Accounts:", accounts)
-        # print("Quantity:", quantity)
-        # print("Rate:", rate)
-        # print("Tax:", tax)
-        # print("Discount:", discount)
-        # print("Amount:", amount)
-
-        # if len(items)==len(accounts)==len(amount) == len(quantity) == len(rate)==len(tax) == len(discount) == len(hsn) and items and accounts and quantity and rate and tax and discount and amount and hsn:
-                
-        #         mapped=zip(items,accounts,quantity,rate,tax,discount,amount,hsn)
-        #         mapped=list(mapped)
-
-        #         for ele in mapped:
-
-        #             it = AddItem.objects.get(user = request.user, id = ele[0]).Name
-        #             try:
-        #                 int(ele[1])
-        #                 ac = Chart_of_Account.objects.get(user = request.user,id = ele[1]).account_name
-                        
-        #             except ValueError:
-                        
-        #                 ac = ele[1]
-                    
-        #             created = Vendor_Credits_Bills_items_bills.objects.create(item = it,account = ac,quantity=ele[2],rate=ele[3],
-        #             tax=ele[4],discount = ele[5],amount=ele[6],hsn=ele[7],user = u,company = company, recur_bills = r_bill)
-
-        # return redirect('vendor_credits_home')
+        return redirect('vendor_credits_home')
     return redirect('vendor_credits_home')
 
 
@@ -7272,122 +7249,296 @@ def get_vendor_credit_det(request):
 
     return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr, 'vendor_name' : baddress},safe=False)
 
+# @login_required(login_url='login')
+# def vendor_credits_home(request):
 
-def show_credits(request, pk):
-    user_id=request.user.id
-    udata=User.objects.get(id=user_id)
-    vdata1=Vendor_Credits_Bills.objects.filter(user=udata)
-    vcredit=Vendor_Credits_Bills.objects.get(id=pk)
-    mdata=Credits_mail_table.objects.filter(vendor=pk)
-    ddata=Credits_doc_upload_table.objects.filter(user=udata,vendor=vcredit)
-
-    cdata = Credits_comments_table.objects.filter(vendor=vcredit).order_by('-id')
-    # comment = Credits_comments_table.objects.filter(vendor=pk).order_by('id')
-    return render(request,'show_credit.html',{'vdata':vdata1,'vcredit':vcredit,'mdata':mdata,'ddata':ddata,'cdata':cdata})
-
-
-def commentdb(request, pk):
-    if request.method == 'POST':     
-        c_user_id=request.user.id  
-        c_data=User.objects.get(id=c_user_id)
-        c_comment=request.POST['comment']
-        c_data3=Vendor_Credits_Bills.objects.all()
-        c_data2=Vendor_Credits_Bills.objects.get(id=pk)
-        comments= Credits_comments_table(user=c_data,vendor=c_data2,comment=c_comment)
-        Credits_comments_table.objects.filter(vendor=pk).order_by('id')
-        comments.save()
+#     company = company_details.objects.get(user = request.user)
+#     recur = Vendor_Credits_Bills.objects.filter(user = request.user.id).values()
+#     for r in recur:
+#         vn = r['company_name'].split()[1:]
+#         r['vend_name'] = " ".join(vn)
         
-        context = {
-            "allproduct": c_data3,
-            "c_data2": c_data2,
-            "comments": comments,
-        }
-        return redirect("show_credits",pk=pk)
+
+#     sorted_recur = sorted(recur, key=lambda r: r['company_name'],reverse=True) 
+
+#     context = {
+#                 'company' : company,
+#                 'recur_bill' : sorted_recur
+#             }
+#     return render(request,'vendor_credits_home.html',context)
+
+# def show_credits(request, pk):
+#     user_id=request.user.id
+#     udata=User.objects.get(id=user_id)
+#     vdata1=Vendor_Credits_Bills.objects.filter(user=udata)
+#     vcredit=Vendor_Credits_Bills.objects.get(id=pk)
+#     mdata=Credits_mail_table.objects.filter(vendor=pk)
+#     ddata=Credits_doc_upload_table.objects.filter(user=udata,vendor=vcredit)
+
+#     cdata = Credits_comments_table.objects.filter(vendor=vcredit).order_by('-id')
+#     # comment = Credits_comments_table.objects.filter(vendor=pk).order_by('id')
+#     company = company_details.objects.get(user = request.user)
+#     recur = Vendor_Credits_Bills.objects.filter(user = request.user.id).values()
+#     for r in recur:
+#         vn = r['company_name'].split()[1:]
+#         r['vend_name'] = " ".join(vn)
+        
+
+#     sorted_recur = sorted(recur, key=lambda r: r['company_name'],reverse=True) 
+#     return render(request,'show_credit.html',{'vdata':vdata1,'vcredit':vcredit,'mdata':mdata,'ddata':ddata,'cdata':cdata,'company':company,'recur_bill':sorted_recur})
+
+
+# def commentdb(request, pk):
+#     if request.method == 'POST':     
+#         c_user_id=request.user.id  
+#         c_data=User.objects.get(id=c_user_id)
+#         c_comment=request.POST['comment']
+#         c_data3=Vendor_Credits_Bills.objects.all()
+#         c_data2=Vendor_Credits_Bills.objects.get(id=pk)
+#         comments= Credits_comments_table(user=c_data,vendor=c_data2,comment=c_comment)
+#         Credits_comments_table.objects.filter(vendor=pk).order_by('id')
+#         comments.save()
+        
+#         context = {
+#             "allproduct": c_data3,
+#             "c_data2": c_data2,
+#             "comments": comments,
+#         }
+#         return redirect("show_credits",pk=pk)
+
+
+
+
+# @login_required(login_url='login')
+# def delete_comment_credit(request, pk,vid):
+#     comment = Credits_comments_table.objects.get(id=pk)
+#     comment.delete()
+
+#     return redirect('show_credits',pk=vid)
+
+
+
+# def credit_sendmail(request,pk):
+#     if request.method=='POST':
+#         user_id=request.user.id
+#         udata=User.objects.get(id=user_id)
+#         vdata2=Vendor_Credits_Bills.objects.get(id=pk)
+#         mail_from=settings.EMAIL_HOST_USER
+#         mail_to=request.POST['email']
+#         subject=request.POST['subject']
+#         content=request.POST['content']
+#         mail_data=Credits_mail_table(user=udata,vendor=vdata2,mail_from=mail_from,mail_to=mail_to,subject=subject,content=content)
+#         mail_data.save()
+
+#         subject = request.POST['subject']
+#         message = request.POST['content']
+#         recipient = request.POST['email']     #  recipient =request.POST["inputTagName"]
+#         send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
+
+#         return redirect("vendor_credits_home")
+    
+# def credit_upload_document(request,pk):
+#     if request.method=='POST':
+#         user_id=request.user.id
+#         udata=User.objects.get(id=user_id)
+#         vdata=Vendor_Credits_Bills.objects.get(id=pk)
+#         title=request.POST['title']
+#         document=request.FILES.get('file')
+#         doc_data=Credits_doc_upload_table(user=udata,vendor=vdata,title=title,document=document)
+#         doc_data.save()
+#         return redirect("vendor_credits_home")
+
+# def credit_download_doc(request,pk):
+#     document=get_object_or_404(Credits_doc_upload_table,id=pk)
+#     response=HttpResponse(document.document,content_type='application/pdf')
+#     response['Content-Disposition']=f'attachment; filename="{document.document.name}"'
+#     return response
+
+# def credit_delete_vendor(request,pk):
+#     if Credits_comments_table.objects.filter(vendor=pk).exists():
+#         user2=Credits_comments_table.objects.filter(vendor=pk)
+#         user2.delete()
+#     if Credits_mail_table.objects.filter(vendor=pk).exists():
+#         user3=Credits_mail_table.objects.filter(vendor=pk)
+#         user3.delete()
+#     if Credits_doc_upload_table.objects.filter(vendor=pk).exists():
+#         user4=Credits_doc_upload_table.objects.filter(vendor=pk)
+#         user4.delete()
+#     # if contact_person_table.objects.filter(vendor=pk).exists():
+#     #     user5=contact_person_table.objects.filter(vendor=pk)
+#     #     user5.delete()
+#     # if remarks_table.objects.filter(vendor=pk).exists():
+#     #     user6=remarks_table.objects.filter(vendor=pk)
+#     #     user6.delete()
+    
+#     user1=Vendor_Credits_Bills.objects.get(id=pk)
+#     user1.delete()
+#     return redirect("vendor_credits_home")
+
+
+# def credits_statement(request,id):
+#     sales=Vendor_Credits_Bills.objects.get(id=id)
+#     saleitem=Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=id)
+#     sale_order=Vendor_Credits_Bills.objects.all()
+#     company=company_details.objects.get(user_id=request.user.id)
+    
+    
+#     context={
+#         'sale':sales,
+#         'saleitem':saleitem,
+#         'sale_order':sale_order,
+#         'comp':company,
+#         'vendor':vendor,
+        
+        
+#                     }
+#     return render(request,'vender_credit_state.html',context)
+
+
+def vendor_credits_home(request):
+
+    company = company_details.objects.get(user = request.user)
+    recur = Vendor_Credits_Bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['company_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        
+
+    sorted_recur = sorted(recur, key=lambda r: r['company_name'],reverse=True) 
+
+    context = {
+                'company' : company,
+                'recur_bill' : sorted_recur
+            }
+    return render(request,'vendor_credits_home.html',context)
+
+
+@login_required(login_url='login')
+def view_vendor_credits(request, id):
+    company = company_details.objects.get(user=request.user)
+    bills = Vendor_Credits_Bills.objects.filter(user=request.user)
+    recur = Vendor_Credits_Bills.objects.filter(user=request.user.id).values()
+    rbill = Vendor_Credits_Bills.objects.get(user=request.user, id=id)
+    billitem = Vendor_Credits_Bills_items_bills.objects.filter(user=request.user, recur_bills=id)
+
+    # Retrieve the vendor associated with the specific vendor credit bill
+    vend = vendor_table.objects.get(id=rbill.company_name.split(" ")[0])
+
+    # Determine whether to display "GST" or "IGST" based on the source supply state and the company's state
+    gst_or_igst = "GST" if company.state == (" ".join(rbill.source_supply.split(" ")[1:])) else "IGST"
+
+    tax_total = []
+    for b in billitem:
+        vn = b['company_name'].split()[1:]
+        b['vend_name'] = " ".join(vn)
+
+        if b.tax not in tax_total:
+            tax_total.append(b.tax)
+
+    # Create the vendor's full name from salutation, first name, and last name
+    vend_name = vend.salutation + " " + vend.first_name + " " + vend.last_name
+
+    # Sort the recur list based on company_name (if needed)
+    sorted_recur = sorted(recur, key=lambda r: r['company_name'], reverse=True)
+
+    context = {
+        'company': company,
+        'recur_bills': bills,
+        'recur_bill': rbill,
+        'bill_item': billitem,
+        'tax': tax_total,
+        'gst_or_igst': gst_or_igst,
+        'vendor': vend,
+        'vendor_name': vend_name,
+        'sorted_recur': sorted_recur  # Include the sorted_recur list in the context
+    }
+
+    return render(request, 'view_vendor_credits.html', context)
+
 
 
 
 
 @login_required(login_url='login')
-def delete_comment_credit(request, pk,vid):
-    comment = Credits_comments_table.objects.get(id=pk)
-    comment.delete()
+def vendor_credit_comment(request):
 
-    return redirect('show_credits',pk=vid)
+    company = company_details.objects.get(user = request.user)
 
-
-
-def credit_sendmail(request,pk):
     if request.method=='POST':
-        user_id=request.user.id
-        udata=User.objects.get(id=user_id)
-        vdata2=Vendor_Credits_Bills.objects.get(id=pk)
-        mail_from=settings.EMAIL_HOST_USER
-        mail_to=request.POST['email']
-        subject=request.POST['subject']
-        content=request.POST['content']
-        mail_data=Credits_mail_table(user=udata,vendor=vdata2,mail_from=mail_from,mail_to=mail_to,subject=subject,content=content)
-        mail_data.save()
-
-        subject = request.POST['subject']
-        message = request.POST['content']
-        recipient = request.POST['email']     #  recipient =request.POST["inputTagName"]
-        send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
-
-        return redirect("vendor_credits_home")
-    
-def credit_upload_document(request,pk):
-    if request.method=='POST':
-        user_id=request.user.id
-        udata=User.objects.get(id=user_id)
-        vdata=Vendor_Credits_Bills.objects.get(id=pk)
-        title=request.POST['title']
-        document=request.FILES.get('file')
-        doc_data=Credits_doc_upload_table(user=udata,vendor=vdata,title=title,document=document)
-        doc_data.save()
-        return redirect("vendor_credits_home")
-
-def credit_download_doc(request,pk):
-    document=get_object_or_404(Credits_doc_upload_table,id=pk)
-    response=HttpResponse(document.document,content_type='application/pdf')
-    response['Content-Disposition']=f'attachment; filename="{document.document.name}"'
-    return response
-
-def credit_delete_vendor(request,pk):
-    if Credits_comments_table.objects.filter(vendor=pk).exists():
-        user2=Credits_comments_table.objects.filter(vendor=pk)
-        user2.delete()
-    if Credits_mail_table.objects.filter(vendor=pk).exists():
-        user3=Credits_mail_table.objects.filter(vendor=pk)
-        user3.delete()
-    if Credits_doc_upload_table.objects.filter(vendor=pk).exists():
-        user4=Credits_doc_upload_table.objects.filter(vendor=pk)
-        user4.delete()
-    # if contact_person_table.objects.filter(vendor=pk).exists():
-    #     user5=contact_person_table.objects.filter(vendor=pk)
-    #     user5.delete()
-    # if remarks_table.objects.filter(vendor=pk).exists():
-    #     user6=remarks_table.objects.filter(vendor=pk)
-    #     user6.delete()
-    
-    user1=Vendor_Credits_Bills.objects.get(id=pk)
-    user1.delete()
-    return redirect("vendor_credits_home")
-
-
-def credits_statement(request,id):
-    sales=Vendor_Credits_Bills.objects.get(id=id)
-    saleitem=Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=id)
-    sale_order=Vendor_Credits_Bills.objects.all()
-    company=company_details.objects.get(user_id=request.user.id)
-    
-    
-    context={
-        'sale':sales,
-        'saleitem':saleitem,
-        'sale_order':sale_order,
-        'comp':company,
-        'vendor':vendor,
+        id =request.POST.get('id')
+        cmnt =request.POST.get('comment')
         
+        u = User.objects.get(id = request.user.id)
+        r_bill = recurring_bills.objects.get(user = request.user, id = id)
+        r_bill.comments = cmnt
+        r_bill.save()
+
+        return HttpResponse({"message": "success"})
+
+@login_required(login_url='login')
+def vendor_credit_add_file(request,id):
+
+    company = company_details.objects.get(user = request.user)
+    bill = recurring_bills.objects.get(user = request.user,id=id)
+    print(bill)
+
+    if request.method == 'POST':
+
+        bill.document=request.POST.get('file')
+
+        if len(request.FILES) != 0:
+             
+            bill.document = request.FILES['file']
+
+        bill.save()
+        return redirect('view_recurring_bills',id)
+    
+
+@require_POST
+def vendor_credit_email(request,id):
+
+    company = company_details.objects.get(user = request.user)
+    bill = recurring_bills.objects.get(user = request.user,id=id)
+
+    if request.method == 'POST':
+
+        recipient =request.POST.get('recipient')
+        sender =request.POST.get('sender')
+        sub =request.POST.get('subject')
+        message =request.POST.get('message')
+
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    template_filename = 'view_recurring_bills.html'
+    template_path = os.path.join(script_directory, 'templates', template_filename)
+
+    with open(template_path, 'r') as file:
+        html_content = file.read()
         
-                    }
-    return render(request,'vender_credit_state.html',context)
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+    section = soup.find('div', class_='print-only')
+    section_html = section.prettify()
+    template = Template(section_html)
+
+    if template:
+        prntonly_content = str(template)
+
+    # print(prntonly_content)
+    with tempfile.NamedTemporaryFile(suffix='.html', delete=False) as temp_file:
+        temp_file.write(prntonly_content.encode('utf-8'))
+
+    with open(temp_file.name, 'rb') as attachment_file:
+        attachment_content = attachment_file.read()
+
+    email = EmailMessage(
+        subject=sub,
+        body=message,
+        from_email=sender,
+        to=[recipient],
+    )
+    email.attach('Recurring Bill',attachment_content , 'text/html')
+
+    email.send()
+     
+    return HttpResponse(status=200)
+    

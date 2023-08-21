@@ -85,6 +85,10 @@
     .item{
       height: auto;
     }
+
+    #customerInputWrapper {
+      display: none;
+    }
     </style>
 
 
@@ -144,14 +148,14 @@
         </div>
       </div>
 
-      <div class="row mt-3 mb-2" id="gstin_row">
+      <!-- <div class="row mt-3 mb-2" id="gstin_row">
         <div class="col-md-3">
           <label for="vstreet">Address</label>
         </div>
         <div class="col-md-6">
           <input type="text" class="form-control text-dark bg-light"  id="vstreet" name="vstreet">
         </div>
-      </div>
+      </div> -->
 
       <div class="row mt-3 mb-2">
         <div class="col-md-3">
@@ -233,7 +237,25 @@
         </div>
     </div>
 
+    
+    <div class="row mt-2" id="customerInputWrapper">
+      <div class="col-md-3">
+        <label style="color: rgb(190, 88, 88);">Customer Name *</label><br>
+      </div>
+      <div class="col-md-6">
+        <select name="customer" id="customer" class="form-control text-dark bg-light" >
+          <option value=""></option>
+          {% for c in customer %}
+          <option value="{{c.id}} {{c.customerName}}">{{ c.customerName }}</option>
+          {% endfor %}
+        </select>
+        <a href="" data-toggle="modal" data-target="#newcustomer">+ Add New Customer</a>
+        <input type="hidden" id="cust_state" value="" readonly >
 
+        <input type="hidden" id="company_state" value="{{company.state}}" readonly>
+
+      </div>
+    </div>
 
 
       <div class="row mt-2">

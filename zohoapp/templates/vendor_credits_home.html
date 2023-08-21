@@ -138,7 +138,7 @@
                 <div class="card-title">
                     <div class="row">
                         <div class="col-md-10">
-                            <h2 class="mb-0 text-uppercase text-right">ALL Recurring Bills</h2>
+                            <h2 class="mb-0 text-uppercase text-right">All Vendor Credits</h2>
                         </div>
                         <div class="col-md-2">
                             
@@ -188,26 +188,26 @@
                                 <th>DATE</th>
                                 <th>PROFILE NAME</th>
                                 <th>VENDOR NAME</th>
-                                <th>CUSTOMER NAME</th>
+                                <th>TAX AMOUNT</th>
                                 <th>AMOUNT</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for r in v_credits %}
-                                <tr >
-                                    <th><a href="{% url 'show_credits' r.id %}">{{ r.company_name }}</a></th>
-                                    <td><a href="{% url 'show_credits' r.id %}"> {{ r.vendor_email }}</a></td>
-                                    <td class="text-capitalize"><a href="{% url 'show_credits' r.id %}">{{ r.vend_name }}</a></td>
-                                    <td class="text-capitalize"><a href="{% url 'show_credits' r.id %}">{{ r.cust_name }}</a></td>
-                                    <td><a href="{% url 'show_credits' r.id %}">{{ r.grand_total|floatformat:2 }}</a></td>
-                                    <td class="text-right">
-                                        <a href="{% url 'delete_recurring_bills' r.id %}" 
-                                        data-toggle="tooltip" data-placement="top" title="Delete Recurring Expense">
-                                                <i class="gg-trash text-center text-danger"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                            {% for r in recur_bill %}
+                            <tr >
+                                <th><a href="{% url 'view_vendor_credits' r.id %}">{{ r.vendor_date }}</a></th>
+                                <td><a href="{% url 'view_vendor_credits' r.id %}"> {{ r.vendor_email }}</a></td>
+                                <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.vend_name }}</a></td>
+                                <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.tax_amount }}</a></td>
+                                <td><a href="{% url 'view_vendor_credits' r.id %}">{{ r.grand_total|floatformat:2 }}</a></td>
+                                <td class="text-right">
+                                    <a href="{% url 'view_vendor_credits' r.id %}" 
+                                    data-toggle="tooltip" data-placement="top" title="Delete Recurring Expense">
+                                            <i class="gg-trash text-center text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>

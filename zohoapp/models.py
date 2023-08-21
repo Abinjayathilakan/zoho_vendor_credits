@@ -693,7 +693,7 @@ class Comments_item(models.Model):
     content = models.TextField(max_length=255,null=True,blank=True)
     
     
-# abin
+# Vendor Credits
 
 
 
@@ -727,9 +727,6 @@ class Vendor_Credits_Bills(models.Model):
     note = models.CharField(max_length=255,null=True,blank=True)
     document=models.FileField(upload_to='doc/Vendor_Credits_Bills',null=True,blank=True)
     comments = models.CharField(max_length=255,null=True,blank=True)
-    
-    
-    
     
     
 class Vendor_Credits_Bills_items_bills (models.Model):
