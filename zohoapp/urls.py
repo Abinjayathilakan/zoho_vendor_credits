@@ -351,12 +351,17 @@ urlpatterns = [
     path('vendor_credit_add_file/<id>',views.vendor_credit_add_file,name = "vendor_credit_add_file"),
     path('vendor_credit_email/<id>', views.vendor_credit_email, name='vendor_credit_email'),
     
-    path('view_custasc/<id>',views.view_custasc,name='view_custasc'),
-    path('view_custdesc/<id>',views.view_custdesc,name='view_custdesc'),
-    path('view_vendorasc/<id>',views.view_vendorasc,name='view_vendorasc'),
-    path('view_vendordesc/<id>',views.view_vendordesc,name='view_vendordesc'),
-    path('view_profileasc/<id>',views.view_profileasc,name='view_profileasc'),
-    path('view_profiledesc/<id>',views.view_profiledesc,name='view_profiledesc'),
+    path('vc_view_vendorasc/<id>',views.vc_view_vendorasc,name='vc_view_vendorasc'),
+    path('vc_view_vendordesc/<id>',views.vc_view_vendordesc,name='vc_view_vendordesc'),
+    
+    path('delete_vendor_credits/<id>',views.delete_vendor_credits,name='delete_vendor_credits'),
+    
+    path('edit_vendor_credits/<id>',views.edit_vendor_credits,name='edit_vendor_credits'),
+    path('change_vendor_credits/<id>',views.change_vendor_credits,name='change_vendor_credits'),
+    
+    # path('view_vendordesc/<id>',views.view_vendordesc,name='view_vendordesc'),
+    # path('view_profileasc/<id>',views.view_profileasc,name='view_profileasc'),
+    # path('view_profiledesc/<id>',views.view_profiledesc,name='view_profiledesc'),
     
     
     

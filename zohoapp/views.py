@@ -6807,7 +6807,6 @@ def payment_delete_details(request):
     return redirect('paymentmethod')
 
 
-
 # Vendor Credits
 
 
@@ -6971,10 +6970,6 @@ def create_vendor_credit(request):
                     rate=element[6],
                 )
                 created.save()
-        return redirect('vendor_credits_home')
-    
-    
-
         return redirect('vendor_credits_home')
     return redirect('vendor_credits_home')
 
@@ -7395,68 +7390,38 @@ def get_vendor_credit_det(request):
 #     return render(request,'vender_credit_state.html',context)
 
 
-def vendor_credits_home(request):
+@login_required(login_url='login')
+def view_vendor_credits(request,id):
 
     company = company_details.objects.get(user = request.user)
-    recur = Vendor_Credits_Bills.objects.filter(user = request.user.id).values()
-    for r in recur:
-        vn = r['company_name'].split()[1:]
-        r['vend_name'] = " ".join(vn)
-        
-
-    sorted_recur = sorted(recur, key=lambda r: r['company_name'],reverse=True) 
-
+    bills = Vendor_Credits_Bills.objects.filter(user = request.user)
+    rbill=Vendor_Credits_Bills.objects.get(user = request.user, id= id)
+    billitem = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills=id)
+    
+    #cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
+    vend = vendor_table.objects.get(id = rbill.company_name.split(" ")[0])
+    gst_or_igst = "GST" if company.state == (" ".join(rbill.source_supply.split(" ")[1:])) else "IGST"
+    tax_total = [] 
+    for b in billitem:
+        if b.tax not in tax_total: 
+            tax_total.append(b.tax)
+    
+    #cust_name = cust.customerName
+    vend_name = vend.salutation+ " " +vend.first_name + " " +vend.last_name
     context = {
                 'company' : company,
-                'recur_bill' : sorted_recur
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                #'customer' : cust,
+                'vendor' : vend,
+                #'customer_name' : cust_name,
+                'vendor_name' : vend_name,
             }
-    return render(request,'vendor_credits_home.html',context)
 
-
-@login_required(login_url='login')
-def view_vendor_credits(request, id):
-    company = company_details.objects.get(user=request.user)
-    bills = Vendor_Credits_Bills.objects.filter(user=request.user)
-    recur = Vendor_Credits_Bills.objects.filter(user=request.user.id).values()
-    rbill = Vendor_Credits_Bills.objects.get(user=request.user, id=id)
-    billitem = Vendor_Credits_Bills_items_bills.objects.filter(user=request.user, recur_bills=id)
-
-    # Retrieve the vendor associated with the specific vendor credit bill
-    vend = vendor_table.objects.get(id=rbill.company_name.split(" ")[0])
-
-    # Determine whether to display "GST" or "IGST" based on the source supply state and the company's state
-    gst_or_igst = "GST" if company.state == (" ".join(rbill.source_supply.split(" ")[1:])) else "IGST"
-
-    tax_total = []
-    for b in billitem:
-        vn = b['company_name'].split()[1:]
-        b['vend_name'] = " ".join(vn)
-
-        if b.tax not in tax_total:
-            tax_total.append(b.tax)
-
-    # Create the vendor's full name from salutation, first name, and last name
-    vend_name = vend.salutation + " " + vend.first_name + " " + vend.last_name
-
-    # Sort the recur list based on company_name (if needed)
-    sorted_recur = sorted(recur, key=lambda r: r['company_name'], reverse=True)
-
-    context = {
-        'company': company,
-        'recur_bills': bills,
-        'recur_bill': rbill,
-        'bill_item': billitem,
-        'tax': tax_total,
-        'gst_or_igst': gst_or_igst,
-        'vendor': vend,
-        'vendor_name': vend_name,
-        'sorted_recur': sorted_recur  # Include the sorted_recur list in the context
-    }
-
-    return render(request, 'view_vendor_credits.html', context)
-
-
-
+    return render(request, 'view_vendor_credits.html',context)
 
 
 @login_required(login_url='login')
@@ -7469,7 +7434,7 @@ def vendor_credit_comment(request):
         cmnt =request.POST.get('comment')
         
         u = User.objects.get(id = request.user.id)
-        r_bill = recurring_bills.objects.get(user = request.user, id = id)
+        r_bill = Vendor_Credits_Bills.objects.get(user = request.user, id = id)
         r_bill.comments = cmnt
         r_bill.save()
 
@@ -7479,7 +7444,7 @@ def vendor_credit_comment(request):
 def vendor_credit_add_file(request,id):
 
     company = company_details.objects.get(user = request.user)
-    bill = recurring_bills.objects.get(user = request.user,id=id)
+    bill = Vendor_Credits_Bills.objects.get(user = request.user,id=id)
     print(bill)
 
     if request.method == 'POST':
@@ -7491,14 +7456,14 @@ def vendor_credit_add_file(request,id):
             bill.document = request.FILES['file']
 
         bill.save()
-        return redirect('view_recurring_bills',id)
+        return redirect('view_vendor_credits',id)
     
 
 @require_POST
 def vendor_credit_email(request,id):
 
     company = company_details.objects.get(user = request.user)
-    bill = recurring_bills.objects.get(user = request.user,id=id)
+    bill = Vendor_Credits_Bills.objects.get(user = request.user,id=id)
 
     if request.method == 'POST':
 
@@ -7508,7 +7473,7 @@ def vendor_credit_email(request,id):
         message =request.POST.get('message')
 
     script_directory = os.path.dirname(os.path.abspath(__file__))
-    template_filename = 'view_recurring_bills.html'
+    template_filename = 'view_vendor_credits.html'
     template_path = os.path.join(script_directory, 'templates', template_filename)
 
     with open(template_path, 'r') as file:
@@ -7541,4 +7506,207 @@ def vendor_credit_email(request,id):
     email.send()
      
     return HttpResponse(status=200)
+
+@login_required(login_url='login')
+def vc_view_vendorasc(request,id):
+    company = company_details.objects.get(user = request.user)
+    bills =Vendor_Credits_Bills.objects.filter(user = request.user).order_by('company_name')
+
+    rbill=Vendor_Credits_Bills.objects.get(user = request.user, id= id)
+    billitem = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    # cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
+    vend = vendor_table.objects.get(id = rbill.company_name.split(" ")[0])
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
+
+    context = {
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                # 'customer' : cust,
+                'vendor' : vend,
+            }
+    return render(request,'view_vendor_credits.html',context)
+
+@login_required(login_url='login')
+def vc_view_vendordesc(request,id):
+    company = company_details.objects.get(user = request.user)
+    bills =Vendor_Credits_Bills.objects.filter(user = request.user).order_by('-company_name')
+
+    rbill=Vendor_Credits_Bills.objects.get(user = request.user, id= id)
+    billitem = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    # cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
+    vend = vendor_table.objects.get(id = rbill.company_name.split(" ")[0])
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
+
+    context = {
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                # 'customer' : cust,
+                'vendor' : vend,
+            }
+    return render(request,'view_vendor_credits.html',context)
+
     
+    
+@login_required(login_url='login')
+def delete_vendor_credits(request, id):
+
+    company = company_details.objects.get(user = request.user)
+    rbill=Vendor_Credits_Bills.objects.get(user = request.user, id= id)
+    billitem = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills=id)
+
+    rbill.delete() 
+    billitem.delete() 
+     
+    return redirect('vendor_credits_home')
+
+
+
+@login_required(login_url='login')
+def edit_vendor_credits(request,id):
+
+    company = company_details.objects.get(user = request.user)
+    vendor = vendor_table.objects.filter(user = request.user)
+    acnt = Chart_of_Account.objects.filter(user = request.user)
+    acnt_type = Chart_of_Account.objects.filter(user = request.user).values('account_type').distinct()
+    cust = customer.objects.filter(user = request.user)
+    item = AddItem.objects.filter(user = request.user)
+    payments = payment_terms.objects.filter(user = request.user)
+    units = Unit.objects.all()
+    sales=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    
+    sales_type = set(Sales.objects.values_list('Account_type', flat=True))
+    purchase_type = set(Purchase.objects.values_list('Account_type', flat=True))
+    recur_bills = Vendor_Credits_Bills.objects.get(user = request.user,id=id)
+    recur_item = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills = id)   
+
+    # c = customer.objects.filter(user = request.user).get(id = recur_bills.customer_name.split(' ')[0])
+    v = vendor_table.objects.filter(user = request.user)
+    # print(recur_bills.customer_name.split(" ")[2:])
+    context = {
+        'company' : company,
+        'vendor' : vendor,
+        'account': acnt,
+        'account_type' : acnt_type,
+        'customer' : cust,
+        'item' : item,
+        'payments' :payments,
+        'units' :units,
+        'sales' :sales,
+        'purchase':purchase,
+        'sales_type':sales_type,
+        'purchase_type':purchase_type,
+        'recur_bills': recur_bills,
+        'recur_items' : recur_item,
+        # 'cust':c,
+        'vend' : v,
+        'vend_name' : " ".join(recur_bills.company_name.split(" ")[1:]),
+        'cust_name' : " ".join(recur_bills.customer_name.split(" ")[2:])
+    }
+
+    return render(request,'edit_vendor_credits.html',context)
+
+
+def change_vendor_credits(request,id):
+            
+    company = company_details.objects.get(user = request.user)
+    # cust = customer.objects.get(customerName=request.POST.get('customer').strip(" "),user = request.user)
+    r_bill=Vendor_Credits_Bills.objects.get(user = request.user,id=id)
+
+    if request.method == 'POST':
+        
+        r_bill.company_name = request.POST.get('vendor')
+        r_bill.customer_name= request.POST.get('customer')
+       
+        r_bill.source_supply=request.POST['srcofsupply']
+        r_bill.vendor_email = request.POST.get('email_inp')
+        r_bill.gst_treatment = request.POST.get('gst_trt_inp')
+      
+        # r_bill.address = request.POST.get('vstreet')
+        
+        r_bill.credit_note = request.POST.get('credit_note')
+        r_bill.order_no = request.POST.get('order_number')
+        r_bill.vendor_date = request.POST.get('credit_date')
+      
+
+      
+        r_bill.note=request.POST['note']
+        r_bill.sub_total=None if request.POST.get('subtotal') == "" else  request.POST.get('subtotal')
+        r_bill.igst=None if request.POST.get('igst') == "" else  request.POST.get('igst')
+        r_bill.cgst=None if request.POST.get('cgst') == "" else  request.POST.get('cgst')
+        r_bill.sgst=None if request.POST.get('sgst') == "" else  request.POST.get('sgst')
+        r_bill.shipping_charge=request.POST['addcharge']
+        r_bill.adjustment=request.POST['add_round_off']
+        r_bill.grand_total=request.POST.get('grand_total')
+
+        if len(request.FILES) != 0:
+             
+            r_bill.document = request.FILES['file']
+            
+
+        r_bill.save()          
+
+        item = request.POST.getlist("item[]")
+        hsn = request.POST.getlist("hsn[]")
+        quantity = request.POST.getlist("quantity[]")
+        rate = request.POST.getlist("rate[]")
+
+        if (" ".join(request.POST['srcofsupply'].split(" ")[1:])) == company.state:
+            tax = request.POST.getlist("tax1[]")
+        else:
+            tax = request.POST.getlist("tax2[]")
+
+        discount = 0 if request.POST.getlist("discount[]") == " " else request.POST.getlist("discount[]")
+        amount = request.POST.getlist("amount[]")
+
+        if len(item) == len(hsn) == len(quantity) == len(discount) == len(tax) == len(amount) == len(rate) and item and hsn and quantity and rate and tax and discount and amount:
+                
+            mapped=zip(item,hsn,quantity,rate,tax,discount,amount)
+            mapped=list(mapped)
+
+            
+            count = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=r_bill.id).count()
+            
+            mapped = zip(item, hsn, quantity, discount, tax, amount, rate)
+            mapped = list(mapped)
+            
+            for element in mapped:
+                it = AddItem.objects.get(user = request.user, id = element[0]).Name
+                created = Vendor_Credits_Bills_items_bills.objects.create(
+                    recur_bills=r_bill,
+                    user=u,
+                    company=company,
+                    item=it,
+                    hsn=element[1],
+                    quantity=element[2],
+                    discount=element[3],
+                    tax=element[4],
+                    amount=element[5],
+                    rate=element[6],
+                )
+                created.save()
+
+        return redirect('view_vendor_credits',id)
+    return redirect('vendor_credits_home')

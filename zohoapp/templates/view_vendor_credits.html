@@ -285,8 +285,8 @@
                             <div class="dropdown-menu " style="z-index: 1;">
                                  <a class="dropdown-item" href="{% url 'view_custasc' recur_bill.id  %}">Customer A-Z</a>
                                 <a class="dropdown-item" href="{% url 'view_custdesc' recur_bill.id %}">Customer Z-A</a>
-                                <a class="dropdown-item" href="{% url 'view_vendorasc' recur_bill.id %}">Vendor A-Z</a>
-                                <a class="dropdown-item" href="{% url 'view_vendordesc' recur_bill.id %}">Vendor Z-A</a>
+                                <a class="dropdown-item" href="{% url 'vc_view_vendorasc' recur_bill.id %}">Vendor A-Z</a>
+                                <a class="dropdown-item" href="{% url 'vc_view_vendordesc' recur_bill.id %}">Vendor Z-A</a>
                                 <a class="dropdown-item" href="{% url 'view_profileasc' recur_bill.id %}">Profile A-Z</a>
                                 <a class="dropdown-item" href="{% url 'view_profiledesc' recur_bill.id %}">Profile Z-A</a>
 
@@ -308,7 +308,15 @@
                             
                             <div class="row mt-3">
                                 <div class="col-md-7">
-                                    <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">{{b.vend_name}} </label><br>
+                                    <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">
+                                        <span style="display: none;">{{ b.company_name.split.0 }}</span>
+                                        <span>{{ b.company_name.split.1 }}</span>
+                                        <span>{{ b.company_name.split.2 }}</span>
+                                      </label><br>
+                                      
+                                      
+                                      
+                                      
                                         <!-- <label style="color: rgb(129, 126, 126); font-size: 15px;" class="mx-3 px-2"># RB- {{ b.id }} </label> -->
                                         <label style="color: rgb(129, 126, 126); font-size: 15px; "class="mx-2 px-2"> {{ b.vendor_date }} </label>
                                 </div>
@@ -328,7 +336,12 @@
         <div class="card radius-15 " style="border-bottom: 0.5px solid; color: dimgray;">
             <div class="card-body">
                 <div class="card-title">
-                    <h3 class="mb-0" id="prof_name">{{recur_bill.vendor_email}}</h3>
+                    <h3 class="mb-0" id="prof_name">
+                        <span style="display: none;">{{ recur_bill.company_name.split.0 }}</span>
+                        <span>{{ recur_bill.company_name.split.1 }}</span>
+                        <span>{{ recur_bill.company_name.split.2 }}</span>
+                      </h3>
+                      
                 </div>
 
                 <div class="d-flex" style="float: right; margin-right: 25px;">
@@ -338,10 +351,10 @@
                     </div>
 
                     <div class="mx-4">
-                        <a href="{% url 'edit_recurring_bills' recur_bill.id %}" class=" fa fa-pencil btns px-2 py-2"
+                        <a href="{% url 'edit_vendor_credits' recur_bill.id %}" class=" fa fa-pencil btns px-2 py-2"
                               data-toggle="tooltip" title="EDIT"> </a>
-                        <a href="{% url 'delete_recurring_bills' recur_bill.id %} " class="delete fa fa-trash btns px-2 py-2"
-                         data-toggle="tooltip" title="DELETE" onclick="return confirm('Do you want to Delete this Recurring Bill?');"> </a>
+                        <a href="{% url 'delete_vendor_credits' recur_bill.id %} " class="delete fa fa-trash btns px-2 py-2"
+                         data-toggle="tooltip" title="DELETE" onclick="return confirm('Do you want to Delete this Vendor Credit?');"> </a>
                     </div>
 
                     <div class="mx-1">
@@ -390,7 +403,7 @@
                 <div class="row pt-0 m-0 text-center">
                     <div class="col-4 "></div>
                     <div class="col-4 ">
-                        <h4 class="text-uppercase text-dark" >Vendor Credits</h4>
+                        <h4 class="text-uppercase text-dark" >Vendor credit</h4>
                     </div>
                     <div class="col-4 "></div>
                 </div>
@@ -410,13 +423,14 @@
                         <section class="d-flex justify-content-between">
                             <div class="top-right">
                                 <div class="graphic-path text-center">
-                                    <h5 class="text-capitalize"  >{{recur_bill.profile_name}}</h5>
-                                    <p class="text-capitalize" id="pid" hidden>{{recur_bill.id}}</p>
+                                  <h3 class="text-uppercase" style="color: black;"> <span style="display: none;">{{ recur_bill.company_name.split.0 }}</span>
+                                    <span>{{ recur_bill.company_name.split.1 }}</span>
+                                    <span>{{ recur_bill.company_name.split.2 }}</span>
 
-                                </div>
+                                </div></h3> 
                                 <div class="position-relative">
-                                    <p>Bill Date : &nbsp <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
-                                    <p>Due Date : &nbsp <span style="color: black;">{{recur_bill.end_date|date:'d-m-Y'}}</span></p>
+                                    <p><span style="color: black;">{{recur_bill.vendor_email}}</span></p>
+                                    <p>Credit Date : &nbsp <span style="color: black;">{{recur_bill.vendor_date|date:'d-m-Y'}}</span></p>
                                     <p>Term : &nbsp <span style="color: black;">NET {{recur_bill.payment_terms}}</span></p> 
                                 </div>
                             </div>
@@ -448,15 +462,12 @@
                             </div> -->
 
                             <div class="col-5">
-                                <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Deliver To,</p>
-                                <h6  class="mx-2 text-capitalize" style="color: black;">{{customer.customerName}}</h6>
-                                <p class="address col-6 mx-3 p-2" style="margin-left: -14px;">{{customer.Address1}} <br>
-                                    {{customer.Address2}}<br>
-                                    {{customer.city}}<br>
-                                    {{customer.state}}<br>
-
-                                    
-                                </p>
+                                <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Vendor Details,</p>
+                                <div class="position-relative">
+                                    <p>Credit Note : &nbsp <span style="color: black;">{{recur_bill.credit_note}}</span></p>
+                                    <p>Order Number : &nbsp <span style="color: black;">{{recur_bill.order_no}}</span></p>
+                                    <p>Source of Supply : &nbsp <span style="color: black;">{{recur_bill.source_supply}}</span></p> 
+                                </div>
 
                             </div>
                         </div>
@@ -529,8 +540,8 @@
                                 {% endif %}
                                 {% if recur_bill.shipping_charge != "" %}
                                 <tr>
-                                    <td style="font-weight:bold">Shipping Charge:</td>
-                                    <td style="font-weight:bold">{{recur_bill.shipping_charge|floatformat:2}}</td>
+                                    <td style="font-weight:bold">Adjustment Charge:</td>
+                                    <td style="font-weight:bold">{{recur_bill.adjustment|floatformat:2}}</td>
                                 </tr>
                                 {% endif %}
                                 <tfoot>
@@ -957,7 +968,7 @@
             $.ajax({
 
                 type: 'POST',
-                url: "",
+                url: "{% url 'vendor_credit_comment' %}",
 
                 data: {
                     id: $("#com_id").val(),
@@ -981,7 +992,7 @@
             $.ajax({
 
                 type: 'POST',
-                url: "",
+                url: "{% url 'vendor_credit_add_file' recur_bill.id %}",
 
                 data: {
                     id: $("#file_id").val(),
@@ -1005,7 +1016,7 @@
             $.ajax({
 
                 type: 'POST',
-                url: "",
+                url: "{% url 'vendor_credit_email' recur_bill.id %}",
 
                 data: {
                     // id: $("#email_id").val(),
@@ -1052,7 +1063,7 @@ $(document).ready(function () {
             var opt =
             {
                 margin: 0,
-                filename: 'recurring bill_'+$("#pid").text() + '.pdf',
+                filename: 'vendor credit'+$("#pid").text() + '.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 3 },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -1064,5 +1075,15 @@ $(document).ready(function () {
  });
 
 </script>
+
+<script>
+    // Get references to the two spans
+    var hiddenFirstLetter = document.getElementById("hidden-first-letter");
+    var restOfName = document.getElementById("rest-of-name");
+  
+    // Display the first letter and the rest of the name
+    hiddenFirstLetter.style.display = "inline";
+    restOfName.style.display = "inline";
+  </script>
 
 {% endblock %}
