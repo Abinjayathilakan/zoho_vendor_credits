@@ -348,6 +348,7 @@ urlpatterns = [
     path('view_vendor_credits/<id>',views.view_vendor_credits,name='view_vendor_credits'),
     
     path('vendor_credit_comment',views.vendor_credit_comment,name = "vendor_credit_comment"),
+    # path('vendor_credit_add_file/<id>',views.vendor_credit_add_file,name = "vendor_credit_add_file"),
     path('vendor_credit_add_file/<id>',views.vendor_credit_add_file,name = "vendor_credit_add_file"),
     path('vendor_credit_email/<id>', views.vendor_credit_email, name='vendor_credit_email'),
     

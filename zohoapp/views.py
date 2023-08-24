@@ -7399,7 +7399,7 @@ def view_vendor_credits(request,id):
     billitem = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills=id)
     
     #cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
-    vend = vendor_table.objects.get(id = rbill.company_name.split(" ")[0])
+    # vend = vendor_table.objects.get(id = rbill.company_name.split(" ")[0])
     gst_or_igst = "GST" if company.state == (" ".join(rbill.source_supply.split(" ")[1:])) else "IGST"
     tax_total = [] 
     for b in billitem:
@@ -7407,7 +7407,7 @@ def view_vendor_credits(request,id):
             tax_total.append(b.tax)
     
     #cust_name = cust.customerName
-    vend_name = vend.salutation+ " " +vend.first_name + " " +vend.last_name
+    # vend_name = vend.salutation+ " " +vend.first_name + " " +vend.last_name
     context = {
                 'company' : company,
                 'recur_bills' : bills,
@@ -7416,9 +7416,9 @@ def view_vendor_credits(request,id):
                 'tax' : tax_total,
                 "gst_or_igst" : gst_or_igst,
                 #'customer' : cust,
-                'vendor' : vend,
+                # 'vendor' : vend,
                 #'customer_name' : cust_name,
-                'vendor_name' : vend_name,
+                # 'vendor_name' : vend_name,
             }
 
     return render(request, 'view_vendor_credits.html',context)
@@ -7442,6 +7442,8 @@ def vendor_credit_comment(request):
 
 @login_required(login_url='login')
 def vendor_credit_add_file(request,id):
+    
+    
 
     company = company_details.objects.get(user = request.user)
     bill = Vendor_Credits_Bills.objects.get(user = request.user,id=id)
@@ -7458,6 +7460,23 @@ def vendor_credit_add_file(request,id):
         bill.save()
         return redirect('view_vendor_credits',id)
     
+@login_required(login_url='login')
+def vendor_credit_add_file(request,id):
+
+    company = company_details.objects.get(user = request.user)
+    bill = recurring_bills.objects.get(user = request.user,id=id)
+    print(bill)
+
+    if request.method == 'POST':
+
+        bill.document=request.POST.get('file')
+
+        if len(request.FILES) != 0:
+             
+            bill.document = request.FILES['file']
+
+        bill.save()
+        return redirect('view_recurring_bills',id)
 
 @require_POST
 def vendor_credit_email(request,id):
@@ -7629,6 +7648,91 @@ def edit_vendor_credits(request,id):
     return render(request,'edit_vendor_credits.html',context)
 
 
+# def change_vendor_credits(request,id):
+            
+#     company = company_details.objects.get(user = request.user)
+#     # cust = customer.objects.get(customerName=request.POST.get('customer').strip(" "),user = request.user)
+#     r_bill=Vendor_Credits_Bills.objects.get(user = request.user,id=id)
+
+#     if request.method == 'POST':
+        
+#         r_bill.company_name = request.POST.get('vendor')
+#         # r_bill.customer_name= request.POST.get('customer')
+       
+#         r_bill.source_supply=request.POST['srcofsupply']
+#         r_bill.vendor_email = request.POST.get('email_inp')
+#         r_bill.gst_treatment = request.POST.get('gst_trt_inp')
+      
+#         # r_bill.address = request.POST.get('vstreet')
+        
+#         r_bill.credit_note = request.POST.get('credit_note')
+#         r_bill.order_no = request.POST.get('order_number')
+#         r_bill.vendor_date = request.POST.get('credit_date')
+      
+
+      
+#         r_bill.note=request.POST['note']
+#         r_bill.sub_total=None if request.POST.get('subtotal') == "" else  request.POST.get('subtotal')
+#         r_bill.igst=None if request.POST.get('igst') == "" else  request.POST.get('igst')
+#         r_bill.cgst=None if request.POST.get('cgst') == "" else  request.POST.get('cgst')
+#         r_bill.sgst=None if request.POST.get('sgst') == "" else  request.POST.get('sgst')
+#         r_bill.shipping_charge=request.POST['addcharge']
+#         r_bill.adjustment=request.POST['add_round_off']
+#         r_bill.grand_total=request.POST.get('grand_total')
+#         r_bill.note = request.POST['note']
+        
+#         u = User.objects.get(id = request.user.id)
+
+#         if len(request.FILES) != 0:
+             
+#             r_bill.document = request.FILES['file']
+            
+
+#         r_bill.save()          
+
+#         item = request.POST.getlist("item[]")
+#         hsn = request.POST.getlist("hsn[]")
+#         quantity = request.POST.getlist("quantity[]")
+#         rate = request.POST.getlist("rate[]")
+
+#         if (" ".join(request.POST['srcofsupply'].split(" ")[1:])) == company.state:
+#             tax = request.POST.getlist("tax1[]")
+#         else:
+#             tax = request.POST.getlist("tax2[]")
+
+#         discount = 0 if request.POST.getlist("discount[]") == " " else request.POST.getlist("discount[]")
+#         amount = request.POST.getlist("amount[]")
+
+#         if len(item) == len(hsn) == len(quantity) == len(discount) == len(tax) == len(amount) == len(rate) and item and hsn and quantity and rate and tax and discount and amount:
+                
+#             mapped=zip(item,hsn,quantity,rate,tax,discount,amount)
+#             mapped=list(mapped)
+
+            
+#             count = Vendor_Credits_Bills_items_bills.objects.get_or_create(recur_bills=r_bill.id).count()
+            
+#             mapped = zip(item, hsn, quantity, discount, tax, amount, rate)
+#             mapped = list(mapped)
+            
+#             for element in mapped:
+#                 it = AddItem.objects.get(user = request.user, id = element[0]).Name
+#                 created = Vendor_Credits_Bills_items_bills.objects.create(
+#                     recur_bills=r_bill,
+#                     user=u,
+#                     company=company,
+#                     item=it,
+#                     hsn=element[1],
+#                     quantity=element[2],
+#                     discount=element[3],
+#                     tax=element[4],
+#                     amount=element[5],
+#                     rate=element[6],
+#                 )
+#                 created.save()
+
+#         return redirect('view_vendor_credits',id)
+#     return redirect('vendor_credits_home')
+
 def change_vendor_credits(request,id):
             
     company = company_details.objects.get(user = request.user)
@@ -7638,20 +7742,13 @@ def change_vendor_credits(request,id):
     if request.method == 'POST':
         
         r_bill.company_name = request.POST.get('vendor')
-        r_bill.customer_name= request.POST.get('customer')
-       
         r_bill.source_supply=request.POST['srcofsupply']
         r_bill.vendor_email = request.POST.get('email_inp')
-        r_bill.gst_treatment = request.POST.get('gst_trt_inp')
-      
-        # r_bill.address = request.POST.get('vstreet')
-        
+        r_bill.gst_treatment = request.POST.get('gst_trt_inp')       
         r_bill.credit_note = request.POST.get('credit_note')
         r_bill.order_no = request.POST.get('order_number')
         r_bill.vendor_date = request.POST.get('credit_date')
-      
 
-      
         r_bill.note=request.POST['note']
         r_bill.sub_total=None if request.POST.get('subtotal') == "" else  request.POST.get('subtotal')
         r_bill.igst=None if request.POST.get('igst') == "" else  request.POST.get('igst')
@@ -7661,15 +7758,12 @@ def change_vendor_credits(request,id):
         r_bill.adjustment=request.POST['add_round_off']
         r_bill.grand_total=request.POST.get('grand_total')
 
-        if len(request.FILES) != 0:
-             
+        if len(request.FILES) != 0:        
             r_bill.document = request.FILES['file']
-            
-
         r_bill.save()          
 
-        item = request.POST.getlist("item[]")
-        hsn = request.POST.getlist("hsn[]")
+        items = request.POST.getlist("item[]")
+        # accounts = request.POST.getlist("account[]")
         quantity = request.POST.getlist("quantity[]")
         rate = request.POST.getlist("rate[]")
 
@@ -7680,33 +7774,37 @@ def change_vendor_credits(request,id):
 
         discount = 0 if request.POST.getlist("discount[]") == " " else request.POST.getlist("discount[]")
         amount = request.POST.getlist("amount[]")
+        # obj_dele=Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=r_bill.id)
+        # obj_dele.delete()
 
-        if len(item) == len(hsn) == len(quantity) == len(discount) == len(tax) == len(amount) == len(rate) and item and hsn and quantity and rate and tax and discount and amount:
+        if len(items) == len(quantity) == len(rate)==len(tax) == len(discount) ==len(amount) and items and quantity and rate and tax and discount and amount:
                 
-            mapped=zip(item,hsn,quantity,rate,tax,discount,amount)
+            mapped=zip(items,quantity,rate,tax,discount,amount)
             mapped=list(mapped)
 
             
             count = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=r_bill.id).count()
             
-            mapped = zip(item, hsn, quantity, discount, tax, amount, rate)
-            mapped = list(mapped)
-            
-            for element in mapped:
-                it = AddItem.objects.get(user = request.user, id = element[0]).Name
-                created = Vendor_Credits_Bills_items_bills.objects.create(
-                    recur_bills=r_bill,
-                    user=u,
-                    company=company,
-                    item=it,
-                    hsn=element[1],
-                    quantity=element[2],
-                    discount=element[3],
-                    tax=element[4],
-                    amount=element[5],
-                    rate=element[6],
-                )
-                created.save()
+            for ele in mapped:
+
+                if int(len(items))>int(count):
+
+                    pbillss=Vendor_Credits_Bills.objects.get(id=id)
+                    company = company_details.objects.get(user = request.user)
+                    it = AddItem.objects.get(user = request.user, id = ele[0]).Name
+                    it = AddItem.objects.get(user = request.user, id = ele[0]).Name
+                
+                    
+                    created = Vendor_Credits_Bills_items_bills.objects.get_or_create(item = it,quantity=ele[2],rate=ele[3],
+                    tax=ele[4],discount = ele[5],amount=ele[6],recur_bills=r_bill.id,company=company,user = request.user)
+
+
+                else:
+                    
+                    dbs=Vendor_Credits_Bills_items_bills.objects.get(recur_bills =r_bill.id,item = ele[0])
+                    created = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills =dbs.recur_bills,items = ele[0]).update(item = ele[0],
+                        quantity=ele[2],rate=ele[3], tax=ele[4],discount=ele[5],amount= ele[6])
 
         return redirect('view_vendor_credits',id)
     return redirect('vendor_credits_home')
+

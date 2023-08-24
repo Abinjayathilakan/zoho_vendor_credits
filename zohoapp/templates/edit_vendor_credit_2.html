@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-
+{% load tz %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
@@ -63,25 +63,25 @@
 
 
     ::-webkit-scrollbar {
-    width: 5px; 
-  }
+      width: 5px; 
+    }
 
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-  }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
 
-  ::-webkit-scrollbar-thumb {
-    background: #888; 
-  }
+    ::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-  }
-  .modal{
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
+
+    .modal{
       z-index: 9999;
       overflow: scroll;
     }
-
     .item{
       height: auto;
     }
@@ -89,7 +89,6 @@
     #customerInputWrapper {
       display: none;
     }
-
     </style>
 
 
@@ -98,57 +97,66 @@
   <div class="card radius-15 p-3">
     <div class="card-body">
         <div class="card-title">
-          <h2 class="mb-0 text-uppercase text-right"><i class="fas fa-file-edit"></i> &nbsp; Edit Vendor Credits</h2>
+          <h2 class="mb-0 text-uppercase text-right"><i class="fa fa-receipt"></i> &nbsp; Edit Vendor Credits</h2>
         </div>
     </div>
   </div>
 
   <div class="card radius-15 p-5">
     <form action="{% url 'change_vendor_credits' recur_bills.id %}" class="mt-2 mb-4" method="post" enctype="multipart/form-data" id="myForm">
-      {% csrf_token %}
-      <div class="row">
-        <div class="col-md-3">
-          <label style="color: rgb(190, 88, 88);">Vendor Name *</label>
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-3">
+            <label style="color: rgb(190, 88, 88);">Vendor Name *</label>
+          </div>
+          <div class="col-md-6">
+            <select name="vendor" id="vendor" class="form-control text-dark bg-light" >
+              <option value="{{recur_bills.vendor_name}}" selected class="text-dark bg-light">{{vend_name}}</option>
+  
+              <div class="dropdown-divider"></div>
+              {% for v in vendor %}
+              <option value="{{v.id}} {{ v.company_name }}">{{ v.company_name }} </option>
+              {% endfor %}
+            </select>
+            <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
+          </div>
         </div>
-        <div class="col-md-6">
-          <select name="vendor" id="vendor" class="form-control text-dark bg-light" >
-            <option value="{{recur_bills.vendor_name}}" selected class="text-dark bg-light">{{vend_name}}</option>
 
-            <div class="dropdown-divider"></div>
-            {% for v in vendor %}
-            <option value="{{v.id}} {{ v.company_name }}">{{ v.company_name }} </option>
-            {% endfor %}
-          </select>
-          <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
-        </div>
-      </div>
-
-      <div class="row mt-2" id="email_row">
+      <div class="row mt-3" id="email_row">
         <div class="col-md-3">
           <label for="email_inp">Vendor Email</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control text-dark bg-light" id="email_inp" name="email_inp" value="{{recur_bills.vendor_email}}">
+          <input type="text" class="form-control text-dark bg-light" id="email_inp" value="{{recur_bills.vendor_email}}" name="email_inp">
         </div>
       </div>
 
-      <div class="row mt-2" id="gst_trt_row">
+      <div class="row mt-3 " id="gst_trt_row">
         <div class="col-md-3">
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control text-dark bg-light" id="gst_trt_inp" name="gst_trt_inp" value="{{recur_bills.gst_treatment}}" >
+          <input type="text" class="form-control text-dark bg-light" id="gst_trt_inp" value="{{recur_bills.gst_treatment}}" name="gst_trt_inp">
         </div>
       </div>
 
-      <div class="row mt-2 mb-2" id="gstin_row">
+      <!-- <div class="row mt-3 mb-2" id="gstin_row">
         <div class="col-md-3">
           <label for="gstin_inp">GST Number</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control text-dark bg-light" id="gstin_inp" name="gstin_inp" value="{{recur_bills.profile_name}}">
+          <input type="text" class="form-control text-dark bg-light"  id="gstin_inp"  name="gstin_inp">
         </div>
-      </div>
+      </div> -->
+
+      <!-- <div class="row mt-3 mb-2" id="gstin_row">
+        <div class="col-md-3">
+          <label for="vstreet">Address</label>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control text-dark bg-light"  id="vstreet" name="vstreet">
+        </div>
+      </div> -->
 
       <div class="row mt-3 mb-2">
         <div class="col-md-3">
@@ -202,14 +210,13 @@
         </div>
       </div>
       
-   
       <div class="row mt-3 mb-2">
         <div class="col-md-3">
           <label for="credit_note" style="color: rgb(190, 88, 88);">Credit Note *</label>
         </div>
 
         <div class="col-md-6">
-          <input type="text" class="form-control text-dark bg-light"  id="credit_note" name="credit_note" maxlength="8" value="{{recur_bills.credit_note}}" required>
+          <input type="text" class="form-control text-dark bg-light"  id="credit_note" name="credit_note" value="{{recur_bills.credit_note}}" maxlength="8" required>
         </div>
       </div>
 
@@ -228,7 +235,7 @@
           <label for="date1">Vendor Credit Date</label>
         </div>
         <div class="col-md-3">
-          <input type="date" class="form-control text-dark bg-light" id="credit_date" name="credit_date" value="{{recur_bills.vendor_date| date:'Y-m-d' }}" required>
+          <input type="date" class="form-control text-dark bg-light" id="credit_date" name="credit_date" value="{{recur_bills.vendor_date| date:'Y-m-d' }}"  required>
         </div>
     </div>
 
@@ -252,10 +259,6 @@
       </div>
     </div>
 
-       
-
-
- 
 
       <div class="row mt-2">
         <div class="col-md-12 table-responsive-md mt-3">
@@ -265,7 +268,8 @@
                 <th class="text-center text-uppercase">Item Details <br>
                   <a href="" data-toggle="modal" data-target="#newitem" class="text-capitalize">+ add item</a>
                 </th>
-                <th class="text-center text-uppercase">Hsn<br>
+                <th class="text-center text-uppercase">HSN <br>
+
                 </th>
                 <th class="text-center text-uppercase">quantity</th>
                 <th class="text-center text-uppercase">rate</th>
@@ -275,31 +279,41 @@
               </tr>
             </thead>
             <tbody id="items-table-body">
-              {% for ri in recur_items %}
-              <tr id='addr{{forloop.counter}}' class="addr">
-                <td style="width: 20%;">
-                  <div class="d-flex">
-                    <select name='item[]' id="item{{forloop.counter0}}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
-                      <option value=" {{ ri.item }}" selected >{{ ri.item }}</option>
-                      {% for i in item %}
-                        <option value="{{i.id}}">{{ i.Name  }} </option>
-                      {% endfor %}
-                    </select>
-                    
-                  </div>  
-                </td>
+                {% for ri in recur_items %}
+                <tr id='addr{{forloop.counter}}' class="addr">
+                  <td style="width: 20%;">
+                    <div class="d-flex">
+                      <select name='item[]' id="item{{forloop.counter}}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
+                        <option value=" {{ ri.item }}" selected >{{ ri.item }}</option>
+                        {% for i in item %}
+                          <option value="{{i.id}}">{{ i.Name  }} </option>
+                        {% endfor %}
+                      </select>
+                      
+                    </div>  
+                  </td>
                 
-                <td style="width: 20%;">
-                  <input type="text" name='hsn[]' placeholder='Hsn' id="hsn{{forloop.counter0}}" value=" {{ri.hsn}} "  class="form-control hsn text-dark bg-light" step=0 min=0/>
+                <td  style="width: 20%;">
+                    <input type='text' name='hsn[]' placeholder='Hsn' id="hsn1{{forloop.counter}}" value=" {{ri.hsn}} " class='form-control border-0 text-black text-right hsn bg-white'  value=''  > 
                 </td>
-                
+                <script>
+                    $(document).on("input", ".hsn", function() {
+                      var hsn_value = $(this).val();
+                      var hsn_length = hsn_value.length;
+                      if (hsn_length > 6) {
+                          $(this).val(hsn_value.substring(0, 6));
+                          alert("HSN should not be more than 6 digits!");
+                      }
+                  });
+            </script> 
                 <td style="width: 10%;">
+
                   <input type="text" name='qty[]' placeholder='Qty' id="qty{{forloop.counter0}}" value=" {{ri.quantity}} "  class="form-control qty text-dark bg-light" step=0 min=0/>
                 </td>
                 <td style="width: 10%;">
-                  <input type="text" name='rate[]' id="rate{{forloop.counter0}}" placeholder='Rate' value=" {{ ri.rate }} " class="form-control rate text-dark bg-light" step="0.00" min="0" />
+                  <input type="text" name='rate[]' id="rate0{{forloop.rate}}" value=" {{ri.rate}} " placeholder='Rate' class="form-control rate text-dark bg-light" />
                 </td>
-                <td style="width: 15%;">
+                        <td style="width: 15%;">
                   <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
                   <input type="text" placeholder="Select TAX" class="form-control selecttax text-dark bg-light" id="selecttax0">
                   <select name="tax[]" id="intra_tax0" class="form-control tax1 d-none mb-2 text-dark bg-light">
@@ -323,13 +337,12 @@
                     <option value=0 text=" ">0.0% IGST(0%)</option>
                   </select>
                 </td>
-                
                 <td style="width: 11%;">
-                  <input type="text" name='discount[]' id="disc{{forloop.counter}}" value=" {{ri.discount}} " placeholder='Discount' class="text-dark bg-light form-control disc" step="0.00" min="0"/>
+                  <input type="text" name='discount[]' id="disc0{{forloop.counter}}" value=" {{ri.discount}} " placeholder='Discount' class="form-control disc text-dark bg-light" step="0.00" min="0"/>
                 </td>
 
                 <td style="width: 11%;">
-                  <input type="text" name='amount[]' id="amount{{forloop.counter}}" value=" {{ri.amount}} " placeholder='Amount' class=" text-dark bg-light form-control amount" step="0.00" min="0"  />
+                  <input type="text" name='amount[]' id="amount0{{forloop.counter}}" value=" {{ri.amount}} " placeholder='Amount' class="form-control amount text-dark bg-light" step="0.00" min="0"  />
                 </td>
                 <td>
                   <button type="button" id="0" class="btn btn-outline-primary clone_row text-center mb-1 p-1 " data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
@@ -337,17 +350,17 @@
                     <i class="fa-solid fa-clone"></i>
                   </button> 
                     <br>
-                  <button type="button" id="0" class="btn btn-outline-danger remove_row text-center p-1" data-toggle= "tooltip" data-placement="bottom" tooltip="Remove"
+                  <button disabled type="button" id="0" class="btn remove_row text-center p-1" data-toggle= "tooltip" data-placement="bottom" tooltip="Remove"
                       style = "width:25px; height: 25px; border-radius: 90% " >
-                    <i class="fa fa-window-close"></i>
+                    <i class="fa fa-window-close bg-dark text-dark"></i>
                   </button>
                 </td>
 
               </tr>
-              {% endfor %}
-            </tbody>
-            
 
+              {% endfor %}
+
+            </tbody>
             <tr>
                 <td style="border: none;"><a class="btn btn-outline-secondary ml-1 text-capitalize" role="button" id="add"  
                   title="Add Another Line">+</a></td>
@@ -363,7 +376,7 @@
             <textarea class="form-control text-dark bg-light" name="note" rows="15" style="height: 200px;" value="{{recur_bills.note}}">{{recur_bills.note}}</textarea>
           </div><br>
           <div>
-            <input type="file" class="form-control" name="file" value="{{recur_bills.document}}">
+            <input type="file" class="form-control text-dark bg-light" name="file" value="{{recur_bills.document}}">
           </div>
           <div>
           </div>
@@ -375,7 +388,7 @@
             </div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2">
-              <input type="number" step="any" name='subtotal' placeholder=0 value="{{recur_bills.sub_total}}" step="0.00" min="0"
+              <input type="number" step="any" name='subtotal' value="{{recur_bills.sub_total}}" placeholder=0  step="0.00" min="0"
                 class="form-control text-dark bg-light" id="subtotal" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;">
             </div>
           </div>
@@ -383,7 +396,7 @@
           <div class="row container-fluid p-2 m-0 d-none" id="igst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">IGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='igst'  step="0.00" min="0" id="igst" placeholder=0 value="{{recur_bills.igst}}"
+            <div class="col-sm-4 mt-2"><input type="number" name='igst' step="0.00" min="0" id="igst" placeholder=0 value="{{recur_bills.igst}}"
                 class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
@@ -397,7 +410,7 @@
           <div class="row container-fluid p-2 m-0 d-none" id="sgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">SGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='sgst' tep="0.00" min="0" id="sgst" placeholder=0 value="{{recur_bills.sgst}}"
+            <div class="col-sm-4 mt-2"><input type="number" name='sgst' step="0.00" min="0" id="sgst" placeholder=0 value="{{recur_bills.sgst}}"
                 class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
@@ -409,7 +422,7 @@
             <div class="col-sm-3 mt-2">
             </div>
             <div class="col-sm-4 mt-2">
-              <input type="number" name='addcharge' step="any" id="addcharge" placeholder=0 value="{{recur_bills.shipping_charge}}" step="0.00" min="0"
+              <input type="number" name='addcharge' tep="0.00" min="0" id="addcharge" placeholder=0 value="{{recur_bills.shipping_charge}}"
               class="form-control text-dark bg-light"/>
             </div>
           </div>
@@ -424,10 +437,10 @@
           </div><hr>
                  
           <div class="row container-fluid  p-2 m-0">
-            <div class="col-sm-5 mt-2"><label for="a" class="text-center " id="grandtotallbl">Grand Total</label></div>
+            <div class="col-sm-5 mt-2"><label for="a" class="text-center" id="grandtotallbl">Grand Total</label></div>
             <div class="col-sm-2 mt-2"></div>
-            <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" tep="0.00" min="0" 
-                value="{{recur_bills.grand_total}}" class="form-control text-dark bg-light" readonly>
+            <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" value="{{recur_bills.grand_total}}" step="0.00" min="0"
+                class="form-control text-dark bg-light" readonly>
             </div>
           </div>
         </div>   
@@ -443,7 +456,6 @@
         <div class="col-md-4"></div>
         <div class="col-md-4"></div>
       </div>
-      
     </form>
 
     <div class="modal fade" id="newvendor">
@@ -465,10 +477,10 @@
                   </div>
                   <div class="col-md-3 mt-2">
                     <select name="title" id="title" class="form-control text-dark bg-light">
-                      <option value="Mr">Mr</option>
-                      <option value="Mrs">Mrs</option>
+                      <option value="Mr.">Mr.</option>
+                      <option value="Mrs.">Mrs.</option>
                       <option value="Miss">Miss</option>
-                      <option value="Ms">Ms</option>
+                      <option value="Ms.">Ms.</option>
                     </select>
                   </div>
                 </div>
@@ -885,7 +897,7 @@
                     <label for="vspincode">Pincode</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vspincode" name="vspincode" maxlength="6" placeholder="PIN Code">  
+                    <input type="text" class="form-control text-dark bg-light" id="vspincode" name="vspincode" maxlength="6"  placeholder="PIN Code">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -897,7 +909,7 @@
                     <label for="vphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vphone" name="vphone" maxlength="6" placeholder="Phone"> 
+                    <input type="text" class="form-control text-dark bg-light" id="vphone" name="vphone"  placeholder="Phone"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -905,7 +917,7 @@
                     <label for="vsphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vsphone" name="vsphone" maxlength="6" placeholder="Phone">  
+                    <input type="text" class="form-control text-dark bg-light" id="vsphone" name="vsphone"  placeholder="Phone">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -917,7 +929,7 @@
                     <label for="vfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vfax" name="vfax" maxlength="6" placeholder="FAX"> 
+                    <input type="text" class="form-control text-dark bg-light" id="vfax" name="vfax"  placeholder="FAX"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -925,7 +937,7 @@
                     <label for="vsfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vsfax" name="vsfax" maxlength="6" placeholder="FAX">  
+                    <input type="text" class="form-control text-dark bg-light" id="vsfax" name="vsfax"  placeholder="FAX">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -939,7 +951,6 @@
                     </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-4"></div>
                   <div class="col-md-4">
                     <div class="d-flex">
                       <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
@@ -952,7 +963,8 @@
                       </button>
                     </div>
                   </div>
-                  <div class="col-md-4"></div>
+                  <div class="col-md-6"></div>
+                  <!-- <div class="col-md-4"></div> -->
                 </div>
               </form>
                   </div>
@@ -1027,608 +1039,21 @@
       </div>  
     </div>  
 
-    <!-- customer modal -->
-
-
-    <div class="modal fade" id="newcustomer">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-          <div class="modal-header " style="background: rgb(32, 35, 37);">
-              <h3 class="m-3 text-uppercase">New Customer</h3>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body" style="background: rgb(32, 35, 37);">
-            <div class="card p-3 m-3">
-              <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalCustomer">
-        
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="">Customer Type</label><br>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <div class="d-flex">
-                      <div class="radio_opt mx-5 mt-2">
-                        <input type="radio" id="business" name="radioCust" value="Business" >
-                        <label for="option1">Business</label>
-                      </div>
-                      <div class="radio_opt mx-4 mt-2">
-                        <input type="radio" id="individual" name="radioCust" value="Individual" >
-                        <label for="option2">Individual</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row mt-5">
-                  <div class="col-md-3">
-                    <label for="ctitle">Title</label>
-                  </div>
-                  <div class="col-md-3">
-                    <select name="ctitle" id="ctitle" class="form-control text-dark bg-light">
-                      <option value="Mr." selected>Mr.</option>
-                      <option value="Mrs.">Mrs.</option>
-                      <option value="Ms.">Ms.</option>
-                      <option value="Miss.">Miss.</option>
-                      <option value="Dr.">Dr.</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="cfname">First name</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="cfname" name="cfirstname" required>
-                  </div>
-                </div>
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="clname">Last name</label>
-                    <label id="cdisplayname" name = "cdisplayname" hidden></label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="clname" name="clastname">
-                  </div>
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="ccompany">Company Name</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="ccompany" name="ccompany_name">
-                  </div>
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="cemail">Customer Email</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="email" class="form-control text-dark bg-light" id="cemail" name="cemail" placeholder="example@gmail.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">    
-                  </div>              
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="email">Customer Phone</label>
-                  </div>
-                  <div class="col-md-3 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="cw_mobile" placeholder="Work Number" maxlength="10" name="cw_mobile">
-                  </div>        
-                  <div class="col-md-3 mt-2">
-                    <input type="text" class="form-control" id="cp_mobile" placeholder="Personal Number" maxlength="10" name="cp_mobile">
-                  </div>          
-                </div>
-
-           
-                <hr>
-                <center><h4 class="text-uppercase mb-3"><b>Other Details</b></h4></center>
-                <div class="row mt-5">
-                  <div class="col-md-3 mt-2">
-                    <label for="facebook">Facebook</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="facebook" placeholder="www.example.com" name="facebook">
-                  </div>       
-                </div>
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="twitter">Twitter</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light " id="twitter" placeholder="www.example.com" name="twitter">
-                  </div>       
-                </div>
-
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="website">Website</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="website" placeholder="www.example.com" name="website">
-                  </div>       
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="cskype">Skype name/Number</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="cskype" name="cskype">
-                  </div>       
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="c_desg">Designation</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="c_desg" name="c_desg">
-                  </div>       
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="c_dpt">Department</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="c_dpt" name="c_dpt">
-                  </div>       
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="c_gsttype" style="color:rgb(190, 88, 88);">GST Treatment *</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <select class="form-control text-dark bg-light" id="c_gsttype" name="c_gsttype" required>
-                      <option value="value" selected>Select a Gst Treatment</option>
-                      <option value="Registered Business-Regular Business that is registered under GST">Registered Business-Regular Business that is registered under GST</option>
-                      <option value="Registered Business-Composition Business that is registered under the Composition scheme in GST">Registered Business-Composition Business that is registered under the Composition scheme in GST</option>
-                      <option value="Unregistered Business-not Registered under GST">Unregistered Business-not Registered under GST</option>
-                      <option value="Consumer- A customer who is a regular Consumer">Consumer- A customer who is a regular Consumer</option>
-                      <option value="Overseas- Persons with who you do import or exports of supplies outside india">Overseas- Persons with who you do import or exports of supplies outside india</option>
-                      <option value="Special Economic Zone">Special Economic Zone</option>
-                    </select>
-                  </div>       
-                </div>
-
-                <!-- <div class="row gstrow d-none">
-                  <div class="col-md-3 mt-2">
-                    <label id="glbl" style="color:rgb(190, 88, 88);">GSTIN/UIN *</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="v_gstin" name="v_gstin" placeholder="29APPCK7465F1Z1">
-                    <label id="gst_label"></label>
-                  </div>       
-                </div>
-
-                <div class="row">
-                  <div class="col-md-3 mt-2">
-                    <label for="v_pan">PAN Number</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="v_pan" name="v_pan" placeholder="APPCK7465F">
-                    <label id="pan_label"></label>
-                  </div>       
-                </div> -->
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="" style="color: rgb(190, 88, 88);">Place of Supply *</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <select class="form-control text-dark bg-light" id="placesupply" name="placesupply">
-                      <option value="Nill"></option>
-                      <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
-                      <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
-                      <option value="[AR] Arunachal Predesh">[AR] Arunachal Predesh</option>
-                      <option value="[AS] Assam">[AS] Assam</option>
-                      <option value="[BR] Bihar">[BR] Bihar</option>
-                      <option value="[CH] Chandigarh">[CH] Chandigarh</option>
-                      <option value="[CG] Chhattisgarh">[CG] Chhattisgarh</option>
-                      <option value="[DNH] Dadra and Nagar Haveli">[DNH] Dadra and Nagar Haveli</option>
-                      <option value="[DD] Damn anad Diu">[DD] Damn anad Diu</option>
-                      <option value="[DL] Delhi">[DL] Delhi</option>
-                      <option value="[GA] Goa">[GA] Goa</option>
-                      <option value="[GJ] Gujarat">[GJ] Gujarat</option>
-                      <option value="[HR] Haryana">[HR] Haryana</option>
-                      <option value="[HP] Himachal Predesh">[HP] Himachal Predesh</option>
-                      <option value="[JK] Jammu and Kashmir">[JK] Jammu and Kashmir</option>
-                      <option value="[JH] Jharkhand">[JH] Jharkhand</option>
-                      <option value="[KA] Karnataka">[KA] Karnataka</option>
-                      <option value="[KL] Kerala">[KL] Kerala</option>
-                      <option value="[LA] Ladakh">[LA] Ladakh</option>
-                      <option value="[LD] Lakshadweep">[LD] Lakshadweep</option>
-                      <option value="[MP] Madhya Predesh">[MP] Madhya Predesh</option>
-                      <option value="[MH] Maharashtra">[MH] Maharashtra</option>
-                      <option value="[MN] Manipur">[MN] Manipur</option>
-                      <option value="[ML] Meghalaya">[ML] Meghalaya</option>
-                      <option value="[MZ] Mizoram">[MZ] Mizoram</option>
-                      <option value="[NL] Nagaland">[NL] Nagaland</option>
-                      <option value="[OD] Odisha">[OD] Odisha</option>
-                      <option value="[PY] Puducherry">[PY] Puducherry</option>
-                      <option value="[PB] Punjab">[PB] Punjab</option>
-                      <option value="[RJ] Rajasthan">[RJ] Rajasthan</option>
-                      <option value="[SK] Sikkim">[SK] Sikkim</option>
-                      <option value="[TN] Tamil Nadu">[TN] Tamil Nadu</option>
-                      <option value="[TS] Telangana">[TS] Telangana</option>
-                      <option value="[TR] Tripura">[TR] Tripura</option>
-                      <option value="[UP] Uttar Predesh">[UP] Uttar Predesh</option>
-                      <option value="[UK] Uttarakhand">[UK] Uttarakhand</option>
-                      <option value="[WB] West Bengal">[WB] West Bengal</option>
-                      <option value="[OT] Other Territory">[OT] Other Territory</option>
-                    </select>
-                  </div>       
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="c_tax" style="color: rgb(190, 88, 88);">Tax Preference* </label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <div class="d-flex">
-                      <div class="radio_opt mx-5 mt-2">
-                        <input type="radio" id="tax" name="radioCust1" value="Taxable" >
-                        <label for="option1">Taxable</label>
-                      </div>
-                      <div class="radio_opt mx-4 mt-2">
-                        <input type="radio" id="taxe" name="radioCust1" value="Tax-exempt" >
-                        <label for="option2">Tax-exempt</label>
-                      </div>
-                    </div>
-                  </div>       
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="c_curn">Currency </label>
-                  </div>
-                  <div class="col-md-3 mt-2">
-                    <select class="form-control text-dark bg-light" id="c_curn" name="c_curn" required>
-                      <option selected disabled value="">Choose..</option>
-                      <option value="INR">INR</option>
-                    </select>
-                  </div>       
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="c_open">Opening Balance</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="c_open" name="c_open">
-                  </div>       
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="v_terms">Payment Terms</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <div class="d-flex">
-                      <select class="form-control text-dark bg-light" id="v_terms" name="v_terms" required>
-                        <option selected value="15">NET 15</option>
-                        <option value="30">NET 30</option>
-                        <option value="45">NET 45</option>
-                        <option value="60">NET 60</option>
-                        <option value="90">NET 90</option>
-                        <option value="">Due end of the month</option>
-                        <option value="recpt">Due on receipt</option>
-                        {% for p in payments %}
-                        <option value="{{p.Terms}} {{p.id}}">{{p.Terms}}</option>
-                        {% endfor %}
-                      </select>                
-                      <a href="#" class="btn btn-outline-secondary py-2 my-1" data-target="#newpayment" data-toggle="modal">+</a>   
-                    </div>
-                  </div>       
-                </div>
-                
-
-                <hr>
-
-                <div class="row mt-2">
-                  <div class="col-md-6 mt-5 text-center text-uppercase">
-                    <h4 class="mb-0">Billing Address</h4>
-                  </div>
-                  <div class="col-md-6 mt-5">
-                    <h4 class="mb-0 text-center text-uppercase">Shipping Address</h4>
-                  </div>
-                </div>
-                <div class="row mt-2 m-0 p-0 mb-2">
-                  <div class="col-md-9"> </div>
-                  <div class="col-md-3 text-right  m-0 p-0">
-                    <input type="checkbox" onclick="addressSame()" id="csokay" name="csokay">
-                    <label for="csokay" style="color: #909091;">Same As Billing Address</label>
-                  </div>
-                </div>
-
-                <div class="row mt-5">
-                  <div class="col-md-1">
-                    <label for="cstreet1">Address 1</label>
-                  </div>
-                  <div class="col-md-4">
-                    <textarea class="form-control street text-dark bg-light" id="cstreet1" name="cstreet1"></textarea>
-                  </div>
-                  <div class="col-md-1"></div>
-
-                  <div class="col-md-1">
-                    <label for="csstreet1">Address 1</label>
-                  </div>
-                  <div class="col-md-4 ">
-                    <textarea class="form-control street text-dark bg-light" id="csstreet1" name="csstreet1"></textarea>
-                  </div>
-                  <div class="col-md-1"></div>
-
-                </div>
-                <div class="row mt-5">
-                  <div class="col-md-1">
-                    <label for="cstreet2">Address 2</label>
-                  </div>
-                  <div class="col-md-4">
-                    <textarea class="form-control street text-dark bg-light" id="cstreet2" name="cstreet2"></textarea>
-                  </div>
-                  <div class="col-md-1"></div>
-
-                  <div class="col-md-1">
-                    <label for="csstreet2">Address 2</label>
-                  </div>
-                  <div class="col-md-4 ">
-                    <textarea class="form-control street text-dark bg-light" id="csstreet2" name="csstreet2"></textarea>
-                  </div>
-                  <div class="col-md-1"></div>
-
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-1">
-                    <label for="ccity">City</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="ccity" name="ccity" placeholder="City">  
-                  </div>
-                  <div class="col-md-1">
-                  </div>
-                  <div class="col-md-1">
-                    <label for="cscity">City</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="cscity" name="cscity" placeholder="City">  
-                  </div>
-                  <div class="col-md-1">
-                  </div>
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-1">
-                    <label for="cstate">State</label>
-                  </div>
-                  <div class="col-md-4">
-                    <select type="text" class="form-control text-dark bg-light" id="cstate" name="cstate">
-                      <option value="" selected>Choose</option>
-                      <option value="None Of This">None Of This</option>
-                      <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads</option>
-                      <option value="Andhra Predhesh">Andhra Predhesh</option>
-                      <option value="Arunachal Predesh">Arunachal Predesh</option>
-                      <option value="Assam">Assam</option>
-                      <option value="Bihar">Bihar</option>
-                      <option value="Chandigarh">Chandigarh</option>
-                      <option value="Chhattisgarh">Chhattisgarh</option>
-                      <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
-                      <option value="Damn anad Diu">Damn anad Diu</option>
-                      <option value="Delhi">Delhi</option>
-                      <option value="Goa">Goa</option>
-                      <option value="Gujarat">Gujarat</option>
-                      <option value="Haryana">Haryana</option>
-                      <option value="Himachal Predesh">Himachal Predesh</option>
-                      <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                      <option value="Jharkhand">Jharkhand</option>
-                      <option value="Karnataka">Karnataka</option>
-                      <option value="Kerala">Kerala</option>
-                      <option value="Ladakh">Ladakh</option>
-                      <option value="Lakshadweep">Lakshadweep</option>
-                      <option value="Madhya Predesh">Madhya Predesh</option>
-                      <option value="Maharashtra">Maharashtra</option>
-                      <option value="Manipur">Manipur</option>
-                      <option value="Meghalaya">Meghalaya</option>
-                      <option value="Mizoram">Mizoram</option>
-                      <option value="Nagaland">Nagaland</option>
-                      <option value="Odisha">Odisha</option>
-                      <option value="Puducherry">Puducherry</option>
-                      <option value="Punjab">Punjab</option>
-                      <option value="Rajasthan">Rajasthan</option>
-                      <option value="Sikkim">Sikkim</option>
-                      <option value="Tamil Nadu">Tamil Nadu</option>
-                      <option value="Telangana">Telangana</option>
-                      <option value="Tripura">Tripura</option>
-                      <option value="Uttar Predesh">Uttar Predesh</option>
-                      <option value="Uttarakhand">Uttarakhand</option>
-                      <option value="West Bengal">West Bengal</option>
-                      <option value="Other Territory">Other Territory</option>
-                    </select>
-                  </div>
-                  <div class="col-md-1"></div>
   
-                  <div class="col-md-1">
-                    <label for="csstate">State</label>
-                  </div>
-                  <div class="col-md-4 ">
-                    <select type="text" class="form-control text-dark bg-light" id="csstate" name="csstate">
-                      <option value="" selected>Choose</option>
-                      <option value="None Of This">None Of This</option>
-                      <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
-                      </option>
-                      <option value="Andhra Predhesh">Andhra Predhesh</option>
-                      <option value="Arunachal Predesh">Arunachal Predesh</option>
-                      <option value="Assam">Assam</option>
-                      <option value="Bihar">Bihar</option>
-                      <option value="Chandigarh">Chandigarh</option>
-                      <option value="Chhattisgarh">Chhattisgarh</option>
-                      <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
-                      <option value="Damn anad Diu">Damn anad Diu</option>
-                      <option value="Delhi">Delhi</option>
-                      <option value="Goa">Goa</option>
-                      <option value="Gujarat">Gujarat</option>
-                      <option value="Haryana">Haryana</option>
-                      <option value="Himachal Predesh">Himachal Predesh</option>
-                      <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                      <option value="Jharkhand">Jharkhand</option>
-                      <option value="Karnataka">Karnataka</option>
-                      <option value="Kerala">Kerala</option>
-                      <option value="Ladakh">Ladakh</option>
-                      <option value="Lakshadweep">Lakshadweep</option>
-                      <option value="Madhya Predesh">Madhya Predesh</option>
-                      <option value="Maharashtra">Maharashtra</option>
-                      <option value="Manipur">Manipur</option>
-                      <option value="Meghalaya">Meghalaya</option>
-                      <option value="Mizoram">Mizoram</option>
-                      <option value="Nagaland">Nagaland</option>
-                      <option value="Odisha">Odisha</option>
-                      <option value="Puducherry">Puducherry</option>
-                      <option value="Punjab">Punjab</option>
-                      <option value="Rajasthan">Rajasthan</option>
-                      <option value="Sikkim">Sikkim</option>
-                      <option value="Tamil Nadu">Tamil Nadu</option>
-                      <option value="Telangana">Telangana</option>
-                      <option value="Tripura">Tripura</option>
-                      <option value="Uttar Predesh">Uttar Predesh</option>
-                      <option value="Uttarakhand">Uttarakhand</option>
-                      <option value="West Bengal">West Bengal</option>
-                      <option value="Other Territory">Other Territory</option>
-                    </select>
-                  </div>
-
-                  <div class="col-md-1"></div>
-
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-1">
-                    <label for="ccountry">Country</label>
-                  </div>
-                  <div class="col-md-4 ">
-                    <input type="text" class="form-control text-dark bg-light" id="ccountry" name="ccountry" placeholder="Country">  
-                  </div>
-                  <div class="col-md-1"></div>
-
-                  <div class="col-md-1">
-                    <label for="cscountry">Country</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="cscountry"  name="cscountry" placeholder="Country">
-                  </div>
-                  <div class="col-md-1 "></div>
-
-                </div>
-
-                <div class="row mt-2">
-
-                  <div class="col-md-1">
-                    <label for="cpincode">Pincode</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="cpincode" name="cpincode" maxlength="6" placeholder="PIN Code"> 
-                  </div>
-                  <div class="col-md-1"></div>
-
-                  <div class="col-md-1">
-                    <label for="cspincode">Pincode</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="cspincode" name="cspincode" maxlength="6" placeholder="PIN Code">  
-                  </div>
-                  <div class="col-md-1"></div>
-
-                </div>
-
-                <div class="row mt-2">
-
-                  <div class="col-md-1">
-                    <label for="cphone">Phone</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="cphone" name="cphone" placeholder="Phone"> 
-                  </div>
-                  <div class="col-md-1"></div>
-
-                  <div class="col-md-1">
-                    <label for="csphone">Phone</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="csphone" name="csphone" placeholder="Phone">  
-                  </div>
-                  <div class="col-md-1"></div>
-
-                </div>
-
-                <div class="row mt-2">
-
-                  <div class="col-md-1">
-                    <label for="cfax">Fax</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="cfax" name="cfax" placeholder="FAX"> 
-                  </div>
-                  <div class="col-md-1"></div>
-
-                  <div class="col-md-1">
-                    <label for="csfax">Fax</label>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="csfax" name="csfax" placeholder="FAX">  
-                  </div>
-                  <div class="col-md-1"></div>
-
-                </div>
-
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                      <input type="checkbox" value="" id="invalidCheck" name="invalidCheck" required>
-                      <label for="invalidCheck" style="color: #909091;">Agree to terms and conditions</label>
-                      <div class="invalid-feedback text-warning" >You must agree before submitting.</div>
-                    </div>
-                </div>
-                <div class="row mt-5">
-                  <div class="col-md-4"></div>
-                  <div class="col-md-4">
-                    <div class="d-flex">
-                      <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
-                      type="submit" data-dismiss="modal" id="customerSave">Submit
-                      </button> 
-
-                      <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
-                        data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">Cancel</span>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="col-md-4"></div>
-                </div>
-              </form>
-                  </div>
-              </div>
-          </div>
-      </div>  
-    </div>  
-
     <!-- item modal -->
 
     <div class="modal fade" id="newitem">
       <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
           <div class="modal-header " style="background: rgb(32, 35, 37);">
-              <h3 class="m-3 text-uppercase">New Item</h3>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
+            <h3 class="m-3 text-uppercase">New Item</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           <div class="modal-body" style="background: rgb(32, 35, 37);">
             <div class="card p-3 m-3">
               <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalItem">
-
                 <div class="row mt-2">
                   <div class="col-md-4 mr-0">
                     <label class="col-form-label col-sm-2 p-0">Type <i class="fa fa-question-circle"></i></label>
@@ -1709,7 +1134,7 @@
                   </div>
                   <div class="col-md-3">
                     <select name="inter" class="form-control text-dark bg-light" id="inter">
-                      <option value="">Select GST</option>
+                      <option value="">Select IGST</option>
 
                       <option value="IGST0[0%]">IGST0[0%]</option>
                       <option value="IGST5[5%]">IGST5[5%]</option>
@@ -1824,12 +1249,12 @@
                       <div class="invalid-feedback text-warning" >You must agree before submitting.</div>
                     </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-4"></div>
-                  <div class="col-md-4">
+                <div class="row ">
+                  <div class="col-md-5"></div>
+                  <div class="col-md-3">
                     <div class="d-flex">
                       <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
-                      type="submit" data-dismiss="modal" id="itemSave">Submit
+                          type="submit" data-dismiss="modal" id="itemSave">Submit
                       </button> 
 
                       <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
@@ -1841,8 +1266,8 @@
                   <div class="col-md-4"></div>
                 </div>
               </form>
-                  </div>
-              </div>
+            </div>
+          </div>
           </div>
       </div>  
     </div>  
@@ -1899,63 +1324,7 @@
     </div>  
 
 
-    <!-- account modal -->
 
-    <div class="modal fade" id="newaccount">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-          <div class="modal-header " style="background: rgb(32, 35, 37);">
-              <h3 class="m-3 text-uppercase">New Account</h3>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body" style="background: rgb(32, 35, 37);">
-            <div class="card p-3 m-3">
-              <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalAccount">
-        
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="">Account Type</label><br>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="acct_type" name="acct_type" required>
-                  </div>
-                </div>
-                
-                <div class="row mt-2">
-                  <div class="col-md-3 mt-2">
-                    <label for="cfname">Account name</label>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark bg-light" id="acct_name" name="acct_name" required>
-                  </div>
-                </div>            
-
-                <div class="row mt-5">
-                  <div class="col-md-4"></div>
-                  <div class="col-md-4">
-                    <div class="d-flex">
-                      <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
-                      type="submit" data-dismiss="modal" id="accountSave">Submit
-                      </button> 
-
-                      <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
-                        data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">Cancel</span>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="col-md-4"></div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>  
-    </div>  
-
-    <!-- end of modal -->
 
 
 
@@ -1967,6 +1336,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
+
 document.getElementById("cancelButton").addEventListener("click", function() {
   document.getElementById("myForm").reset(); 
   location.reload(); 
@@ -2001,42 +1371,16 @@ document.getElementById("cancelButton").addEventListener("click", function() {
       });
   });
 
-  $(document).ready(function() {
 
-        var name = $("#vendor").val();
-        var na = name.split(' ')[0];
-        $.ajax({
-
-            url: "{% url 'vendor_credit_vendor' %}", 
-
-            data: { 
-                    // fname : na[0],
-                    // lname : na[1],
-                    id :na,
-                    csrfmiddlewaretoken: '{{ csrf_token }}' 
-                },
-
-            type : 'POST',
-
-            success: function(data) {
-
-                $('#email_inp').val(" " +data.vendor_email);
-                $('#gstin_inp').val(" " +data.gst_number);
-                $('#gst_trt_inp').val(" "+data.gst_treatment);
-
-            }
-        });
-
-});
   
 $(document).ready(function() {
     $('#vendor').change(function() {
-      var name = $("#vendor").val();
+        var name = $("#vendor").val();
         var na = name.split(' ')[0];
         // console.log(name);
         $.ajax({
 
-            url: "{% url 'vendor_credit_vendor' %}", 
+            url: "{% url 'get_vendor_credit_det' %}", 
 
             data: { 
                     // fname : na[0],
@@ -2048,90 +1392,32 @@ $(document).ready(function() {
             type : 'POST',
 
             success: function(data) {
-                // $("#email_row").removeClass('d-none');
-                // $("#email_row").addClass('d-flex');
-                // $("#gstin_row").removeClass('d-none');
-                // $("#gstin_row").addClass('d-flex');
-                // $("#gst_trt_row").removeClass('d-none');
-                // $("#gst_trt_row").addClass('d-flex');
+                $("#email_row").removeClass('d-none');
+                $("#email_row").addClass('d-flex');
+                $("#gstin_row").removeClass('d-none');
+                $("#gstin_row").addClass('d-flex');
+                $("#gst_trt_row").removeClass('d-none');
+                $("#gst_trt_row").addClass('d-flex');
 
                 $('#email_inp').val(" " +data.vendor_email);
                 $('#gstin_inp').val(" " +data.gst_number);
                 $('#gst_trt_inp').val(" "+data.gst_treatment);
+                $('#vstreet').val(" "+data.vstreet);
 
             }
         });
     
     });
 });
-
-$(document).ready(function() {
-
-        var name = $("#customer").val();
-        var na = name.split(' ')[0];
-        $.ajax({
-
-            url: "{% url 'get_customerdet' %}", 
-
-            data: { 
-                    // name : na[1]+ " " + na[2] + " "+ na[3],
-                    id : na,
-                    csrfmiddlewaretoken: '{{ csrf_token }}' 
-                },
-
-            type : 'POST',
-
-            success: function(data) {
-              console.log('na');
-              // $("#cemail_row").removeClass('d-none');
-              // $("#cemail_row").addClass('d-flex');
-              
-              // $("#cgst_trt_row").removeClass('d-none');
-              // $("#cgst_trt_row").addClass('d-flex');
-              $('#cemail_inp').val(' '+ data.customer_email);
-              $('#cgst_trt_inp').val(' ' +data.gst_treatment);
-
-              if( data.gst_treatment == 'Registered Business-Regular Business that is registered under GST'){
-                // $("#cgstin_row").removeClass('d-none');
-                // $("#cgstin_row").addClass('d-flex');
-                $('#cgstin_inp').val(' '+ data.gstin);
-
-              }
-              else if( data.gst_treatment == 'Registered Business-Composition Business that is registered under the Composition scheme in GST'){
-                // $("#cgstin_row").removeClass('d-none');
-                // $("#cgstin_row").addClass('d-flex');
-                $('#cgstin_inp').val(' '+ data.gstin);
-              }
-              else if( data.gst_treatment == 'Overseas- Persons with who you do import or exports of supplies outside india'){
-                // $("#cgstin_row").removeClass('d-none');
-                // $("#cgstin_row").addClass('d-flex');
-                $('#cgstin_inp').val(' '+ data.gstin);
-              }
-              
-              else{
-                $("#cgstin_row").addClass('d-none');
-              }
-
-                // gst or igst in tax
-
-              $("#cust_state").val(data.state);
-              
-            }
-            
-        });
-
-});
-
 
 $(document).ready(function() {
     $('#customer').change(function() {
 
         var name = $("#customer").val();
         var na = name.split(' ')[0];
-        console.log(na);
         $.ajax({
 
-            url: "{% url 'get_customerdet' %}", 
+            url: "", 
 
             data: { 
                     // name : na[1]+ " " + na[2] + " "+ na[3],
@@ -2143,28 +1429,28 @@ $(document).ready(function() {
 
             success: function(data) {
 
-              // $("#cemail_row").removeClass('d-none');
-              // $("#cemail_row").addClass('d-flex');
+              $("#cemail_row").removeClass('d-none');
+              $("#cemail_row").addClass('d-flex');
               
-              // $("#cgst_trt_row").removeClass('d-none');
-              // $("#cgst_trt_row").addClass('d-flex');
+              $("#cgst_trt_row").removeClass('d-none');
+              $("#cgst_trt_row").addClass('d-flex');
               $('#cemail_inp').val(' '+ data.customer_email);
               $('#cgst_trt_inp').val(' ' +data.gst_treatment);
 
               if( data.gst_treatment == 'Registered Business-Regular Business that is registered under GST'){
-                // $("#cgstin_row").removeClass('d-none');
-                // $("#cgstin_row").addClass('d-flex');
+                $("#cgstin_row").removeClass('d-none');
+                $("#cgstin_row").addClass('d-flex');
                 $('#cgstin_inp').val(' '+ data.gstin);
 
               }
               else if( data.gst_treatment == 'Registered Business-Composition Business that is registered under the Composition scheme in GST'){
-                // $("#cgstin_row").removeClass('d-none');
-                // $("#cgstin_row").addClass('d-flex');
+                $("#cgstin_row").removeClass('d-none');
+                $("#cgstin_row").addClass('d-flex');
                 $('#cgstin_inp').val(' '+ data.gstin);
               }
               else if( data.gst_treatment == 'Overseas- Persons with who you do import or exports of supplies outside india'){
-                // $("#cgstin_row").removeClass('d-none');
-                // $("#cgstin_row").addClass('d-flex');
+                $("#cgstin_row").removeClass('d-none');
+                $("#cgstin_row").addClass('d-flex');
                 $('#cgstin_inp').val(' '+ data.gstin);
               }
               
@@ -2177,14 +1463,10 @@ $(document).ready(function() {
               $("#cust_state").val(data.state);
               
             }
-            
+           
         });
-    
     });
 });
-
-
-
 
   $(document).ready(function(){
 
@@ -2195,7 +1477,7 @@ $(document).ready(function() {
 
       $('#items-table-body').append(
         
-        `<tr id='addr${roinc}' class = 'addr'>
+        `<tr id='addr${roinc}' class = 'addr '>
           <td style="width: 20%;">
             <div class="d-flex">
               <select name='item[]' id="item${roinc}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
@@ -2206,12 +1488,11 @@ $(document).ready(function() {
               </select>
             </div>  
           </td>
-    
-
-          <td style="width: 10%;">
-            <input type="text" name='hsn[]' placeholder='Hsn' id="hsn${roinc}" value=" {{ri.hsn}} "  class="form-control hsn text-dark bg-light" step=0 min=0/>
-          </td>
-
+          
+        <td  style="width: 20%;">
+            <input type='text' name='hsn[]' placeholder='Hsn' id='hsn1${roinc}' class='form-control border-0 text-black text-right hsn bg-white'  value=''  > 
+        </td>
+          
           <td style="width: 10%;">
             <input type="number" name='qty[]'  placeholder='Qty' id="qty${roinc}"  class="form-control qty text-dark bg-light" step=0 min=0/>
           </td>
@@ -2221,7 +1502,7 @@ $(document).ready(function() {
           <td style="width: 15%;">
             <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
             <input type="text" placeholder="Select TAX" class="form-control selecttax text-dark bg-light" id="selecttax${roinc}">
-            <select name="tax[]" id="intra_tax${roinc}" class="form-control tax1 d-none mb-2 text-dark bg-light">
+            <select name="tax1[]" id="intra_tax${roinc}" class="form-control tax1 d-none mb-2 text-dark bg-light">
                 <option id="ta1" value=0 text=" ">Choose GST</option>
                 <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
                 <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
@@ -2231,7 +1512,7 @@ $(document).ready(function() {
                 <option value=0 text={{ cmp1.state }}>0.0% GST(0%)</option>
             </select>
 
-            <select name="tax[]" id="inter_tax${roinc}" class="form-control tax2 d-none mb-2 text-dark bg-light">
+            <select name="tax2[]" id="inter_tax${roinc}" class="form-control tax2 d-none mb-2 text-dark bg-light">
               <option id="ta5" value=0 text=" " >Choose IGST</option>
               <option value=28 text=" ">28.0% IGST(28%)</option>
               <option value=18 text=" ">18.0% IGST(18%)</option>
@@ -2355,7 +1636,7 @@ $(document).ready(function() {
       var newId = idPrefix + roinc ;
       newRow.find('.tax1').eq(index).val(value7).attr('id' , newId);
     });
-
+    
     inter.each(function(index){
       var value8 = $(this).val();
       var idPrefix = 'inter_tax';
@@ -2387,12 +1668,9 @@ $(document).ready(function() {
       amount_t += parseFloat($("#amount"+i).val());
 
       $("#subtotal").val(amount_t);
-      // console.log($("#amount"+i).val())
       
       var tax1 = $("#intra_tax" +i).val();
       var tax2 = $("#inter_tax" +i).val();
-      // console.log(tax1)
-      // console.log(tax2)
       if (tax1 == 0){
         if(tax2 == 0){
           tax = 0;
@@ -2402,7 +1680,6 @@ $(document).ready(function() {
           tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100) ;
           
           tax_tot += tax;
-          // console.log(tax_tot);
           $("#igst").val(tax_tot);
         }
       }
@@ -2420,100 +1697,100 @@ $(document).ready(function() {
         $("#grandtotal").val(amount_t+tax_tot)
       }
     }
-});
+  });
+  
+  $(document).on('click','.remove_row',function(){
+    
+    var row_id = $(this).attr("id");
+    $('#addr'+row_id+'').remove();
 
-$(document).on('click','.remove_row',function(){
+    $('tr[id^="addr"]').each(function(index) {
+        var new_row_id = 'addr' + (index);
+        $(this).attr('id', new_row_id);
 
-  var row_id = $(this).attr("id");
-  $('#addr'+row_id+'').remove();
+        $(this).find('select[id^="item"]').each(function(tdIndex) {
+          var new_td_id = 'item' + (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('select[id^="account"]').each(function(tdIndex) {
+          var new_td_id = 'account' + (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('input[id^="qty"]').each(function(tdIndex) {
+          var new_td_id = 'qty' + (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('input[id^="rate"]').each(function(tdIndex) {
+          var new_td_id = 'rate' + (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('input[id^="disc"]').each(function(tdIndex) {
+          var new_td_id = 'disc' + (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('input[id^="amount"]').each(function(tdIndex) {
+          var new_td_id = 'amount' + (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('select[id^="intra_tax"]').each(function(tdIndex) {
+          var new_td_id = 'intra_tax' + (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('select[id^="inter_tax"]').each(function(tdIndex) {
+          var new_td_id = 'inter_tax' + (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('button').each(function(tdIndex) {
+          var new_td_id = (index * 1 + tdIndex);
+          $(this).attr('id', new_td_id);
+        });
+        $(this).find('button[class="remove_row"]').each(function(tdIndex) {
+          var new_td_id1 = ((index * 1) + tdIndex);
+          $(this).attr('id', new_td_id1);
+        });
+        var row_c = $("#items-table-body tr").length;
+        var amount_t = 0;
+        var tax = 0;
+        var tax_tot = 0;
+        var ship = parseFloat( $("#addcharge").val());
+        for(var i=0; i<row_c;i++){
+          amount_t += parseFloat($("#amount"+i).val());
 
-  $('tr[id^="addr"]').each(function(index) {
-      var new_row_id = 'addr' + (index);
-      $(this).attr('id', new_row_id);
+          $("#subtotal").val(amount_t);
 
-      $(this).find('select[id^="item"]').each(function(tdIndex) {
-        var new_td_id = 'item' + (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('select[id^="account"]').each(function(tdIndex) {
-        var new_td_id = 'account' + (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('input[id^="qty"]').each(function(tdIndex) {
-        var new_td_id = 'qty' + (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('input[id^="rate"]').each(function(tdIndex) {
-        var new_td_id = 'rate' + (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('input[id^="disc"]').each(function(tdIndex) {
-        var new_td_id = 'disc' + (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('input[id^="amount"]').each(function(tdIndex) {
-        var new_td_id = 'amount' + (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('select[id^="intra_tax"]').each(function(tdIndex) {
-        var new_td_id = 'intra_tax' + (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('select[id^="inter_tax"]').each(function(tdIndex) {
-        var new_td_id = 'inter_tax' + (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('button').each(function(tdIndex) {
-        var new_td_id = (index * 1 + tdIndex);
-        $(this).attr('id', new_td_id);
-      });
-      $(this).find('button[class="remove_row"]').each(function(tdIndex) {
-        var new_td_id1 = ((index * 1) + tdIndex);
-        $(this).attr('id', new_td_id1);
-      });
-      var row_c = $("#items-table-body tr").length;
-      var amount_t = 0;
-      var tax = 0;
-      var tax_tot = 0;
-      var ship = parseFloat( $("#addcharge").val());
-      for(var i=0; i<row_c;i++){
-        amount_t += parseFloat($("#amount"+i).val());
+          var tax1 = $("#intra_tax" +i).val();
+          var tax2 = $("#inter_tax" +i).val();
 
-        $("#subtotal").val(amount_t);
-
-        var tax1 = $("#intra_tax" +i).val();
-        var tax2 = $("#inter_tax" +i).val();
-
-        if (tax1 == 0){
-          if(tax2 == 0){
-            tax = 0;
-            tax_tot += tax;
+          if (tax1 == 0){
+            if(tax2 == 0){
+              tax = 0;
+              tax_tot += tax;
+            }
+            else{
+              tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100);
+              
+              tax_tot += tax;
+              // console.log(tax_tot);
+              $("#igst").val(tax_tot);
+            }
           }
           else{
-            tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100);
-            
+
+            tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100) ;
             tax_tot += tax;
-            // console.log(tax_tot);
-            $("#igst").val(tax_tot);
+            $("#sgst").val(tax_tot/2);
+            $("#cgst").val(tax_tot/2);
+          }
+          if(ship){
+            $("#grandtotal").val(amount_t+tax_tot+ship)
+          }
+          else{
+            $("#grandtotal").val(amount_t+tax_tot)
           }
         }
-        else{
+    });
 
-          tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100) ;
-          tax_tot += tax;
-          $("#sgst").val(tax_tot/2);
-          $("#cgst").val(tax_tot/2);
-        }
-        if(ship){
-          $("#grandtotal").val(amount_t+tax_tot+ship)
-        }
-        else{
-          $("#grandtotal").val(amount_t+tax_tot)
-        }
-      }
   });
-
-});
 
   $(document).ready(function() {
     $("#fname, #lname").change(function() {
@@ -2586,6 +1863,7 @@ $(document).on('click','.remove_row',function(){
   function addressSame(){
     var chkbtn1 = document.getElementById('vokay');
     var chkbtn2 = document.getElementById('csokay');
+
     if (chkbtn1.checked == true) {
       document.getElementById('vsstreet').value = document.getElementById('vstreet').value;
       document.getElementById('vscity').value = document.getElementById('vcity').value;
@@ -2615,8 +1893,8 @@ $(document).on('click','.remove_row',function(){
       document.getElementById('csfax').value = document.getElementById('cfax').value;
     } 
     else {
-      document.getElementById('csstreet1').value = '';    
       document.getElementById('csstreet1').value = '';
+      document.getElementById('csstreet2').value = '';
       document.getElementById('cscity').value = '';
       document.getElementById('csstate').value = '';
       document.getElementById('cspincode').value = '';
@@ -2693,7 +1971,7 @@ function reloadVendor() {
       var dropdown = $('#vendor');
       dropdown.empty();
       $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value[0]+" " +value[1] + ' ' + value[2]).val(value[3] + ' ' +value[1] + ' ' + value[2]+ ' ' +value[3]));
+        dropdown.append($('<option></option>').attr('value', key).text(value[0]+" " +value[1] + ' ' + value[2]).val(value[3]+' '+ value[1] + ' ' + value[2]+ ' ' +value[3]));
       });
     },
     error: function(xhr, status, error) {
@@ -2706,94 +1984,13 @@ function reloadVendor() {
 
 //---------modal customer-----
 
-$(document).on("click","#customerSave",function(){
-
-  if ($('input[name="radioCust"]:checked').val() == 'Business'){
-
-    custType = $('#business').val();
-  }
-  else{
-    custType = $('#individual').val();
-  }
-    
-  if ($('input[name="radioCust1"]:checked').val() == 'Taxable'){
-    cust_tax = $('#custtax1').val();
-  }
-  else{
-      cust_tax = $('#custtax2').val();
-  }
-  $.ajax({
-    
-    type : 'POST',
-    url:"{% url 'recurbills_customer' %}",
-
-    data:{
-        customer_type : custType,
-        display_name : $('#cdisplayname').text(),
-        company_name : $('#ccompany').val(),
-        email : $("#cemail").val(),
-        work_mobile :$("#cw_mobile").val(),
-        pers_mobile :$("#cp_mobile").val(),
-        facebook :$("#facebook").val(),
-        twitter :$("#twitter").val(),
-        website :$("#website").val(),
-        skype :$("#cskype").val(),
-        desg :$("#c_desg").val(),
-        dpt :$("#c_dpt").val(),
-        gsttype :$("#c_gsttype").val(),
-        placeofsupply :$("#placesupply").val(),
-        tax_preference :cust_tax,
-        currency : $("#c_curn").val(),
-        openingbalance : $("#c_open").val(),
-        paymentterms : $("#c_terms").val(),
-        street1 : $("#cstreet1").val(),
-        street2 : $("#cstreet2").val(),
-        city : $("#ccity").val(),
-        state : $("#cstate").val(),
-        pincode : $("#cpincode").val(),
-        fax : $("#cfax").val(),
-        phone : $("#cphone").val(),
-        country : $("ccountry").val(),
-        csrfmiddlewaretoken: '{{ csrf_token }}'
-        
-      },
-    
-      success: function(response) {
-        document.getElementById("modalCustomer").reset();
-        reloadCustomer();
-      },
-  });        
-});
-
-function reloadCustomer() {
-
-  $.ajax({
-    url: "{% url 'customer_dropdown' %}",
-    type: "GET",
-    dataType: "json",
-    data: $(this).serialize(),
-    csrfmiddlewaretoken: '{{ csrf_token }}',
-
-    success: function(data) {
-      var dropdown = $('#customer');
-      dropdown.empty();
-      $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value[1]).val(value[0] + ' ' + value[1]));
-      });
-    },
-    error: function(xhr, status, error) {
-    console.error(xhr.responseText);
-    }
-  });
-}
-
 //--------payment terms modal-----------
 
 $(document).on("click","#paySave",function(){
   $.ajax({
     
     type : 'POST',
-    url:"{% url 'recurbills_pay' %}",
+    url:"",
 
     data:{
         name : $("#term_name").val(),
@@ -2813,7 +2010,7 @@ $(document).on("click","#paySave",function(){
 function reloadPayment() {
 
   $.ajax({
-    url: "{% url 'pay_dropdown' %}",
+    url: "",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -2857,7 +2054,7 @@ $(document).on("click","#unitSave",function(){
   $.ajax({
     
     type : 'POST',
-    url:"{% url 'recurbills_unit' %}",
+    url:"",
 
     data:{
         unit : $("#unit").val(),
@@ -2877,7 +2074,7 @@ $(document).on("click","#unitSave",function(){
 function reloadUnit() {
 
   $.ajax({
-    url: "{% url 'unit_dropdown' %}",
+    url: "",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -2989,34 +2186,12 @@ function reloadItem() {
   });
 }
 
-// account modal
 
-$(document).on("click","#accountSave",function(){
-  
-  $.ajax({
-    
-    type : 'POST',
-    url:"{% url 'recurbills_account' %}",
-    
-    data:{
-        actype : $("#acct_type").val(),
-        acname : $("#acct_name").val(),
-     
-        csrfmiddlewaretoken: '{{ csrf_token }}'
-        
-      },
-    
-      success: function(response) {
-        document.getElementById("modalAccount").reset();
-        reloadAccount();
-      },
-  });        
-});
 
 
 function reloadAccount() {
   $.ajax({
-    url: "{% url 'account_dropdown' %}",
+    url: "",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -3156,6 +2331,9 @@ function reloadAccount() {
 }
 
 
+
+
+
 $(document).ready(function() {
   $("#item0").change(function() {
     $.ajax({
@@ -3198,231 +2376,196 @@ $(document).ready(function() {
 
   $(document).on('change', '#srcofsupply',function(){
 
-  $(".selecttax").removeClass('d-none');
-  $(".selecttax").addClass('d-flex');
-  var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
-  console.log(st)
-  if( st == $("#company_state").val())
-  {
-    $(".tax2").removeClass('d-flex');
-    $(".tax2").addClass('d-none');
-    $(".tax1").removeClass('d-flex');
-    $(".tax1").addClass('d-none');
+      $(".selecttax").removeClass('d-none');
+      $(".selecttax").addClass('d-flex');
+      var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
+      // console.log(st)
+      if( st == $("#company_state").val())
+      {
+        $(".tax2").removeClass('d-flex');
+        $(".tax2").addClass('d-none');
+        $(".tax1").removeClass('d-flex');
+        $(".tax1").addClass('d-none');
 
-    $("#cgst1").removeClass('d-none');
-    $("#cgst1").addClass('d-flex');
-    $("#sgst1").removeClass('d-none');
-    $("#sgst1").addClass('d-flex');
+        $("#cgst1").removeClass('d-none');
+        $("#cgst1").addClass('d-flex');
+        $("#sgst1").removeClass('d-none');
+        $("#sgst1").addClass('d-flex');
 
-    $("#igst1").removeClass('d-flex');
-    $("#igst1").addClass('d-none');
+        $("#igst1").removeClass('d-flex');
+        $("#igst1").addClass('d-none');
 
-  }
-  else{
-    $(".tax1").removeClass('d-flex');
-    $(".tax1").addClass('d-none');
-    $(".tax2").removeClass('d-flex');
-    $(".tax2").addClass('d-none');
+      }
+      else{
+        $(".tax1").removeClass('d-flex');
+        $(".tax1").addClass('d-none');
+        $(".tax2").removeClass('d-flex');
+        $(".tax2").addClass('d-none');
 
-    $("#igst1").removeClass('d-none');
-    $("#igst1").addClass('d-flex');
+        $("#igst1").removeClass('d-none');
+        $("#igst1").addClass('d-flex');
 
-    $("#cgst1").removeClass('d-flex');
-    $("#cgst1").addClass('d-none');
-    $("#sgst1").removeClass('d-flex');
-    $("#sgst1").addClass('d-none');
-  }
-});
-
-$(document).on("click",".selecttax",function(){
-
-  $(".selecttax").removeClass('d-flex');
-  $(".selecttax").addClass('d-none');
-  var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
-
-  if(st == $("#company_state").val()){
-  $(".tax2").addClass('d-none');
-  $(".tax1").removeClass('d-none');
-  $(".tax1").addClass('d-flex');
-
-  }
-  else{
-  $(".tax1").addClass('d-none');
-  $(".tax2").removeClass('d-none');
-  $(".tax2").addClass('d-flex');
-  }
-
-});
-
-
-  $(document).ready(function(){
+        $("#cgst1").removeClass('d-flex');
+        $("#cgst1").addClass('d-none');
+        $("#sgst1").removeClass('d-flex');
+        $("#sgst1").addClass('d-none');
+      }
+    });
+ 
+  $(document).on("click",".selecttax",function(){
 
     $(".selecttax").removeClass('d-flex');
     $(".selecttax").addClass('d-none');
     var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
     console.log(st == $("#company_state").val())
-    if( st == $("#company_state").val())
-    {
-      $(".tax2").removeClass('d-flex');
+    if(st == $("#company_state").val()){
       $(".tax2").addClass('d-none');
       $(".tax1").removeClass('d-none');
       $(".tax1").addClass('d-flex');
 
-      $("#cgst1").removeClass('d-none');
-      $("#cgst1").addClass('d-flex');
-      $("#sgst1").removeClass('d-none');
-      $("#sgst1").addClass('d-flex');
-
-      $("#igst1").removeClass('d-flex');
-      $("#igst1").addClass('d-none');
-
     }
     else{
-      $(".tax1").removeClass('d-flex');
       $(".tax1").addClass('d-none');
       $(".tax2").removeClass('d-none');
       $(".tax2").addClass('d-flex');
-
-      $("#igst1").removeClass('d-none');
-      $("#igst1").addClass('d-flex');
-
-      $("#cgst1").removeClass('d-flex');
-      $("#cgst1").addClass('d-none');
-      $("#sgst1").removeClass('d-flex');
-      $("#sgst1").addClass('d-none');
     }
+
   });
+
+
+
+
     
   $(document).on('change','.qty',function(){
 
-var row_count = $("#items-table-body tr").length;
-var tax_tot = 0
+    var row_count = $("#items-table-body tr").length;
+    var tax_tot = 0
 
-var amount_total = 0;
-var ship = parseFloat($("#addcharge").val());
+    var amount_total = 0;
+    var ship = parseFloat($("#addcharge").val());
 
-for(var i=0; i<row_count;i++){
-  var rate = $("#rate"+i).val();
-  var qnty = $("#qty" +i).val();
-  var amount = rate*qnty;
-  var disc = $("#disc" + i).val();
+    for(var i=0; i<row_count;i++){
+      var rate = $("#rate"+i).val();
+      var qnty = $("#qty" +i).val();
+      var amount = rate*qnty;
+      var disc = $("#disc" + i).val();
 
-  var tax1 = $("#intra_tax" +i).val();
-  var tax2 = $("#inter_tax" +i).val();
+      var tax1 = $("#intra_tax" +i).val();
+      var tax2 = $("#inter_tax" +i).val();
 
-  if (tax1 == 0){
-    if(tax2 == 0){
-      if (disc){
-        amount_disc =  amount - disc;
-        $("#amount" + i).val(amount_disc);
-         
+      if (tax1 == 0){
+        if(tax2 == 0){
+          if (disc){
+            amount_disc =  amount - disc;
+            $("#amount" + i).val(amount_disc);
+             
+          }
+
+          else{
+            $("#amount" +i).val(amount);
+           }
+          tax = 0;
+          tax_tot += tax;
+        }
+        else{
+          if (disc){
+            amount_disc =  amount - disc;
+            $("#amount" + i).val(amount_disc);
+            tax =(amount_disc*(tax2/100));
+          }
+
+          else{
+            $("#amount" +i).val(amount);
+            tax =(amount*(tax2/100));
+           }
+          
+          tax_tot += tax;
+          $("#igst").val(tax_tot);
+        }
+      }
+      else{
+        if (disc){
+            amount_disc =  amount - disc;
+            $("#amount" + i).val(amount_disc);
+            tax =(amount_disc*(tax1/100));
+          }
+
+          else{
+            $("#amount" +i).val(amount);
+            tax =(amount*(tax1/100));
+           }
+        tax = (amount*(tax1/100));
+        tax_tot += tax;
+        $("#sgst").val(tax_tot/2);
+        $("#cgst").val(tax_tot/2);
       }
 
-      else{
-        $("#amount" +i).val(amount);
-       }
-      tax = 0;
-      tax_tot += tax;
-    }
-    else{
-      if (disc){
-        amount_disc =  amount - disc;
-        $("#amount" + i).val(amount_disc);
-        tax =(amount_disc*(tax2/100));
-      }
+      if(ship){
+        // console.log('yea');
+        if (disc){
+          amount_disc =  amount - disc;
+          $("#amount" + i).val(amount_disc);
+          amount_total += amount_disc;
+          $("#subtotal").val(amount_total);
+          
+          $("#grandtotal").val(amount_total+ ship +tax_tot);
+        }
 
+        else{
+          $("#amount" +i).val(amount);
+          amount_total += amount;
+          $("#subtotal").val(amount_total);
+          $("#grandtotal").val(amount_total+ ship +tax_tot);
+        }
+      }
       else{
-        $("#amount" +i).val(amount);
-        tax =(amount*(tax2/100));
-       }
+
+        if (disc){
+          amount_disc =  amount - disc;
+          $("#amount" +i).val(amount_disc);
+          amount_total += amount_disc;
+          $("#subtotal").val(amount_total);
+        
+          $("#grandtotal").val(amount_total+tax_tot);
+        }
+
+        else{
+          $("#amount" +i).val(amount);
+          amount_total += amount;
+          $("#subtotal").val(amount_total);
+          $("#grandtotal").val(amount_total+tax_tot);
+        }
+      }
       
-      tax_tot += tax;
-      $("#igst").val(tax_tot);
-    }
-  }
-  else{
-    if (disc){
-        amount_disc =  amount - disc;
-        $("#amount" + i).val(amount_disc);
-        tax =(amount_disc*(tax1/100));
-      }
-
-      else{
-        $("#amount" +i).val(amount);
-        tax =(amount*(tax1/100));
-       }
-    tax = (amount*(tax1/100));
-    tax_tot += tax;
-    $("#sgst").val(tax_tot/2);
-    $("#cgst").val(tax_tot/2);
-  }
-
-  if(ship){
-    // console.log('yea');
-    if (disc){
-      amount_disc =  amount - disc;
-      $("#amount" + i).val(amount_disc);
-      amount_total += amount_disc;
-      $("#subtotal").val(amount_total);
-      
-      $("#grandtotal").val(amount_total+ ship +tax_tot);
-    }
-
-    else{
-      $("#amount" +i).val(amount);
-      amount_total += amount;
-      $("#subtotal").val(amount_total);
-      $("#grandtotal").val(amount_total+ ship +tax_tot);
-    }
-  }
-  else{
-
-    if (disc){
-      amount_disc =  amount - disc;
-      $("#amount" +i).val(amount_disc);
-      amount_total += amount_disc;
-      $("#subtotal").val(amount_total);
-    
-      $("#grandtotal").val(amount_total+tax_tot);
-    }
-
-    else{
-      $("#amount" +i).val(amount);
-      amount_total += amount;
-      $("#subtotal").val(amount_total);
-      $("#grandtotal").val(amount_total+tax_tot);
-    }
-  }
-  
-}  
-});
+    }  
+  });
 
 
 $(document).on('change','.disc',function(){
 
-var row_count1 = $("#items-table-body tr").length;
-var amount_tot = 0;
-var amount_disc,tax_tot1= 0;
-var i,rate,qnty,amount;
-var ship = parseFloat($("#addcharge").val());
+  var row_count1 = $("#items-table-body tr").length;
+  var amount_tot = 0;
+  var amount_disc,tax_tot1= 0;
+  var i,rate,qnty,amount;
+  var ship = parseFloat($("#addcharge").val());
 
-for(i = 0;i<row_count1 ; i++){
+  for(i = 0;i<row_count1 ; i++){
 
-  rate = $("#rate"+ i).val();
-  qnty = $("#qty" + i).val();
-  amount = rate*qnty;
-  
-  amount_disc =amount - $("#disc" + i).val();
-  $("#amount" + i).val(amount_disc);
+      rate = $("#rate"+ i).val();
+      qnty = $("#qty" + i).val();
+      amount = rate*qnty;
+      
+      amount_disc =amount - $("#disc" + i).val();
+      $("#amount" + i).val(amount_disc);
 
-  amount_tot += amount_disc;
+      amount_tot += amount_disc;
 
-  $("#subtotal").val(amount_tot);
+      $("#subtotal").val(amount_tot);
 
-  var tax1 = $("#intra_tax" +i).val();
-  var tax2 = $("#inter_tax" +i).val();
+      var tax1 = $("#intra_tax" +i).val();
+      var tax2 = $("#inter_tax" +i).val();
 
-  if (tax1 == 0){
+      if (tax1 == 0){
         if(tax2 == 0){
           tax = 0;
           tax_tot1 += tax;
@@ -3439,127 +2582,203 @@ for(i = 0;i<row_count1 ; i++){
           $("#sgst").val(tax_tot1/2);
           $("#cgst").val(tax_tot1/2);
       }
-  // console.log(tax)
-  // console.log(tax_tot1)
+      // console.log(tax)
+      // console.log(tax_tot1)
 
-  if(ship){
-    $("#grandtotal").val(amount_tot+tax_tot1+ship);
-  }
+      if(ship){
+        $("#grandtotal").val(amount_tot+tax_tot1+ship);
+      }
 
-  else{
-     $("#grandtotal").val(amount_tot+tax_tot1);
+      else{
+         $("#grandtotal").val(amount_tot+tax_tot1);
+      }
   }
-}
 
 });
 
 
-$(document).on("change",".tax1",function(){
+  $(document).on("change",".tax1",function(){
 
-var row_count2 = $("#items-table-body tr").length;
-var amount_tot1 = 0;
-var ship = parseFloat($("#addcharge").val());
-var tot_tax,tax_tot3 = 0;
-var i;
+    var row_count2 = $("#items-table-body tr").length;
+    var amount_tot1 = 0;
+    var ship = parseFloat($("#addcharge").val());
+    var tot_tax,tax_tot3 = 0;
+    var i;
 
-for(i = 0;i<row_count2 ; i++){
+    for(i = 0;i<row_count2 ; i++){
 
-  var rate = $("#rate"+i).val();
-  var qnty = $("#qty" +i).val();
-  var amount = rate*qnty;
-  var disc = $("#disc" + i).val();
-  var tax = $("#intra_tax"+i).val();
+      var rate = $("#rate"+i).val();
+      var qnty = $("#qty" +i).val();
+      var amount = rate*qnty;
+      var disc = $("#disc" + i).val();
+      var tax = $("#intra_tax"+i).val();
 
-  if(disc){
-    tot_tax = (amount-disc) * (tax/100);
-  }
-  else{
-    tot_tax = amount * (tax/100);
-  }
+      if(disc){
+        tot_tax = (amount-disc) * (tax/100);
+      }
+      else{
+        tot_tax = amount * (tax/100);
+      }
+      
+      tax_tot3 += tot_tax;
+
+      $("#sgst").val(tax_tot3/2);
+      $("#cgst").val(tax_tot3/2);
+
+
+      if(disc){
+        if(ship){
+          amount_disc = amount - disc;
+          amount_tot1 += amount_disc
+          $("#subtotal").val(amount_tot1);
+          $("#grandtotal").val(amount_tot1+tax_tot3+ship);
+        }
+        else{
+          amount_disc = amount - disc;
+          amount_tot1 += amount_disc
+          $("#subtotal").val(amount_tot1);
+          $("#grandtotal").val(amount_tot1+tax_tot3);
+        }
+        
+      }
+      else{
+        if(ship){
+          amount_tot1 += amount; 
+          $("#subtotal").val(amount_tot1);
+          $("#grandtotal").val(amount_tot1+tax_tot3+ship);
+        }
+        else{
+          amount_tot1 += amount; 
+          $("#subtotal").val(amount_tot1);
+          $("#grandtotal").val(amount_tot1+tax_tot3);
+        }
+      }
+    }
+
+  });
+
+  $(document).on("change",".tax2",function(){
+
+    var row_count2 = $("#items-table-body tr").length;
+    var amount_to = 0;
+    var tax_tot4= 0;
+    var ship = parseFloat($("#addcharge").val());
+    var i;
+
+    for(i = 0;i<row_count2 ; i++){
+      console.log(i);
+      var rate = $("#rate"+i).val();
+      var qnty = $("#qty" +i).val();
+      var amount = rate*qnty;
+      var disc = $("#disc" + i).val();
+      var tax = $("#inter_tax"+i).val();
+      var tot
+
+      if(disc){
+        tot = (amount-disc) * (tax/100);
+      }
+      else{
+        tot = amount * (tax/100);
+      }
+
+      tax_tot4 += tot
+
+      $("#igst").val(tax_tot4);
+
+      if(disc){
+        amount_disc = amount - disc;
+        amount_to += amount_disc;
+
+        $("#subtotal").val(amount_to);
+        $("#grandtotal").val(amount_to+tax_tot4);
+      
+      }
+      else{
+        amount_to += amount;
+        $("#subtotal").val(amount_to);
+        $("#grandtotal").val(amount_to+tax_tot4)
+        
+      }
+   }
+  });
+  $(document).on("click",".selecttax",function(){
+
+    $(".selecttax").removeClass('d-flex');
+    $(".selecttax").addClass('d-none');
+    var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
   
-  tax_tot3 += tot_tax;
-
-  $("#sgst").val(tax_tot3/2);
-  $("#cgst").val(tax_tot3/2);
-
-
-  if(disc){
-    if(ship){
-      amount_disc = amount - disc;
-      amount_tot1 += amount_disc
-      $("#subtotal").val(amount_tot1);
-      $("#grandtotal").val(amount_tot1+tax_tot3+ship);
+    if(st == $("#company_state").val()){
+    $(".tax2").addClass('d-none');
+    $(".tax1").removeClass('d-none');
+    $(".tax1").addClass('d-flex');
+  
     }
     else{
-      amount_disc = amount - disc;
-      amount_tot1 += amount_disc
-      $("#subtotal").val(amount_tot1);
-      $("#grandtotal").val(amount_tot1+tax_tot3);
+    $(".tax1").addClass('d-none');
+    $(".tax2").removeClass('d-none');
+    $(".tax2").addClass('d-flex');
     }
-    
-  }
-  else{
-    if(ship){
-      amount_tot1 += amount; 
-      $("#subtotal").val(amount_tot1);
-      $("#grandtotal").val(amount_tot1+tax_tot3+ship);
-    }
-    else{
-      amount_tot1 += amount; 
-      $("#subtotal").val(amount_tot1);
-      $("#grandtotal").val(amount_tot1+tax_tot3);
-    }
-  }
-}
-
-});
-
-$(document).on("change",".tax2",function(){
-
-var row_count2 = $("#items-table-body tr").length;
-var amount_to = 0;
-var tax_tot4= 0;
-var ship = parseFloat($("#addcharge").val());
-var i;
-
-for(i = 0;i<row_count2 ; i++){
-  console.log(i);
-  var rate = $("#rate"+i).val();
-  var qnty = $("#qty" +i).val();
-  var amount = rate*qnty;
-  var disc = $("#disc" + i).val();
-  var tax = $("#inter_tax"+i).val();
-  var tot
   
-  if(disc){
-    tot = (amount-disc) * (tax/100);
-  }
-  else{
-    tot = amount * (tax/100);
-  }
-
-  tax_tot4 += tot
-
-  $("#igst").val(tax_tot4);
-
-  if(disc){
-    amount_disc = amount - disc;
-    amount_to += amount_disc;
-
-    $("#subtotal").val(amount_to);
-    $("#grandtotal").val(amount_to+tax_tot4);
+  });
   
-  }
-  else{
-    amount_to += amount;
-    $("#subtotal").val(amount_to);
-    $("#grandtotal").val(amount_to+tax_tot4)
-    
-  }
-}
-});
+  
+    $(document).ready(function(){
+  
+      $(".selecttax").removeClass('d-flex');
+      $(".selecttax").addClass('d-none');
+      var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
+      console.log(st == $("#company_state").val())
+      if( st == $("#company_state").val())
+      {
+        $(".tax2").removeClass('d-flex');
+        $(".tax2").addClass('d-none');
+        $(".tax1").removeClass('d-none');
+        $(".tax1").addClass('d-flex');
+  
+        $("#cgst1").removeClass('d-none');
+        $("#cgst1").addClass('d-flex');
+        $("#sgst1").removeClass('d-none');
+        $("#sgst1").addClass('d-flex');
+  
+        $("#igst1").removeClass('d-flex');
+        $("#igst1").addClass('d-none');
+  
+      }
+      else{
+        $(".tax1").removeClass('d-flex');
+        $(".tax1").addClass('d-none');
+        $(".tax2").removeClass('d-none');
+        $(".tax2").addClass('d-flex');
+  
+        $("#igst1").removeClass('d-none');
+        $("#igst1").addClass('d-flex');
+  
+        $("#cgst1").removeClass('d-flex');
+        $("#cgst1").addClass('d-none');
+        $("#sgst1").removeClass('d-flex');
+        $("#sgst1").addClass('d-none');
+      }
+    });
 
 
+    $(document).on("change","#addcharge",function(){
+
+      var sta = $("#srcofsupply").val().slice(4).trim();
+
+      if(sta == $("#company_state").val()){
+        var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
+        $("#grandtotal").val(total);
+      }
+      else if(sta != $("#company_state").val()){
+        var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
+        $("#grandtotal").val(total);
+      }
+      else{
+        var total = parseFloat($("#subtotal").val())+  parseFloat($("#addcharge").val());
+        $("#grandtotal").val(total);
+      }
+
+    });
     $(document).on("change","#addcharge",function(){
 
       if($("#srcofsupply").val() == $("#company_state").val()){
@@ -3595,6 +2814,6 @@ for(i = 0;i<row_count2 ; i++){
     }
 
   });
-  </script>
-  
+</script>
+
 {% endblock %}

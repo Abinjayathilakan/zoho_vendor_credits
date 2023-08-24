@@ -729,13 +729,13 @@ class Vendor_Credits_Bills(models.Model):
     comments = models.CharField(max_length=255,null=True,blank=True)
     
     
+    
 class Vendor_Credits_Bills_items_bills (models.Model):
 
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
     recur_bills = models.ForeignKey(Vendor_Credits_Bills,on_delete=models.CASCADE,null=True,blank=True)
     item = models.CharField(max_length=100,null=True,blank=True)
-    account = models.CharField(max_length=100,null=True,blank=True)
     hsn = models.CharField(max_length=100,null=True,blank=True)
     quantity = models.IntegerField(null=True,blank=True)
     rate=models.FloatField(null=True,blank=True)

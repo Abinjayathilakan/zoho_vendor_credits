@@ -218,44 +218,34 @@
         <div class="card radius-15 mt-5">
             <div class="card-body">
                 <div class="card-title">
-                    <h3 class="mb-0 text-center">Life cycle of a Recurring Bill</h3>
+                    <h3 class="mb-0 text-center">Life cycle of a Vendor Credit</h3>
                     <br>
                     <div class="flowchart">
-                        <div class="flowchart-item text-uppercase" style="width: 200px;">
-                            <i class="fa-sharp fa-solid fa-bag-shopping" style="color: #daa430;"></i> Rountine Purchase
+                        <div class="flowchart-item text-uppercase" style="width: 200px;" class="routine-purchase">
+                            <i class="fa-sharp fa-solid fa-bag-shopping" style="color: #daa430;"></i> PRODUCT<br>RETURNED/CANCELLED
                         </div>
                         <div class="flowchart-connector"></div>
-                        <div class="flowchart-item text-uppercase" style="width: 210px;">
-                            <i class="fa-sharp fa-solid fa-file" style="color: #daa430;"></i> Create Recurring Profile
+                        <div class="flowchart-item text-uppercase" style="width: 210px;" class="create-recurring-profile">
+                            <i class="fa-sharp fa-solid fa-file" style="color: #daa430;"></i> CREDIT NOTE <br>RECEIVED
                         </div>
                         <div class="flowchart-connector"></div>
-                        <div class="flowchart-item text-uppercase" >
-                            <i class="fa-sharp fa-solid fa-receipt" style="color: #daa430;"></i> generated bill
+                        <div class="flowchart-item text-uppercase" class="generated-bill">
+                            <i class="fa-sharp fa-solid fa-receipt" style="color: #daa430;"></i> RECORD <br> VENDOR CREDITS
                         </div>
-                        <div class="flowchart-connector">  </div>
-                        <div class="flowchart-item text-uppercase">
-                            <i class="fa-sharp fa-solid fa-money-check-dollar" style="color: #3ec61c;"></i> record payment
+                        <div class="flowchart-connector"></div>
+                        <div class="flowchart-item text-uppercase" class="record-payment">
+                            <i class="fa-sharp fa-solid fa-money-check-dollar" style="color: #3ec61c;"></i> APPLY TO FUTURE BILLS
                         </div>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-        <div class="card radius-15">
-            <div class="card-body">
-                <div class="card-title recurpoints">
-                    <h3 class="mb-0 text-center">In th Recurring Bills Section,you can:</h3>
-                    <br>
-                    <div >
-                    <ul class='image-bullets'>
-                        <li>Create a recurring profile to automatically generate bills.</li>
-                        <li>View when each bill was generated under the recurring profile.</li>
-                        <li>Create an individual bill within the recurring profile.</li>
-                    </ul>
+                        <div class="flowchart-connector"></div>
+                        <div class="flowchart-item text-uppercase" class="pending">
+                            <i class="fa-sharp fa-solid fa-check-circle" style="color: #16a085;"></i> RECORD REFUND
+                        </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
+        
     
 </div>
 
