@@ -330,6 +330,8 @@ urlpatterns = [
     path('create_vendor_credit',views.create_vendor_credit,name='create_vendor_credit'),
     path('add_vendor_credits',views.add_vendor_credits,name='add_vendor_credits'),
     path('get_vendor_credit_det',views.get_vendor_credit_det,name='get_vendor_credit_det'),
+    path('get_vendor_credit_det1',views.get_vendor_credit_det1,name='get_vendor_credit_det1'),
+    
     path('get_customer_credit_det',views.get_customer_credit_det,name='get_customer_credit_det'),
     path('vendor_credit_vendor',views.vendor_credit_vendor,name='vendor_credit_vendor'),
     path('vendor_credit_dropdown',views.vendor_credit_dropdown,name = 'vendor_credit_dropdown'),

@@ -114,7 +114,7 @@
             <option value=" "  selected disabled>Select Vendor</option>
             <!-- <option value="" class="text-dark bg-light"></option> -->
             {% for v in vendor %}
-            <option value="{{v.id}} {{ v.company_name }}" class="text-dark bg-light"> {{ v.company_name }}</option>
+            <option value=" {{v.id}} "  class="text-dark bg-light"> {{ v.first_name }} {{ v.last_name }}</option>
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
@@ -333,7 +333,7 @@
                   </select>
                 </td>
                 <td style="width: 11%;">
-                  <input type="text" name='discount[]' id="disc0" placeholder='Discount' class="form-control disc text-dark bg-light" step="0.00" min="0"/>
+                  <input type="text" name='discount[]' id="disc0" placeholder='Discount' class="form-control disc text-dark bg-light" value="0.00" step="0.00" min="0"/>
                 </td>
 
                 <td style="width: 11%;">
@@ -424,7 +424,7 @@
             <div class="col-sm-3 mt-2">
             </div>
             <div class="col-sm-4 mt-2">
-              <input type="number" name='add_round_off' step="any" id="add_round_off" placeholder=0 class="form-control text-dark bg-light">
+              <input type="number" name='add_round_off' value="0.00" step="any" id="add_round_off" placeholder=0 class="form-control text-dark bg-light">
             </div>
           </div><hr>
                  
@@ -438,9 +438,19 @@
         </div>   
       </div>
       <div class="row mt-5 mb-3">
-        
+
+        <!-- <div class="" style="margin-bottom: 20rem;">
+          <button type="submit" name="sd" class="btn btn-success text-white " 
+              value="Save As Draft">Save as Draft</button>
+          <button type="submit" name="sd" class="btn btn-warning text-white" 
+              value="Save and Send">Save and Send</button>
+          <input class="btn btn-danger text-white"
+              type="reset" >Cancel</a>
+      </div>
+         -->
         <div class="col-md-4">
           <div class="d-flex">
+            <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey w-50 my-4 mx-2" style="width: 200px; text-align: center ;" value="SAVE AS DRAFT" id="save">
             <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey w-50 my-4 mx-2" style="width: 200px; text-align: center ;" value="SAVE CHANGES" id="save">
             <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4 mt-2 py-2" aria-label="Close" id="cancelButton">CANCEL</button>
           </div>
@@ -1368,7 +1378,9 @@ document.getElementById("cancelButton").addEventListener("click", function() {
 $(document).ready(function() {
     $('#vendor').change(function() {
         var name = $("#vendor").val();
-        var na = name.split(' ')[0];
+        <!-- var na = name.split(' ')[0]; -->
+        var na = name;
+   
         // console.log(name);
         $.ajax({
 

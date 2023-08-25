@@ -198,7 +198,7 @@
                             <tr >
                                 <th><a href="{% url 'view_vendor_credits' r.id %}">{{ r.vendor_date }}</a></th>
                                 <td><a href="{% url 'view_vendor_credits' r.id %}"> {{ r.vendor_email }}</a></td>
-                                <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.vend_name }}</a></td>
+                                <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.company_name }}</a></td>
                                 <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.tax_amount }}</a></td>
                                 <td><a href="{% url 'view_vendor_credits' r.id %}">{{ r.grand_total|floatformat:2 }}</a></td>
                                 <td class="text-right">

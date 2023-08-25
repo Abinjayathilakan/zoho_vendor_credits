@@ -111,11 +111,11 @@
           </div>
           <div class="col-md-6">
             <select name="vendor" id="vendor" class="form-control text-dark bg-light" >
-              <option value="{{recur_bills.vendor_name}}" selected class="text-dark bg-light">{{vend_name}}</option>
+              <option value="{{recur_bills.company_name}}" selected class="text-dark bg-light">{{recur_bills.company_name}}</option>
   
               <div class="dropdown-divider"></div>
               {% for v in vendor %}
-              <option value="{{v.id}} {{ v.company_name }}">{{ v.company_name }} </option>
+              <option value="{{ v.first_name }} {{ v.last_name }}"   class="text-dark bg-light"> {{ v.first_name }} {{ v.last_name }}</option>
               {% endfor %}
             </select>
             <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
@@ -1376,16 +1376,17 @@ document.getElementById("cancelButton").addEventListener("click", function() {
 $(document).ready(function() {
     $('#vendor').change(function() {
         var name = $("#vendor").val();
-        var na = name.split(' ')[0];
+        <!-- var na = name.split(' ')[0]; -->
+        
         // console.log(name);
         $.ajax({
 
-            url: "{% url 'get_vendor_credit_det' %}", 
+            url: "{% url 'get_vendor_credit_det1' %}", 
 
             data: { 
                     // fname : na[0],
                     // lname : na[1],
-                    id :na,
+                    id :name,
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
 

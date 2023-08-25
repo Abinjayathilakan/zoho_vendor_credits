@@ -308,11 +308,12 @@
                             
                             <div class="row mt-3">
                                 <div class="col-md-7">
-                                    <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">
+                                    <!-- <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">
                                         <span style="display: none;">{{ b.company_name.split.0 }}</span>
                                         <span>{{ b.company_name.split.1 }}</span>
                                         <span>{{ b.company_name.split.2 }}</span>
-                                      </label><br>
+                                      </label><br> -->
+                                      <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">{{b.company_name}} </label><br>
                                       
                                       
                                       
@@ -336,11 +337,12 @@
         <div class="card radius-15 " style="border-bottom: 0.5px solid; color: dimgray;">
             <div class="card-body">
                 <div class="card-title">
-                    <h3 class="mb-0" id="prof_name">
+                    <!-- <h3 class="mb-0" id="prof_name">
                         <span style="display: none;">{{ recur_bill.company_name.split.0 }}</span>
                         <span>{{ recur_bill.company_name.split.1 }}</span>
                         <span>{{ recur_bill.company_name.split.2 }}</span>
-                      </h3>
+                      </h3> -->
+                      <h3 class="mb-0" id="prof_name">{{recur_bill.company_name}}</h3>
                       
                 </div>
 
@@ -586,9 +588,8 @@
                                     <h6 class="mb-0 text-grey ">Company Name :</h6>
                                 </div>
                                 <div class="col-md-6 mt-3">
-                                    <p class="mb-0 " style="font-size: 18px; color: #434141;"><span style="display: none;">{{ recur_bill.company_name.split.0 }}</span>
-                                        <span>{{ recur_bill.company_name.split.1 }}</span>
-                                        <span>{{ recur_bill.company_name.split.2 }}</span></p>
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;"><span style="display: none;">{{ recur_bill.company_name}}</span>
+                                       
                                 </div>
                             </div>
 
