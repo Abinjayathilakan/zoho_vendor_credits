@@ -279,21 +279,21 @@
               </tr>
             </thead>
             <tbody id="items-table-body">
-              {% for ri in recur_items %}
-              <tr id='addr{{forloop.counter}}' class="addr">
-                <td style="width: 20%;">
-                  <div class="d-flex">
-                    <select name='item[]' id="item0{{forloop.counter0}}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
-                      <option value=" {{ ri.item }}" selected >{{ ri.item }}</option>
-                      {% for i in item %}
-                        <option value="{{i.id}}">{{ i.Name  }} </option>
-                      {% endfor %}
-                    </select>
+                {% for ri in recur_items %}
+                <tr id='addr{{forloop.counter}}' class="addr">
+                  <td style="width: 20%;">
+                    <div class="d-flex">
+                      <select name='item[]' id="item{{forloop.counter0}}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
+                        <option value=" {{ ri.item }}" selected >{{ ri.item }}</option>
+                        {% for i in item %}
+                          <option value="{{i.id}}">{{ i.Name  }} </option>
+                        {% endfor %}
+                      </select>
                   </div>  
                 </td>
                 
                 <td  style="width: 20%;">
-                    <input type='text' name='hsn[]' placeholder='Hsn' id='hsn1{{forloop.counter0}}' value=" {{ri.hsn}} " class='form-control border-0 text-black text-right hsn bg-white'  value=''  > 
+                    <input type='text' name='hsn[]' placeholder='Hsn' value=" {{ri.hsn}} " id='hsn1' class='form-control border-0 text-black text-right hsn bg-white'  value=''  > 
                 </td>
                 <script>
                     $(document).on("input", ".hsn", function() {
@@ -306,17 +306,16 @@
                   });
             </script> 
                 <td style="width: 10%;">
-                   <input type="text" name='qty[]' placeholder='Qty' id="qty0{{forloop.counter0}}" value=" {{ri.quantity}} " class="form-control qty text-dark bg-light" step=0 min=0/>
-                  <!-- <input type="text" name='qty[]' placeholder='Qty' id="qty0{{forloop.counter0}}" value=" {{ri.quantity}} "  class="form-control qty text-dark bg-light" step=0 min=0/>                   -->
+                  <input type="text" name='qty[]' placeholder='Qty' id="qty0"  value=" {{ri.quantity}} "  class="form-control qty text-dark bg-light" step=0 min=0/>
                 </td>
                 <td style="width: 10%;">
-                  <input type="text" name='rate[]' id="rate0{{forloop.counter0}}" value=" {{ ri.rate }}" placeholder='Rate' class="form-control rate text-dark bg-light" />
-                  
+                  <input type="text" name='rate[]' id="rate0" placeholder='Rate' value=" {{ ri.rate }}" class="form-control rate text-dark bg-light" />
                 </td>
                 <td style="width: 15%;">
                   <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
                   <input type="text" placeholder="Select TAX" class="form-control selecttax text-dark bg-light" id="selecttax0">
                   <select name="tax1[]" id="intra_tax0" class="form-control tax1 d-none mb-2 text-dark bg-light">
+                    <!-- <option id="ta1" value=0 text=' '>Choose GST</option> -->
                     <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }} >{{ ri.tax }}% GST({{ ri.tax }}%)</option>
                     <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
                     <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
@@ -327,7 +326,8 @@
                   </select>
 
                   <select name="tax2[]" id="inter_tax0" class="form-control tax2 d-none mb-2 text-dark bg-light">
-                    <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }}>{{ ri.tax }}% IGST({{ ri.tax }}%) </option>   
+                    <!-- <option id="ta5" value=0 text=" "  >Choose IGST</option> -->
+                    <option id="ta5" value="{{ ri.tax  }} " text={{ cmp1.state }}>{{ ri.tax }}% IGST({{ ri.tax }}%) </option> 
                     <option value=28 text=" ">28.0% IGST(28%)</option>
                     <option value=18 text=" ">18.0% IGST(18%)</option>
                     <option value=12 text=" ">12.0% IGST(12%)</option>
@@ -337,11 +337,11 @@
                   </select>
                 </td>
                 <td style="width: 11%;">
-                  <input type="text" name='discount[]' id="disc0{{forloop.counter}}" value=" {{ri.discount}} " placeholder='Discount' class="form-control disc text-dark bg-light" value="0.00" step="0.00" min="0"/>
+                  <input type="text" name='discount[]' id="disc0" value=" {{ri.discount}} " placeholder='Discount' class="form-control disc text-dark bg-light" value="0.00" step="0.00" min="0"/>
                 </td>
 
                 <td style="width: 11%;">
-                  <input type="text" name='amount[]' id="amount0{{forloop.counter}}" value=" {{ri.amount}} " placeholder='Amount' class="form-control amount text-dark bg-light" step="0.00" min="0"  />
+                  <input type="text" name='amount[]' id="amount0" value=" {{ri.amount}} " placeholder='Amount' class="form-control amount text-dark bg-light" step="0.00" min="0"  />
                 </td>
                 <td>
                   <button type="button" id="0" class="btn btn-outline-primary clone_row text-center mb-1 p-1 " data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
@@ -356,10 +356,8 @@
                 </td>
 
               </tr>
-        
 
               {% endfor %}
-
             </tbody>
             <tr>
                 <td style="border: none;"><a class="btn btn-outline-secondary ml-1 text-capitalize" role="button" id="add"  
@@ -373,7 +371,7 @@
         <div class="col-md-5 mt-2 p-3 mx-5">
           <label for="">Note</label>
           <div class="form-row">
-            <textarea class="form-control text-dark bg-light" name="note" rows="15" style="height: 200px;" value="{{recur_bills.note}}">{{recur_bills.note}}</textarea>
+            <textarea class="form-control text-dark bg-light" name="note" rows="15" style="height: 200px;"value="{{recur_bills.note}}">{{recur_bills.note}}</textarea>
           </div><br>
           <div>
             <input type="file" class="form-control text-dark bg-light" name="file" value="{{recur_bills.document}}">
@@ -388,7 +386,7 @@
             </div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2">
-              <input type="number" step="any" name='subtotal' value="{{recur_bills.sub_total}}" placeholder=0  step="0.00" min="0"
+              <input type="number" step="any" name='subtotal' placeholder=0  step="0.00" min="0" value="{{recur_bills.sub_total}}"
                 class="form-control text-dark bg-light" id="subtotal" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;">
             </div>
           </div>
@@ -432,23 +430,33 @@
             <div class="col-sm-3 mt-2">
             </div>
             <div class="col-sm-4 mt-2">
-              <input type="number" name='add_round_off' step="any" id="add_round_off" placeholder=0 value="{{recur_bills.adjustment}}" class="form-control text-dark bg-light">
+              <input type="number" name='add_round_off' value="0.00" step="any" id="add_round_off" placeholder=0 class="form-control text-dark bg-light" value="{{recur_bills.adjustment}}">
             </div>
           </div><hr>
                  
           <div class="row container-fluid  p-2 m-0">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center" id="grandtotallbl">Grand Total</label></div>
             <div class="col-sm-2 mt-2"></div>
-            <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" value="{{recur_bills.grand_total}}" step="0.00" min="0"
+            <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" step="0.00" min="0" value="{{recur_bills.grand_total}}"
                 class="form-control text-dark bg-light" readonly>
             </div>
           </div>
         </div>   
       </div>
       <div class="row mt-5 mb-3">
-        
+
+        <!-- <div class="" style="margin-bottom: 20rem;">
+          <button type="submit" name="sd" class="btn btn-success text-white " 
+              value="Save As Draft">Save as Draft</button>
+          <button type="submit" name="sd" class="btn btn-warning text-white" 
+              value="Save and Send">Save and Send</button>
+          <input class="btn btn-danger text-white"
+              type="reset" >Cancel</a>
+      </div>
+         -->
         <div class="col-md-4">
           <div class="d-flex">
+            <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey w-50 my-4 mx-2" style="width: 200px; text-align: center ;" value="SAVE AS DRAFT" id="save">
             <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey w-50 my-4 mx-2" style="width: 200px; text-align: center ;" value="SAVE CHANGES" id="save">
             <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4 mt-2 py-2" aria-label="Close" id="cancelButton">CANCEL</button>
           </div>
@@ -1377,16 +1385,17 @@ $(document).ready(function() {
     $('#vendor').change(function() {
         var name = $("#vendor").val();
         <!-- var na = name.split(' ')[0]; -->
-        
+        var na = name;
+   
         // console.log(name);
         $.ajax({
 
-            url: "{% url 'get_vendor_credit_det1' %}", 
+            url: "{% url 'get_vendor_credit_det' %}", 
 
             data: { 
                     // fname : na[0],
                     // lname : na[1],
-                    id :name,
+                    id :na,
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
 
@@ -1469,87 +1478,85 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function(){
+  $(document).ready(function(){
 
 
-  $('#add').click(function(){
-    var table = document.getElementById("items-table-body");
-    var roinc = table.rows.length;
+    $('#add').click(function(){
+      var table = document.getElementById("items-table-body");
+      var roinc = table.rows.length;
 
-    $('#items-table-body').append(
-      
-      `<tr id='addr${roinc}' class = 'addr '>
-        <td style="width: 20%;">
-          <div class="d-flex">
-            <select name='item[]' id="item${roinc}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
-              <option value=" " selected disabled >Select Item</option>
-              {% for i in item %}
-                    <option value="{{ i.id }}">{{ i.Name  }} </option>
-              {% endfor %}
+      $('#items-table-body').append(
+        
+        `<tr id='addr${roinc}' class = 'addr '>
+          <td style="width: 20%;">
+            <div class="d-flex">
+              <select name='item[]' id="item${roinc}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
+                <option value=" " selected disabled >Select Item</option>
+                {% for i in item %}
+                      <option value="{{ i.id }}">{{ i.Name  }} </option>
+                {% endfor %}
+              </select>
+            </div>  
+          </td>
+          
+        <td  style="width: 20%;">
+            <input type='text' name='hsn[]' placeholder='Hsn' id='hsn1${roinc}' class='form-control border-0 text-black text-right hsn bg-white'  value=''  > 
+        </td>
+          
+          <td style="width: 10%;">
+            <input type="number" name='qty[]'  placeholder='Qty' id="qty${roinc}"  class="form-control qty text-dark bg-light" step=0 min=0/>
+          </td>
+          <td style="width: 10%;">
+            <input type="text" name='rate[]' id="rate${roinc}" placeholder='Rate' class="form-control rate text-dark bg-light" />
+          </td>
+          <td style="width: 15%;">
+            <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
+            <input type="text" placeholder="Select TAX" class="form-control selecttax text-dark bg-light" id="selecttax${roinc}">
+            <select name="tax1[]" id="intra_tax${roinc}" class="form-control tax1 d-none mb-2 text-dark bg-light">
+                <option id="ta1" value=0 text=" ">Choose GST</option>
+                <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
+                <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
+                <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
+                <option value=5 text={{ cmp1.state }}>05.0% GST(05%)</option>
+                <option value=3 text={{ cmp1.state }}>03.0% GST(03%)</option>
+                <option value=0 text={{ cmp1.state }}>0.0% GST(0%)</option>
             </select>
-          </div>  
-        </td>
+
+            <select name="tax2[]" id="inter_tax${roinc}" class="form-control tax2 d-none mb-2 text-dark bg-light">
+              <option id="ta5" value=0 text=" " >Choose IGST</option>
+              <option value=28 text=" ">28.0% IGST(28%)</option>
+              <option value=18 text=" ">18.0% IGST(18%)</option>
+              <option value=12 text=" ">12.0% IGST(12%)</option>
+              <option value=5 text=" ">05.0% IGST(05%)</option>
+              <option value=3 text=" ">03.0% IGST(03%)</option>
+              <option value=0 text=" ">0.0% IGST(0%)</option>
+            </select>
+          </td>
+            
+          <td style="width: 11%;">
+            <input type="text" name='discount[]' id="disc${roinc}" placeholder='Discount' class="form-control disc text-dark bg-light" step="0.00" min="0"/>
+          </td>
+          <td style="width: 11%;">
+            <input type="text" name='amount[]' id="amount${roinc}" placeholder='Amount' class="form-control amount text-dark bg-light" step="0.00" min="0"  />
+          </td>
+            
+          <td>
+            <button type="button" id="${roinc}" class="btn btn-outline-primary clone_row text-center mb-1 p-1 " data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
+                style = "width:25px; height: 25px; border-radius: 90% " >
+              <i class="fa-solid fa-clone"></i>
+            </button> <br>
+            <button type="button" id="${roinc}" class="btn btn-outline-danger remove_row text-center p-1" data-toggle= "tooltip" data-placement="bottom" tooltip="Remove"
+                style = "width:25px; height: 25px; border-radius: 90% " >
+              <i class="fa fa-window-close"></i>
+            </button>
+          </td>
+        </tr>`
+
+     
+        );
         
-      <td  style="width: 20%;">
-          <input type='text' name='hsn[]' placeholder='Hsn' id='hsn1${roinc}' class='form-control border-0 text-black text-right hsn bg-white'  value=''  > 
-      </td>
-        
-        <td style="width: 10%;">
-          <input type="number" name='qty[]'  placeholder='Qty' id="qty${roinc}"  class="form-control qty text-dark bg-light" step=0 min=0/>
-        </td>
-        <td style="width: 10%;">
-          <input type="text" name='rate[]' id="rate${roinc}" placeholder='Rate' class="form-control rate text-dark bg-light" />
-        </td>
-        <td style="width: 15%;">
-          <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
-          <input type="text" placeholder="Select TAX" class="form-control selecttax text-dark bg-light" id="selecttax${roinc}">
-          <select name="tax1[]" id="intra_tax${roinc}" class="form-control tax1 d-none mb-2 text-dark bg-light">
-              <option id="ta1" value=0 text=" ">Choose GST</option>
-              <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
-              <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
-              <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
-              <option value=5 text={{ cmp1.state }}>05.0% GST(05%)</option>
-              <option value=3 text={{ cmp1.state }}>03.0% GST(03%)</option>
-              <option value=0 text={{ cmp1.state }}>0.0% GST(0%)</option>
-          </select>
-
-          <select name="tax2[]" id="inter_tax${roinc}" class="form-control tax2 d-none mb-2 text-dark bg-light">
-            <option id="ta5" value=0 text=" " >Choose IGST</option>
-            <option value=28 text=" ">28.0% IGST(28%)</option>
-            <option value=18 text=" ">18.0% IGST(18%)</option>
-            <option value=12 text=" ">12.0% IGST(12%)</option>
-            <option value=5 text=" ">05.0% IGST(05%)</option>
-            <option value=3 text=" ">03.0% IGST(03%)</option>
-            <option value=0 text=" ">0.0% IGST(0%)</option>
-          </select>
-        </td>
-          
-        <td style="width: 11%;">
-          <input type="text" name='discount[]' id="disc${roinc}" placeholder='Discount' class="form-control disc text-dark bg-light" step="0.00" min="0"/>
-        </td>
-        <td style="width: 11%;">
-          <input type="text" name='amount[]' id="amount${roinc}" placeholder='Amount' class="form-control amount text-dark bg-light" step="0.00" min="0"  />
-        </td>
-          
-        <td>
-          <button type="button" id="${roinc}" class="btn btn-outline-primary clone_row text-center mb-1 p-1 " data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
-              style = "width:25px; height: 25px; border-radius: 90% " >
-            <i class="fa-solid fa-clone"></i>
-          </button> <br>
-          <button type="button" id="${roinc}" class="btn btn-outline-danger remove_row text-center p-1" data-toggle= "tooltip" data-placement="bottom" tooltip="Remove"
-              style = "width:25px; height: 25px; border-radius: 90% " >
-            <i class="fa fa-window-close"></i>
-          </button>
-        </td>
-      </tr>`
-
-
-   
-      );
-      
+    });
   });
-});
-
 
   $(document).on('click','.clone_row',function(){
 
@@ -2349,7 +2356,7 @@ $(document).ready(function() {
         },
     
       success: function(response) {
-        $("#rate").val(response.rate);
+        $("#rate0").val(response.rate);
 
 
       },
@@ -2435,6 +2442,44 @@ $(document).ready(function() {
 
   });
 
+  
+$(document).ready(function(){
+
+    $(".selecttax").removeClass('d-flex');
+    $(".selecttax").addClass('d-none');
+    var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
+    console.log(st == $("#company_state").val())
+    if( st == $("#company_state").val())
+    {
+      $(".tax2").removeClass('d-flex');
+      $(".tax2").addClass('d-none');
+      $(".tax1").removeClass('d-none');
+      $(".tax1").addClass('d-flex');
+
+      $("#cgst1").removeClass('d-none');
+      $("#cgst1").addClass('d-flex');
+      $("#sgst1").removeClass('d-none');
+      $("#sgst1").addClass('d-flex');
+
+      $("#igst1").removeClass('d-flex');
+      $("#igst1").addClass('d-none');
+
+    }
+    else{
+      $(".tax1").removeClass('d-flex');
+      $(".tax1").addClass('d-none');
+      $(".tax2").removeClass('d-none');
+      $(".tax2").addClass('d-flex');
+
+      $("#igst1").removeClass('d-none');
+      $("#igst1").addClass('d-flex');
+
+      $("#cgst1").removeClass('d-flex');
+      $("#cgst1").addClass('d-none');
+      $("#sgst1").removeClass('d-flex');
+      $("#sgst1").addClass('d-none');
+    }
+  });
 
 
 
@@ -2704,64 +2749,6 @@ $(document).on('change','.disc',function(){
       }
    }
   });
-  $(document).on("click",".selecttax",function(){
-
-    $(".selecttax").removeClass('d-flex');
-    $(".selecttax").addClass('d-none');
-    var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
-  
-    if(st == $("#company_state").val()){
-    $(".tax2").addClass('d-none');
-    $(".tax1").removeClass('d-none');
-    $(".tax1").addClass('d-flex');
-  
-    }
-    else{
-    $(".tax1").addClass('d-none');
-    $(".tax2").removeClass('d-none');
-    $(".tax2").addClass('d-flex');
-    }
-  
-  });
-  
-  
-    $(document).ready(function(){
-  
-      $(".selecttax").removeClass('d-flex');
-      $(".selecttax").addClass('d-none');
-      var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
-      console.log(st == $("#company_state").val())
-      if( st == $("#company_state").val())
-      {
-        $(".tax2").removeClass('d-flex');
-        $(".tax2").addClass('d-none');
-        $(".tax1").removeClass('d-none');
-        $(".tax1").addClass('d-flex');
-  
-        $("#cgst1").removeClass('d-none');
-        $("#cgst1").addClass('d-flex');
-        $("#sgst1").removeClass('d-none');
-        $("#sgst1").addClass('d-flex');
-  
-        $("#igst1").removeClass('d-flex');
-        $("#igst1").addClass('d-none');
-  
-      }
-      else{
-        $(".tax1").removeClass('d-flex');
-        $(".tax1").addClass('d-none');
-        $(".tax2").removeClass('d-none');
-        $(".tax2").addClass('d-flex');
-  
-        $("#igst1").removeClass('d-none');
-        $("#igst1").addClass('d-flex');
-  
-        $("#cgst1").removeClass('d-flex');
-        $("#cgst1").addClass('d-none');
-        $("#sgst1").removeClass('d-flex');
-        $("#sgst1").addClass('d-none');
-      }
-    });
 
 
     $(document).on("change","#addcharge",function(){
@@ -2773,22 +2760,6 @@ $(document).on('change','.disc',function(){
         $("#grandtotal").val(total);
       }
       else if(sta != $("#company_state").val()){
-        var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
-        $("#grandtotal").val(total);
-      }
-      else{
-        var total = parseFloat($("#subtotal").val())+  parseFloat($("#addcharge").val());
-        $("#grandtotal").val(total);
-      }
-
-    });
-    $(document).on("change","#addcharge",function(){
-
-      if($("#srcofsupply").val() == $("#company_state").val()){
-        var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
-        $("#grandtotal").val(total);
-      }
-      else if($("#srcofsupply").val() != $("#company_state").val()){
         var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
         $("#grandtotal").val(total);
       }

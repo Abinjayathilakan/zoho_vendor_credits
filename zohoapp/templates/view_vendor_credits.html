@@ -275,12 +275,16 @@
                         </div>
                     </div>
                     <div class="row p-0 d-flex">
-                        <div class="col-md-7">
+                        <div class="col-md-6">
                             <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off"  >
                         </div>
 
-                        <div class="col-md-2 mt-2 mx-1">
-                            <a class="btn text-center btn-primary bi bi-funnel px-3 py-1" data-bs-toggle="dropdown"
+                        <div class="col-md-2 mt-2 mx-2">
+                            <button onclick="sortTable()" class="btn btn-primary" style="width: 4.5rem;">a-z </button>
+                        </div>
+
+                        <!-- <div class="col-md-2 mt-2 mx-1"> -->
+                            <!-- <a class="btn text-center btn-primary bi bi-funnel px-3 py-1" data-bs-toggle="dropdown"
                                 role="button"></a>
                             <div class="dropdown-menu " style="z-index: 1;">
                                  <a class="dropdown-item" href="{% url 'view_custasc' recur_bill.id  %}">Customer A-Z</a>
@@ -288,11 +292,11 @@
                                 <a class="dropdown-item" href="{% url 'vc_view_vendorasc' recur_bill.id %}">Vendor A-Z</a>
                                 <a class="dropdown-item" href="{% url 'vc_view_vendordesc' recur_bill.id %}">Vendor Z-A</a>
                                 <a class="dropdown-item" href="{% url 'view_profileasc' recur_bill.id %}">Profile A-Z</a>
-                                <a class="dropdown-item" href="{% url 'view_profiledesc' recur_bill.id %}">Profile Z-A</a>
+                                <a class="dropdown-item" href="{% url 'view_profiledesc' recur_bill.id %}">Profile Z-A</a> -->
 
-                            </div>
-                        </div>
-                        <div class="col-md-2 mr-4 mt-2">
+                            <!-- </div> -->
+                        <!-- </div> -->
+                        <div class="col-md-2 mr-4 mt-2 mx-3">
                             <a href="{% url 'add_vendor_credits' %}" class="btn btn-primary fa fa-plus px-3 pt-1"
                                 role="button">
                             </a>
@@ -306,7 +310,7 @@
                     {% for b in recur_bills %}
                         <a href="{% url 'view_vendor_credits' b.id %}" class="my-3">
                             
-                            <div class="row mt-3">
+                            <div class="row mt-3" id="myTable"  >
                                 <div class="col-md-7">
                                     <!-- <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">
                                         <span style="display: none;">{{ b.company_name.split.0 }}</span>
@@ -1097,5 +1101,60 @@ $(document).ready(function () {
     hiddenFirstLetter.style.display = "inline";
     restOfName.style.display = "inline";
   </script>
+
+  <script>
+  function myFunction(){
+    var input,filter,table,tr,td,i,txtValue;
+    input=document.getElementById("myInput");
+    filter=input.value.toUpperCase();
+    table=document.getElementById("myTable");
+    tr=table.getElementsByTagName("tr");
+    for(i = 0; i < tr.length; i++)
+    {
+        td=tr[i].getElementsByTagName("td")[0];
+        if(td){
+            txtValue=td.textContent || td.innerText;
+            if(txtValue.toUpperCase().indexOf(filter) > -1){
+                tr[i].style.display="";
+            }
+            else{
+                tr[i].style.display="none";
+            }
+        }
+    }
+}
+
+function sortTable()
+{
+    var table,i,x,y;
+    table=document.getElementById("myTable");
+    var switching=true;
+    while(switching)
+    {
+        switching=false;
+        var rows=table.rows
+        for(i = 0 ; i < (rows.length - 1) ; i++)
+        {
+            var Switch=false;
+            x = rows[i].getElementsByTagName("TD") [0];
+            y = rows[i + 1].getElementsByTagName("TD") [0];
+            if(x.innerText.toLowerCase() > y.innerText.toLowerCase())
+            {
+                Switch=true;
+                break;
+            }
+
+        }
+        if(Switch)
+        {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching=true
+        }
+    }
+}
+  
+
+  
+</script>
 
 {% endblock %}
