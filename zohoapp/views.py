@@ -7831,158 +7831,158 @@ def edit_vendor_credits(request,id):
 #             return redirect('view_vendor_credits',id)
 #         return redirect('vendor_credits_home')
 
-# def change_vendor_credits(request,id):
+def change_vendor_credits(request,id):
             
-#     company = company_details.objects.get(user = request.user)
-#     # cust = customer.objects.get(customerName=request.POST.get('customer').strip(" "),user = request.user)
-#     r_bill=Vendor_Credits_Bills.objects.get(user = request.user,id=id)
+    company = company_details.objects.get(user = request.user)
+    # cust = customer.objects.get(customerName=request.POST.get('customer').strip(" "),user = request.user)
+    r_bill=Vendor_Credits_Bills.objects.get(user = request.user,id=id)
 
-#     if request.method == 'POST':
+    if request.method == 'POST':
         
-#         r_bill.company_name = request.POST.get('vendor')
+        r_bill.company_name = request.POST.get('vendor')
 
-#         r_bill.source_supply=request.POST['srcofsupply']
-#         r_bill.vendor_email = request.POST.get('email_inp')
-#         r_bill.gst_treatment = request.POST.get('gst_trt_inp')
-#         r_bill.credit_note = request.POST.get('credit_note')
-#         r_bill.order_no = request.POST.get('order_number')
-#         r_bill.vendor_date = request.POST.get('credit_date')
+        r_bill.source_supply=request.POST['srcofsupply']
+        r_bill.vendor_email = request.POST.get('email_inp')
+        r_bill.gst_treatment = request.POST.get('gst_trt_inp')
+        r_bill.credit_note = request.POST.get('credit_note')
+        r_bill.order_no = request.POST.get('order_number')
+        r_bill.vendor_date = request.POST.get('credit_date')
         
-#         r_bill.note=request.POST['note']
-#         r_bill.sub_total=None if request.POST.get('subtotal') == "" else  request.POST.get('subtotal')
-#         r_bill.igst=None if request.POST.get('igst') == "" else  request.POST.get('igst')
-#         r_bill.cgst=None if request.POST.get('cgst') == "" else  request.POST.get('cgst')
-#         r_bill.sgst=None if request.POST.get('sgst') == "" else  request.POST.get('sgst')
-#         r_bill.shipping_charge=request.POST['addcharge']
-#         r_bill.adjustment=request.POST['add_round_off']
-#         r_bill.grand_total=request.POST.get('grand_total')
+        r_bill.note=request.POST['note']
+        r_bill.sub_total=None if request.POST.get('subtotal') == "" else  request.POST.get('subtotal')
+        r_bill.igst=None if request.POST.get('igst') == "" else  request.POST.get('igst')
+        r_bill.cgst=None if request.POST.get('cgst') == "" else  request.POST.get('cgst')
+        r_bill.sgst=None if request.POST.get('sgst') == "" else  request.POST.get('sgst')
+        r_bill.shipping_charge=request.POST['addcharge']
+        r_bill.adjustment=request.POST['add_round_off']
+        r_bill.grand_total=request.POST.get('grand_total')
 
-#         if len(request.FILES) != 0:
+        if len(request.FILES) != 0:
              
-#             r_bill.document = request.FILES['file']
+            r_bill.document = request.FILES['file']
             
 
-#         r_bill.save()          
+        r_bill.save()          
 
-#         items = request.POST.getlist("item[]")
-#         hsn = request.POST.getlist("hsn[]")
-#         quantity = request.POST.getlist("quantity[]")
-#         rate = request.POST.getlist("rate[]")
+        items = request.POST.getlist("item[]")
+        hsn = request.POST.getlist("hsn[]")
+        quantity = request.POST.getlist("quantity[]")
+        rate = request.POST.getlist("rate[]")
 
-#         if (" ".join(request.POST['srcofsupply'].split(" ")[1:])) == company.state:
-#             tax = request.POST.getlist("tax1[]")
-#         else:
-#             tax = request.POST.getlist("tax2[]")
+        if (" ".join(request.POST['srcofsupply'].split(" ")[1:])) == company.state:
+            tax = request.POST.getlist("tax1[]")
+        else:
+            tax = request.POST.getlist("tax2[]")
 
-#         discount = 0 if request.POST.getlist("discount[]") == " " else request.POST.getlist("discount[]")
-#         amount = request.POST.getlist("amount[]")
+        discount = 0 if request.POST.getlist("discount[]") == " " else request.POST.getlist("discount[]")
+        amount = request.POST.getlist("amount[]")
 
-#         if len(items)==len(hsn)==len(amount) == len(quantity) == len(rate)==len(tax) == len(discount) and items and hsn and quantity and rate and tax and discount and amount:
+        if len(items)==len(hsn)==len(amount) == len(quantity) == len(rate)==len(tax) == len(discount) and items and hsn and quantity and rate and tax and discount and amount:
                 
-#             mapped=zip(items,hsn,quantity,rate,tax,discount,amount)
-#             mapped=list(mapped)
+            mapped=zip(items,hsn,quantity,rate,tax,discount,amount)
+            mapped=list(mapped)
 
             
-#             count = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=r_bill.id).count()
+            count = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=r_bill.id).count()
             
-#             for ele in mapped:
+            for ele in mapped:
 
-#                 if int(len(items))>int(count):
+                if int(len(items))>int(count):
 
-#                     pbillss=Vendor_Credits_Bills.objects.get(id=id)
-#                     company = company_details.objects.get(user = request.user)
-#                     it = AddItem.objects.get(user = request.user, id = ele[0]).Name
-#                     it = AddItem.objects.get(user = request.user, id = ele[0]).Name
+                    pbillss=Vendor_Credits_Bills.objects.get(id=id)
+                    company = company_details.objects.get(user = request.user)
+                    it = AddItem.objects.get(user = request.user, id = ele[0]).Name
+                    it = AddItem.objects.get(user = request.user, id = ele[0]).Name
                     
-#                     created = Vendor_Credits_Bills_items_bills.objects.get_or_create(item = it,hsn = ele[1],quantity=ele[2],rate=ele[3],
-#                     tax=ele[4],discount = ele[5],amount=ele[6],recur_bills=r_bill.id,company=company,user = request.user)
+                    created = Vendor_Credits_Bills_items_bills.objects.get_or_create(item = it,hsn = ele[1],quantity=ele[2],rate=ele[3],
+                    tax=ele[4],discount = ele[5],amount=ele[6],recur_bills=r_bill.id,company=company,user = request.user)
 
 
-#                 else:
+                else:
                     
-#                     dbs=Vendor_Credits_Bills_items_bills.objects.get(recur_bills =r_bill.id,item = ele[0],hsn=ele[1])
-#                     created = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills =dbs.recur_bills,items = ele[0],hsn=ele[1]).update(item = ele[0],
-#                         hsn = ele[1],quantity=ele[2],rate=ele[3], tax=ele[4],discount=ele[5],amount= ele[6])
+                    dbs=Vendor_Credits_Bills_items_bills.objects.get(recur_bills =r_bill.id,item = ele[0],hsn=ele[1])
+                    created = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills =dbs.recur_bills,items = ele[0],hsn=ele[1]).update(item = ele[0],
+                        hsn = ele[1],quantity=ele[2],rate=ele[3], tax=ele[4],discount=ele[5],amount= ele[6])
  
 
-#         return redirect('view_vendor_credits',id)
-#     return redirect('vendor_credits_home')
+        return redirect('view_vendor_credits',id)
+    return redirect('vendor_credits_home')
 
 
-def change_vendor_credits(request,id):
-    print(id)
+# def change_vendor_credits(request,id):
+#     print(id)
    
-    p = AddItem.objects.all()
-    invoiceitem = Vendor_Credits_Bills_items_bills.objects.filter(inv_id=id)
-    invoic = Vendor_Credits_Bills.objects.get(id=id)
-    vendors = vendor_table.objects.all()
+#     p = AddItem.objects.all()
+#     invoiceitem = Vendor_Credits_Bills_items_bills.objects.filter(inv_id=id)
+#     invoic = Vendor_Credits_Bills.objects.get(id=id)
+#     vendors = vendor_table.objects.all()
     
   
-    if request.method == 'POST':
-        u=request.user.id
-        # c=request.POST['cx_name']
+#     if request.method == 'POST':
+#         u=request.user.id
+#         # c=request.POST['cx_name']
         
-        invoic.company_name = request.POST['vendor']
-        invoic.vendor_email = request.POST['email_inp']
-        # invoic.baddress = request.POST['address']
-        invoic.gst_treatment = request.POST['gst_trt_inp']
-        invoic.source_supply = request.POST['srcofsupply']
-        invoic.credit_note = request.POST['credit_note']
-        invoic.order_no = request.POST['order_number']
-        invoic.vendor_date = request.POST['credit_date']
+#         invoic.company_name = request.POST['vendor']
+#         invoic.vendor_email = request.POST['email_inp']
+#         # invoic.baddress = request.POST['address']
+#         invoic.gst_treatment = request.POST['gst_trt_inp']
+#         invoic.source_supply = request.POST['srcofsupply']
+#         invoic.credit_note = request.POST['credit_note']
+#         invoic.order_no = request.POST['order_number']
+#         invoic.vendor_date = request.POST['credit_date']
         
-        invoic.note = request.POST['note']
-        invoic.sub_total = request.POST['subtotal']
-        invoic.igst = request.POST['igst']
-        invoic.cgst = request.POST['cgst']
-        invoic.sgst = request.POST['sgst']
-        invoic.adjustment = request.POST['add_round_off']
-        # invoic.t_tax = request.POST['totaltax']
-        invoic.grand_total = request.POST['grand_total']
+#         invoic.note = request.POST['note']
+#         invoic.sub_total = request.POST['subtotal']
+#         invoic.igst = request.POST['igst']
+#         invoic.cgst = request.POST['cgst']
+#         invoic.sgst = request.POST['sgst']
+#         invoic.adjustment = request.POST['add_round_off']
+#         # invoic.t_tax = request.POST['totaltax']
+#         invoic.grand_total = request.POST['grand_total']
 
-        if request.FILES.get('file') is not None:
-            invoic.file = request.FILES['file']
-        else:
-            invoic.file = "/static/images/alt.jpg"
+#         if request.FILES.get('file') is not None:
+#             invoic.file = request.FILES['file']
+#         else:
+#             invoic.file = "/static/images/alt.jpg"
 
             
         
-        status=request.POST['sd']
-        if status=='draft':
-            invoic.status=status      
-        else:
-            invoic.status=status   
+#         status=request.POST['sd']
+#         if status=='draft':
+#             invoic.status=status      
+#         else:
+#             invoic.status=status   
          
-        invoic.save()
+#         invoic.save()
         
-        print("/////////////////////////////////////////////////////////")
-        product=request.POST.getlist('item[]')
-        hsn=request.POST.getlist('hsn[]')
-        quantity=request.POST.getlist('quantity[]')
-        rate=request.POST.getlist('rate[]')
-        discount=request.POST.getlist('desc[]')
-        tax=request.POST.getlist('tax[]')
-        total=request.POST.getlist('amount[]')
-        obj_dele=Vendor_Credits_Bills_items_bills.objects.filter(inv_id=invoic.id)
-        obj_dele.delete()
+#         print("/////////////////////////////////////////////////////////")
+#         product=request.POST.getlist('item[]')
+#         hsn=request.POST.getlist('hsn[]')
+#         quantity=request.POST.getlist('quantity[]')
+#         rate=request.POST.getlist('rate[]')
+#         discount=request.POST.getlist('desc[]')
+#         tax=request.POST.getlist('tax[]')
+#         total=request.POST.getlist('amount[]')
+#         obj_dele=Vendor_Credits_Bills_items_bills.objects.filter(inv_id=invoic.id)
+#         obj_dele.delete()
        
-        if len(product)==len(hsn)==len(quantity)==len(discount)==len(tax)==len(total)==len(rate):
+#         if len(product)==len(hsn)==len(quantity)==len(discount)==len(tax)==len(total)==len(rate):
 
-            mapped = zip(product,hsn,quantity,discount,tax,total,rate)
-            mapped = list(mapped)
-            for element in mapped:
-                created = Vendor_Credits_Bills_items_bills.objects.get_or_create(recur_bills=invoic,product=element[0],hsn=element[1],
-                                    quantity=element[2],discount=element[3],tax=element[4],total=element[5],rate=element[6])
+#             mapped = zip(product,hsn,quantity,discount,tax,total,rate)
+#             mapped = list(mapped)
+#             for element in mapped:
+#                 created = Vendor_Credits_Bills_items_bills.objects.get_or_create(recur_bills=invoic,product=element[0],hsn=element[1],
+#                                     quantity=element[2],discount=element[3],tax=element[4],total=element[5],rate=element[6])
                 
-            return redirect('view_vendor_credits',id)
+#             return redirect('view_vendor_credits',id)
                     
-    context = {
+#     context = {
            
-            'p': p,
-            'inv': invoiceitem,
-            'i': invoic,
-            'vendors':vendors,
+#             'p': p,
+#             'inv': invoiceitem,
+#             'i': invoic,
+#             'vendors':vendors,
             
-        }             
+#         }             
         
-    return render(request, 'edit_vendor_credits_3.html', context)
+#     return render(request, 'edit_vendor_credits_3.html', context)
