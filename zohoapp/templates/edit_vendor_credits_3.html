@@ -1381,21 +1381,20 @@ document.getElementById("cancelButton").addEventListener("click", function() {
 
 
   
-$(document).ready(function() {
+  $(document).ready(function() {
     $('#vendor').change(function() {
         var name = $("#vendor").val();
         <!-- var na = name.split(' ')[0]; -->
-        var na = name;
-   
+        
         // console.log(name);
         $.ajax({
 
-            url: "{% url 'get_vendor_credit_det' %}", 
+            url: "{% url 'get_vendor_credit_det1' %}", 
 
             data: { 
                     // fname : na[0],
                     // lname : na[1],
-                    id :na,
+                    id :name,
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
 

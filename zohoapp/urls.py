@@ -359,8 +359,11 @@ urlpatterns = [
     
     path('delete_vendor_credits/<id>',views.delete_vendor_credits,name='delete_vendor_credits'),
     
-    path('edit_vendor_credits/<id>',views.edit_vendor_credits,name='edit_vendor_credits'),
-    path('change_vendor_credits/<id>',views.change_vendor_credits,name='change_vendor_credits'),
+    # path('edit_vendor_credits/<id>',views.edit_vendor_credits,name='edit_vendor_credits'),
+    # path('change_vendor_credits/<id>',views.change_vendor_credits,name='change_vendor_credits'),
+    
+    # path('edit_vendor_credits/<int:pk>',views.edit_vendor_credits,name='edit_vendor_credits'),
+    # path('change_vendor_credits/<int:id>',views.change_vendor_credits,name='change_vendor_credits'),
     
     # path('view_vendordesc/<id>',views.view_vendordesc,name='view_vendordesc'),
     # path('view_profileasc/<id>',views.view_profileasc,name='view_profileasc'),
