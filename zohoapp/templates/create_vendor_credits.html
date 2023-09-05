@@ -118,7 +118,7 @@
         </div>
       </div>
 
-      <div class="row mt-2 d-none" id="email_row">
+      <div class="row mt-2" id="email_row">
         <div class="col-md-3">
           <label for="email_inp">Vendor Email</label>
         </div>
@@ -127,7 +127,7 @@
         </div>
       </div>
 
-      <div class="row mt-2 d-none" id="gst_trt_row">
+      <div class="row mt-2 " id="gst_trt_row">
         <div class="col-md-3">
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
@@ -136,12 +136,21 @@
         </div>
       </div>
 
-      <div class="row mt-2 mb-2 d-none" id="gstin_row">
+      <div class="row mt-2 mb-2" id="gstin_row">
         <div class="col-md-3">
           <label for="gstin_inp">GST Number</label>
         </div>
         <div class="col-md-6">
           <input type="text" class="form-control bg-light text-dark"  id="gstin_inp" name="gstin_inp">
+        </div>
+      </div>
+
+      <div class="row mt-2 mb-2" id="address_row">
+        <div class="col-md-3">
+          <label for="address_inp">Address </label>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control bg-light text-dark"  id="address_inp" name="address_inp">
         </div>
       </div>
 
@@ -334,7 +343,7 @@
 
 
 
-      <div class="row mt-5 mb-5">
+      <div class="row mt-3 mb-2">
         <div class="col-md-3">
           <label style="color: rgb(190, 88, 88);">Source of Supply*</label>
         </div>
@@ -383,9 +392,40 @@
             
         </div>
       </div>
-      
-      
 
+      <div class="row mt-3 mb-2">
+        <div class="col-md-3">
+          <label for="credit_note" style="color: rgb(190, 88, 88);">Credit Note *</label>
+        </div>
+
+        <div class="col-md-6">
+          <input type="text" class="form-control text-dark bg-light"  id="credit_note" name="credit_note" value="DUS-" maxlength="8" required>
+        </div>
+      </div>
+
+      <div class="row mt-3 mb-2">
+        <div class="col-md-3">
+          <label for="order_number" style="color: rgb(190, 88, 88);">Order Number *</label>
+        </div>
+
+        <div class="col-md-6">
+          <input type="text" class="form-control text-dark bg-light"  id="order_number" name="order_number" required>
+        </div>
+      </div>
+
+      <div class="row mt-2" >
+        <div class="col-md-3">
+          <label for="date1">Vendor Credit Date</label>
+        </div>
+        <div class="col-md-3">
+          <input type="date" class="form-control text-dark bg-light" id="credit_date" name="credit_date" required>
+        </div>
+    </div>
+
+
+      
+      
+<!-- 
       <div class="row mt-2">
         <div class="col-md-3">
           <label for="prof_name" style="color: rgb(190, 88, 88);">Purchase Order</label>
@@ -394,7 +434,9 @@
         <div class="col-md-6">
           <input type="text" class="form-control bg-light text-dark" value="PO-"  id="prof_name" name="pur_ord">
         </div>
-      </div>
+      </div> -->
+
+
       <!-- <div class="row mt-2">
         <div class="col-md-3">
           <label for="prof_name" style="color: rgb(190, 88, 88);">Reference</label>
@@ -460,7 +502,7 @@
             <thead>
               <tr>
                 <th>Item<br><a href="" data-toggle="modal" data-target="#newitem" class="text-capitalize">+ Item</a></th>
-                <th class="text-uppercase">account<br><a href="" data-toggle="modal" data-target="#newaccount" class="text-capitalize">+ NEW</a></th>
+                <th class="text-right">Hsn</th>
                 <th class="text-right">Quantity</th>
                 <th class="text-right">Rate</th>
                 <th class="text-right">Discount</th>
@@ -481,141 +523,20 @@
                           </select></div>
                   </td>
                   
-                  <td  style="width: 15%;">
-                    <div class="d-flex">
-                      <select name='account[]' id="account1" class="form-control acnt bg-light text-dark">
-                        <option value=" " selected disabled >Select Account</option>
-                        <optgroup class=""label="Accounts Payable">
-                          <option value='Accounts Payable'>Accounts Payable</option>
-                        </optgroup>
-    
-                        <optgroup class="" label="Accounts Receivable">
-                          <option value='Accounts Receivable'>Accounts Receivable</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Other Current Asset">
-                          <option value='Advance Tax'>Advance Tax</option>
-                          <option value='Employee Advance'>Employee Advance</option>
-                          <option value='Prepaid Expences'>Prepaid Expences</option>
-                          <option value='GST TCS Receivable'>GST TCS Receivable</option>
-                          <option value='GST TDS Receivable'>GST TDS Receivable</option>
-                          <option value='Input Tax Credits'>Input Tax Credits</option>
-                          <option value='Input CGST'>Input CGST</option>
-                          <option value='Input IGST'>Input IGST</option>
-                          <option value='Input SGST'>Input SGST</option>
-                          <option value='Reverse Charge Input Tax but not Due'>Reverse Charge Input Tax but not Due</option>
-                          <option value='Sales to Customers(Cash)'>Sales to Customers(Cash)</option>
-                          <option value='TDS Receivable'>TDS Receivable</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Expence">
-                          <option value='Advertising and Marketing'>Advertising and Marketing</option>
-                          <option value='Automobile Expense'>Automobile Expense</option>
-                          <option value='Bad Debt'>Bad Debt</option>
-                          <option value='Bank Fees and Charges'>Bank Fees and Charges</option>
-                          <option value='Consultant Expense'>Consultant Expense</option>
-                          <option value='Credit Card Expense'>Credit Card Expense</option>
-                          <option value='IT and Internet Expenses'>IT and Internet Expenses</option>
-                          <option value='Janitorial Expences'>Janitorial Expences</option>
-                          <option value='Lodging'>Lodging</option>
-                          <option value='Meals and Entertainment'>Meals and Entertainment</option>
-                          <option value='Office Supplies'>Office Supplies</option>
-                          <option value=0>Other Expenses</option>
-                          <option value='Other Expenses'>Postage</option>
-                          <option value='Printing and Stationery'>Printing and Stationery</option>
-                          <option value='Rent Expense'>Rent Expense</option>
-                          <option value='Repair and Maintenance'>Repair and Maintenance</option>
-                          <option value='Salaries and Employee Wages'>Salaries and Employee Wages</option>
-                          <option value='Telephone Expense'>Telephone Expense</option>
-                          <option value='Travel Expense'>Travel Expense</option>
-                          <option value='Uncategorized'>Uncategorized</option>
-                          <option value='Contract Assets'>Contract Assets</option>
-                          <option value='Depreciation and Amortisation'>Depreciation and Amortisation</option>
-                          <option value='Merchandise'>Merchandise</option>
-                          <option value='Raw Materials and Consumables'>Raw Materials and Consumables</option>
-                          <option value='Transpotaion Expense'>Transpotaion Expense</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Cost of Goods Sold">
-                          <option value='Cost of Goods Sold'>Cost of Goods Sold</option>
-                          <option value='Job Costing'>Job Costing</option>
-                          <option value='Labor'>Labor</option>
-                          <option value='Materials'>Materials</option>
-                          <option value='Subcontractor'>Subcontractor</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Income">
-                          <option value='Discount'>Discount</option>
-                          <option value='General Income'>General Income</option>
-                          <option value='Interest Income'>Interest Income</option>
-                          <option value='Late Fee Income'>Late Fee Income</option>
-                          <option value='Other Charges'>Other Charges</option>
-                          <option value='Sales'>Sales</option>
-                          <option value='Shipping Charge'>Shipping Charge</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Equity">
-                          <option value='Drawings'>Drawings</option>
-                          <option value='Opening Balance Offset'>Opening Balance Offset</option>
-                          <option value="Owner's Equity">Owner's Equity</option>
-                          <option value='Retained Earnings'>Retained Earnings</option>
-                          <option value='Capital Stock'>Capital Stock</option>
-                          <option value='Distributions'>Distributions</option>
-                          <option value='Dividends Paid'>Dividends Paid</option>
-                          <option value='Investments'>Investments</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Other Current Liability">
-                          <option value='Employee Reimbursements'>Employee Reimbursements</option>
-                          <option value='Opening Balance Adjustments'>Opening Balance Adjustments</option>
-                          <option value='Tax Payable'>Tax Payable</option>
-                          <option value='Unearned Revenue'>Unearned Revenue</option>
-                          <option value='GST Payable'>GST Payable</option>
-                          <option value='Output CGST'>Output CGST</option>
-                          <option value='Output IGST'>Output IGST</option>
-                          <option value='Output SGST'>Output SGST</option>
-                          <option value='TDS Payable'>TDS Payable</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Other Expense">
-                          <option value='Exchange Gain or Loss'>Exchange Gain or Loss</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Fixed Asset">
-                          <option value='Furniture and Equipment'>Furniture and Equipment</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Stock">
-                          <option value='Inventory Asset'>Inventory Asset</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Cash">
-                          <option value='Petty Cash'>Petty Cash</option>
-                          <option value='Undeposited Funds'>Undeposited Funds</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Other Liability">
-                          <option value='Tag Adjustments'>Tag Adjustments</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Long Term Liability">
-                          <option value='Construction Loans'>Construction Loans</option>
-                          <option value='Mortgages'>Mortgages</option>
-                        </optgroup>
-  
-                        <optgroup class="" label="Others">
-                          {% for i in account %}
-                            <option value="{{ i.id }}">{{ i.accountName }} </option>
-                          {% endfor %}
-                        </optgroup>
-                        
-                        <hr>
-                        {% for i in account %}
-                            <option value="{{ i.accountName }} ">{{ i.accountName  }} </option>
-                        {% endfor %}
-                      </select>
-                    </div>  
-                  </td>
+                  <td  style="width: 20%;">
+                    <input type='text' name='hsn[]' placeholder='Hsn' id='hsn1' class='form-control border-0 text-black text-right hsn bg-white'  value=''  > 
+                </td>
+                  <script>
+                      $(document).on("input", ".hsn", function() {
+                        var hsn_value = $(this).val();
+                        var hsn_length = hsn_value.length;
+                        if (hsn_length > 6) {
+                            $(this).val(hsn_value.substring(0, 6));
+                            alert("HSN should not be more than 6 digits!");
+                        }
+                    });
+                  </script> 
+
                   <td style="width: 13%;" class='text-right'><input type='number' id='qty1'
                           class=' text-right qty form-control bg-light text-dark' name='quantity[]'
                           value='0'>
@@ -674,7 +595,7 @@
 
             <label for="">Customer Notes</label>
             <textarea name="customer_note" id="" cols="8" rows="8"
-                placeholder=" Will be Displayed on the Purchase Order"></textarea>
+                placeholder=" Notes "></textarea>
         </div>
         <div class="col-sm-6 " >
             <table class=" table  text-white" style="background-color: rgba(58, 57, 57, 0.8);">
@@ -708,13 +629,22 @@
                     <td><input type="number" id="total_taxamount" name="total_taxamount" step="any" value="0.00" 
                         class="total_taxamount form-control bg-transparent border-0 text-right  text-white"></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td>Shipping Charges</td>
                     
                     <td><input type="hidden" id="shipping_charge" name="shipping_charge" step="any" value="0.00" 
                         class="form-control bg-transparent border-0 text-right shipping_charge  "></td>
                         <td><input type="number" class="form-control  bg-transparent border-0  text-light" id="shipping" value="0"> </td>
-                </tr>
+                </tr> -->
+
+                <tr>
+                  <td>Adjustment</td>
+                  
+                  <td><input type="hidden" id="add_round_off" name="add_round_off" step="any" value="0.00" 
+                      class="form-control bg-transparent border-0 text-right add_round_off  "></td>
+                      <td><input type="number" class="form-control  bg-transparent border-0  text-light" step="any"  id="adjustment" value="0"> </td>
+              </tr>
+
                 <tr>
                     <td></td>
                     <td></td>
@@ -731,11 +661,11 @@
     </div>
 
     <div class="row py-5 border-bottom">
-        <div class="col-md-8 d-flex flex-column w-60 text-white">
+        <!-- <div class="col-md-8 d-flex flex-column w-60 text-white">
             <label for="">Terms & Conditions</label>
             <textarea name="tearms_conditions" id="" cols="20" rows="5"
                 placeholder=" Enter the terms & conditions of your business to be displayed in your transaction."></textarea>
-        </div>
+        </div> -->
         <div class="col-md-4 py-5 text-center rounded" style="background-color: rgba(32, 35, 37);">
             <label class="text-white" for="">Attach File(s) to Purchase</label><br>
 
@@ -2292,7 +2222,7 @@ $(document).ready(function() {
         var na = name.split(' ')
         $.ajax({
 
-            url: "{% url 'get_vendordet' %}", 
+            url: "{% url 'get_vendor_credit_det' %}", 
 
             data: { 
                     fname : na[0],
@@ -2311,10 +2241,13 @@ $(document).ready(function() {
                 $("#gstin_row").addClass('d-flex');
                 $("#gst_trt_row").removeClass('d-none');
                 $("#gst_trt_row").addClass('d-flex');
+                $("#address_row").removeClass('d-none');
+                $("#address_row").addClass('d-flex');
 
                 $('#email_inp').val(" " +data.vendor_email);
                 $('#gstin_inp').val(" " +data.gst_number);
                 $('#gst_trt_inp').val(" "+data.gst_treatment);
+                $('#address_inp').val(" "+data.baddress);
 
             }
         });
@@ -2322,30 +2255,6 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
-  $('#custom').change(function() {
-    var name = $("#custom").val();
-    var na = name.split(' ');
-    console.log(name)
-    $.ajax({
-      url: "{% url 'customer_det' %}",
-      data: {
-        name:name,
-        csrfmiddlewaretoken: '{{ csrf_token }}'
-      },
-      type: 'POST',
-      success: function(data) {
-        $("#cemail_inp").val(data.customer_email);
-        $("#custAddress").val(data.adres);
-        $("#custstreet").val(data.streat);
-        $("#custcity").val(data.city);
-        $("#custstate").val(data.state);
-        document.getElementById('company_state').value = data.st
-
-      }
-    });
-  });
-});
 
 
 
@@ -2529,103 +2438,6 @@ $(document).ready(function() {
   }
 //------customer create 
 
-$(document).on("click","#customersave",function(){
-  if ($('input[name="radioCust"]:checked').val() == 'Business'){
-
-    itemtype = $('#business').val();
-  }
-  else{
-    itemtype = $('#individual').val();
-  }
-
-  if ($('input[name="radioOption2"]:checked').val() == 'Taxable'){
-    inte = $('#item-tax3').val();
-    
-  }
-  else{
-    inte = $('#item-tax4').val();
-  }
-
-
-  $.ajax({
-    
-    type : 'POST',
-    url:"{% url 'purchase_customer' %}",
-
-    data:{
-        tax:inte,
-        itemtype:itemtype,
-        title : $("#ctitle").val(),
-        firstname : $("#cfname").val(),
-        lastname : $("#clname").val(),
-        company_name : $("#ccompany").val(),
-        display_name : $('#cdisplayname').text(),
-        email : $("#cemail").val(),
-        website :$("#cwsite").val(),
-        work_mobile :$("#cw_mobile").val(),
-        pers_mobile :$("#cp_mobile").val(),
-        skype :$("#cskype").val(),
-        facebook :$("#facebook").val(),
-        twitter :$("#twitter").val(),
-        desg :$("#c_desg").val(),
-        dpt :$("#c_dpt").val(),
-        gsttype :$("#c_gsttype").val(),
-        gstin :$("#c_gstin").val(),
-        panno : $("#c_pan").val(),
-        placesupply :$("#placesupply").val(),
-        currency : $("#c_curn").val(),
-        openingbalance : $("#c_open").val(),
-        paymentterms : $("#c_terms").val(),
-        street : $("#cstreet").val(),
-        city : $("#ccity").val(),
-        state : $("#cstate").val(),
-        pincode : $("#cpincode").val(),
-        fax : $("#cfax").val(),
-        phone : $("#cphone").val(),
-        country : $("#ccountry").val(),
-        shipstreet : $("csstreet").val(),
-        shipcity : $("#cscity").val(),
-        shipstate : $("#csstate").val(),
-        shippincode : $("#cspincode").val(),
-        shipcountry : $("#cscountry").val(),
-        shipfax : $("#csfax").val(),
-        shipphone : $("#csphone").val(),
-        radioCust: $("input[name='radioCust']:checked").val(),
-        csrfmiddlewaretoken: '{{ csrf_token }}',
-      },
-      
-      success: function(response) {
-        document.getElementById("modalCustomer").reset();
-        
-
-        reloadcustomer();
-        
-      },
-  });        
-});
-
-function reloadcustomer() {
-
-  $.ajax({
-    url: "{% url 'customer_dropdown' %}",
-    type: "GET",
-    dataType: "json",
-    data: $(this).serialize(),
-    csrfmiddlewaretoken: '{{ csrf_token }}',
-
-    success: function(data) {
-      var dropdow = $('#custom');
-      dropdow.empty();
-      $.each(data, function(key, value) {
-          dropdow.append($('<option></option>').attr('value', key).text(value).val(value));
-      });
-    },
-    error: function(xhr, status, error) {
-    console.error(xhr.responseText);
-    }
-  });
-}
-
 
   //---------modal vendor-----
 
@@ -2633,7 +2445,7 @@ $(document).on("click","#vendorSave",function(){
   $.ajax({
     
     type : 'POST',
-    url:"{% url 'purchase_vendor' %}",
+    url:"{% url 'vendor_credit_vendor' %}",
 
     data:{
         title : $("#title").val(),
@@ -2682,7 +2494,7 @@ $(document).on("click","#vendorSave",function(){
 
 function reloadVendor() {
   $.ajax({
-    url: "{% url 'vendor_dropdown' %}",
+    url: "{% url 'vendor_credit_dropdown' %}",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -2701,100 +2513,6 @@ function reloadVendor() {
   });
 }
 
-//--------payment terms modal-----------
-
-$(document).on("click","#paySave",function(){
-  $.ajax({
-    
-    type : 'POST',
-    url:"{% url 'purchase_pay' %}",
-
-    data:{
-        name : $("#term_name").val(),
-        days : $("#term_days").val(),
-        
-        csrfmiddlewaretoken: '{{ csrf_token }}'
-        
-      },
-    
-      success: function(response) {
-        document.getElementById("modalPayment").reset();
-        reloadPayment();
-      },
-  });        
-});
-
-function reloadPayment() {
-
-  $.ajax({
-    url: "{% url 'payment_dropdown' %}",
-    type: "GET",
-    dataType: "json",
-    data: $(this).serialize(),
-    csrfmiddlewaretoken: '{{ csrf_token }}',
-
-    success: function(data) {
-      var dropdown = $('#terms');
-      dropdown.empty();
-      var drpv = $('#v_terms');
-      drpv.empty();
-      $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
-          drpv.append($('<option></option>').attr('value', key).text(value).val(value));
-      });
-    },
-    error: function(xhr, status, error) {
-    console.error(xhr.responseText);
-    }
-  });
-}
-
-
-// unit modal
-
-
-$(document).on("click","#unitSave",function(){
-  $.ajax({
-    
-    type : 'POST',
-    url:"{% url 'purchase_unit' %}",
-
-    data:{
-        unit : $("#unit").val(),      
-        csrfmiddlewaretoken: '{{ csrf_token }}'
-        
-      },
-    
-      success: function(response) {
-        document.getElementById("modalUnit").reset();
-        reloadUnit();
-      },
-  });        
-});
-
-
-function reloadUnit() {
-
-  $.ajax({
-    url: "{% url 'purchase_unit_dropdown' %}",
-    type: "GET",
-    dataType: "json",
-    data: $(this).serialize(),
-    csrfmiddlewaretoken: '{{ csrf_token }}',
-
-    success: function(data) {
-      var dropdown = $('#item_units');
-      dropdown.empty();
-
-      $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
-      });
-    },
-    error: function(xhr, status, error) {
-    console.error(xhr.responseText);
-    }
-  });
-}
 
 
 // item modal
@@ -2850,7 +2568,7 @@ $(document).on("click","#itemSave",function(){
   $.ajax({
     
     type : 'POST',
-    url:"{% url 'purchase_item' %}",
+    url:"{% url 'vendor_credit_item' %}",
     
     data:{
         type : itemtype,
@@ -2879,7 +2597,7 @@ $(document).on("click","#itemSave",function(){
 
 function reloadItem() {
   $.ajax({
-    url: "{% url 'purchase_item_dropdown' %}",
+    url: "{% url 'vendor_credit_item_dropdown' %}",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -2899,52 +2617,7 @@ function reloadItem() {
   });
 }
 
-// account modal
 
-$(document).on("click","#accountSave",function(){
-
-  $.ajax({
-    
-    type : 'POST',
-    url:"{% url 'purchase_account' %}",
-    
-    data:{
-        actype : $("#acct_type").val(),
-        acname : $("#acct_name").val(),
-     
-        csrfmiddlewaretoken: '{{ csrf_token }}'
-        
-      },
-    
-      success: function(response) {
-        document.getElementById("modalAccount").reset();
-        reloadAccount();
-      },
-  });        
-});
-
-
-function reloadAccount() {
-  $.ajax({
-    url: "{% url 'purchase_account_dropdown' %}",
-    type: "GET",
-    dataType: "json",
-    data: $(this).serialize(),
-    csrfmiddlewaretoken: '{{ csrf_token }}',
-
-    success: function(data) {
-      var dropdown = $('.acnt');
-      dropdown.empty();
-
-      $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
-      });
-    },
-    error: function(xhr, status, error) {
-    console.error(xhr.responseText);
-    }
-  });
-}
 
 </script>
 
@@ -2991,7 +2664,7 @@ function calculateGrandTotal() {
     grandTotal += taxAmount;
     totalTaxAmount += taxAmount;
   });
-  var shippingCharges = parseFloat($('#shipping').val());
+  var shippingCharges = parseFloat($('#adjustment').val());
   grandTotal += shippingCharges;
 
   $('#grandtotal').val(grandTotal.toFixed(2));
@@ -3020,140 +2693,8 @@ function calculateGrandTotal() {
           </div>
         </td>
 
-        <td  style="width: 15%;">
-          <div class="d-flex">
-            <select name='account[]' id="account${rowCount}" class="form-control bg-light text-dark acnt">
-              <option value=" " selected disabled >Select Account</option>
-              <optgroup class=""label="Accounts Payable">
-                        <option value='Accounts Payable'>Accounts Payable</option>
-                      </optgroup>
-  
-                      <optgroup class="" label="Accounts Receivable">
-                        <option value='Accounts Receivable'>Accounts Receivable</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Other Current Asset">
-                        <option value='Advance Tax'>Advance Tax</option>
-                        <option value='Employee Advance'>Employee Advance</option>
-                        <option value='Prepaid Expences'>Prepaid Expences</option>
-                        <option value='GST TCS Receivable'>GST TCS Receivable</option>
-                        <option value='GST TDS Receivable'>GST TDS Receivable</option>
-                        <option value='Input Tax Credits'>Input Tax Credits</option>
-                        <option value='Input CGST'>Input CGST</option>
-                        <option value='Input IGST'>Input IGST</option>
-                        <option value='Input SGST'>Input SGST</option>
-                        <option value='Reverse Charge Input Tax but not Due'>Reverse Charge Input Tax but not Due</option>
-                        <option value='Sales to Customers(Cash)'>Sales to Customers(Cash)</option>
-                        <option value='TDS Receivable'>TDS Receivable</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Expence">
-                        <option value='Advertising and Marketing'>Advertising and Marketing</option>
-                        <option value='Automobile Expense'>Automobile Expense</option>
-                        <option value='Bad Debt'>Bad Debt</option>
-                        <option value='Bank Fees and Charges'>Bank Fees and Charges</option>
-                        <option value='Consultant Expense'>Consultant Expense</option>
-                        <option value='Credit Card Expense'>Credit Card Expense</option>
-                        <option value='IT and Internet Expenses'>IT and Internet Expenses</option>
-                        <option value='Janitorial Expences'>Janitorial Expences</option>
-                        <option value='Lodging'>Lodging</option>
-                        <option value='Meals and Entertainment'>Meals and Entertainment</option>
-                        <option value='Office Supplies'>Office Supplies</option>
-                        <option value=0>Other Expenses</option>
-                        <option value='Other Expenses'>Postage</option>
-                        <option value='Printing and Stationery'>Printing and Stationery</option>
-                        <option value='Rent Expense'>Rent Expense</option>
-                        <option value='Repair and Maintenance'>Repair and Maintenance</option>
-                        <option value='Salaries and Employee Wages'>Salaries and Employee Wages</option>
-                        <option value='Telephone Expense'>Telephone Expense</option>
-                        <option value='Travel Expense'>Travel Expense</option>
-                        <option value='Uncategorized'>Uncategorized</option>
-                        <option value='Contract Assets'>Contract Assets</option>
-                        <option value='Depreciation and Amortisation'>Depreciation and Amortisation</option>
-                        <option value='Merchandise'>Merchandise</option>
-                        <option value='Raw Materials and Consumables'>Raw Materials and Consumables</option>
-                        <option value='Transpotaion Expense'>Transpotaion Expense</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Cost of Goods Sold">
-                        <option value='Cost of Goods Sold'>Cost of Goods Sold</option>
-                        <option value='Job Costing'>Job Costing</option>
-                        <option value='Labor'>Labor</option>
-                        <option value='Materials'>Materials</option>
-                        <option value='Subcontractor'>Subcontractor</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Income">
-                        <option value='Discount'>Discount</option>
-                        <option value='General Income'>General Income</option>
-                        <option value='Interest Income'>Interest Income</option>
-                        <option value='Late Fee Income'>Late Fee Income</option>
-                        <option value='Other Charges'>Other Charges</option>
-                        <option value='Sales'>Sales</option>
-                        <option value='Shipping Charge'>Shipping Charge</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Equity">
-                        <option value='Drawings'>Drawings</option>
-                        <option value='Opening Balance Offset'>Opening Balance Offset</option>
-                        <option value="Owner's Equity">Owner's Equity</option>
-                        <option value='Retained Earnings'>Retained Earnings</option>
-                        <option value='Capital Stock'>Capital Stock</option>
-                        <option value='Distributions'>Distributions</option>
-                        <option value='Dividends Paid'>Dividends Paid</option>
-                        <option value='Investments'>Investments</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Other Current Liability">
-                        <option value='Employee Reimbursements'>Employee Reimbursements</option>
-                        <option value='Opening Balance Adjustments'>Opening Balance Adjustments</option>
-                        <option value='Tax Payable'>Tax Payable</option>
-                        <option value='Unearned Revenue'>Unearned Revenue</option>
-                        <option value='GST Payable'>GST Payable</option>
-                        <option value='Output CGST'>Output CGST</option>
-                        <option value='Output IGST'>Output IGST</option>
-                        <option value='Output SGST'>Output SGST</option>
-                        <option value='TDS Payable'>TDS Payable</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Other Expense">
-                        <option value='Exchange Gain or Loss'>Exchange Gain or Loss</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Fixed Asset">
-                        <option value='Furniture and Equipment'>Furniture and Equipment</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Stock">
-                        <option value='Inventory Asset'>Inventory Asset</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Cash">
-                        <option value='Petty Cash'>Petty Cash</option>
-                        <option value='Undeposited Funds'>Undeposited Funds</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Other Liability">
-                        <option value='Tag Adjustments'>Tag Adjustments</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Long Term Liability">
-                        <option value='Construction Loans'>Construction Loans</option>
-                        <option value='Mortgages'>Mortgages</option>
-                      </optgroup>
-
-                      <optgroup class="" label="Others">
-                        {% for i in account %}
-                          <option value="{{ i.id }}">{{ i.accountName }} </option>
-                        {% endfor %}
-                      </optgroup>
-                      
-              <hr>
-              {% for i in account %}
-                <option value="{{ i.accountName }} ">{{ i.accountName }}</option>
-              {% endfor %}
-            </select>
-          </div>  
+        <td  style="width: 15%;" class='text-right'>
+          <input type='number' id='hsn${rowCount}' class='text-right bg-light text-dark hsn form-control' name='hsn[]' placeholder="Hsn">
         </td>
         
 
@@ -3267,9 +2808,9 @@ function calculateGrandTotal() {
     calculateTaxAmount();
   });
 
-  $('#shipping').on('input', function () {
+  $('#adjustment').on('input', function () {
     var shippingAmount = parseFloat($(this).val());5
-    $('#shipping_charge').val(shippingAmount.toFixed(2));
+    $('#add_round_off').val(shippingAmount.toFixed(2));
     calculateGrandTotal();
   });
 
@@ -3330,7 +2871,7 @@ function calculateTaxAmount() {
         var companyState = "[KL] Kerala"; // Replace with the actual value of company state
 
         var subtotal = parseFloat(document.getElementById("subtotal").value);
-        var shipping = parseFloat(document.getElementById("shipping").value);
+        var adjustment = parseFloat(document.getElementById("adjustment").value);
         var tax = parseFloat(document.getElementById("total_taxamount").value);
         
         var tax_rate = 0.0; // Default tax rate for IGST
@@ -3366,7 +2907,7 @@ function calculateTaxAmount() {
         }
 
         document.getElementById("total_taxamount").value = total_taxamount.toFixed(2);
-        var grandtotal = subtotal + total_taxamount + shipping;
+        var grandtotal = subtotal + total_taxamount + adjustment;
         document.getElementById("grandtotal").value = grandtotal.toFixed(2);
     }
 
@@ -3375,7 +2916,7 @@ function calculateTaxAmount() {
 
     // Add event listeners to update tax amounts when subtotal or shipping changes
     document.getElementById("subtotal").addEventListener("input", calculateTaxAmount);
-    document.getElementById("shipping").addEventListener("input", calculateTaxAmount);
+    document.getElementById("adjustment").addEventListener("input", calculateTaxAmount);
     
 
 function toggleDateInput() {

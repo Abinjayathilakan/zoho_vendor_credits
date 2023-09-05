@@ -279,9 +279,25 @@
                             <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off"  >
                         </div>
 
-                        <div class="col-md-2 mt-2 mx-2">
-                            <button onclick="sortTable()" class="btn btn-primary" style="width: 4.5rem;">a-z </button>
+                        <!-- <div class="col-md-2 mt-2 mx-2">
+                            <button onclick="sortTable()" class="btn btn-primary" style="width: 4.5rem;">a-z</button>
                         </div>
+                        <div class="col-md-2 mt-2 mx-2">
+                            <button onclick="sortTable()" class="btn btn-primary" style="width: 4.5rem;">Sort</button>
+                        </div> -->
+
+                        <div class="col-md-2 mt-2 mx-1">
+                            <div class="dropdown">
+                                <button class="btn text-center btn-primary bi bi-funnel px-3 py-1" type="button" data-bs-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                </button>
+                                <div class="dropdown-menu" style="z-index: 1;">
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="sortTable(true)">Vendor A-Z</a>
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="sortTable(false)">Vendor Z-A</a>
+                                </div>
+                            </div>
+                        </div>
+                        
 
                         <!-- <div class="col-md-2 mt-2 mx-1"> -->
                             <!-- <a class="btn text-center btn-primary bi bi-funnel px-3 py-1" data-bs-toggle="dropdown"
@@ -309,31 +325,23 @@
                 <div class="row mt-5 bills">
                     {% for b in recur_bills %}
                         <a href="{% url 'view_vendor_credits' b.id %}" class="my-3">
-                            
-                            <div class="row mt-3" id="myTable"  >
+                            <div class="row mt-3">
                                 <div class="col-md-7">
-                                    <!-- <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">
-                                        <span style="display: none;">{{ b.company_name.split.0 }}</span>
-                                        <span>{{ b.company_name.split.1 }}</span>
-                                        <span>{{ b.company_name.split.2 }}</span>
-                                      </label><br> -->
-                                      <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">{{b.company_name}} </label><br>
-                                      
-                                      
-                                      
-                                      
-                                        <!-- <label style="color: rgb(129, 126, 126); font-size: 15px;" class="mx-3 px-2"># RB- {{ b.id }} </label> -->
-                                        <label style="color: rgb(129, 126, 126); font-size: 15px; "class="mx-2 px-2"> {{ b.vendor_date }} </label>
+                                    <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">
+                                        <span>{{ b.vendor_name.split.0 }}</span>
+                                        <span>{{ b.vendor_name.split.1 }}</span>
+                                        <span style="display: none;">{{ b.vendor_name.split.2 }}</span>
+                                    </label><br>
+                                    <!-- <label style="color: rgb(129, 126, 126); font-size: 15px; " class="mx-2 px-2"># RB- {{ b.id }} </label> -->
+                                    <label style="color: rgb(129, 126, 126); font-size: 15px; " class="mx-2 px-2"> {{ b.vendor_date }} </label>
                                 </div>
-                                <!-- <div class="col-md-1"></div> -->
                                 <div class="col-md-5 mt-3">
                                     <label style="color: rgb(129, 126, 126); font-size: 15px;">₹ {{ b.grand_total|floatformat:2 }} </label>
                                 </div>
                             </div>
-
-                        </a> 
+                        </a>
                     {% endfor %}
-                </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -341,12 +349,12 @@
         <div class="card radius-15 " style="border-bottom: 0.5px solid; color: dimgray;">
             <div class="card-body">
                 <div class="card-title">
-                    <!-- <h3 class="mb-0" id="prof_name">
-                        <span style="display: none;">{{ recur_bill.company_name.split.0 }}</span>
-                        <span>{{ recur_bill.company_name.split.1 }}</span>
-                        <span>{{ recur_bill.company_name.split.2 }}</span>
-                      </h3> -->
-                      <h3 class="mb-0" id="prof_name">{{recur_bill.company_name}}</h3>
+                    <h3 class="mb-0" id="prof_name">
+                        <span>{{ recur_bill.vendor_name.split.0 }}</span>
+                        <span>{{ recur_bill.vendor_name.split.1 }}</span>
+                        <span style="display: none;">{{ recur_bill.vendor_name.split.2 }}</span>
+                      </h3>
+                      <!-- <h3 class="mb-0" id="prof_name">{{recur_bill.vendor_name}}</h3> -->
                       
                 </div>
 
@@ -357,7 +365,7 @@
                     </div>
 
                     <div class="mx-4">
-                        <a href="{% url 'edit_vendor_credits' recur_bill.id %}" class=" fa fa-pencil btns px-2 py-2"
+                        <a href=" {% url 'edit_vendor_credits' recur_bill.id %}" class=" fa fa-pencil btns px-2 py-2"
                               data-toggle="tooltip" title="EDIT"> </a>
                         <a href="{% url 'delete_vendor_credits' recur_bill.id %} " class="delete fa fa-trash btns px-2 py-2"
                          data-toggle="tooltip" title="DELETE" onclick="return confirm('Do you want to Delete this Vendor Credit?');"> </a>
@@ -429,9 +437,9 @@
                         <section class="d-flex justify-content-between">
                             <div class="top-right">
                                 <div class="graphic-path text-center">
-                                  <h3 class="text-uppercase" style="color: black;"> <span style="display: none;">{{ recur_bill.company_name.split.0 }}</span>
-                                    <span>{{ recur_bill.company_name.split.1 }}</span>
-                                    <span>{{ recur_bill.company_name.split.2 }}</span>
+                                  <h3 class="text-uppercase" style="color: black;"> <span>{{ recur_bill.vendor_name.split.0 }}</span>
+                                    <span>{{ recur_bill.vendor_name.split.1 }}</span>
+                                    <span style="display: none;">{{ recur_bill.vendor_name.split.2 }}</span>
 
                                 </div></h3> 
                                 <div class="position-relative">
@@ -453,7 +461,7 @@
                             <div class="col-1 "></div>
                             <div class="col-5">
                                 <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Bill To,</p>
-                                <h6  class="mx-3 text-capitalize" style="color: black; ">{{ vendor.salutation}} {{vendor.first_name}} {{ vendor.last_name}}</h6>
+                                <h6  class="mx-3 text-capitalize" style="color: black; ">{{recur_bill.address}}</h6>
                                 <p class="address col-6 mx-4 p-2" style="margin-left: -14px;">{{vendor.baddress}}<br>
                                     {{vendor.bcity}}<br>
                                     {{vendor.bstate}}<br> 
@@ -592,7 +600,10 @@
                                     <h6 class="mb-0 text-grey ">Company Name :</h6>
                                 </div>
                                 <div class="col-md-6 mt-3">
-                                    <p class="mb-0 " style="font-size: 18px; color: #434141;"><span style="display: none;">{{ recur_bill.company_name}}</span>
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">
+                                        <span>{{ recur_bill.vendor_name.split.0 }}</span>
+                                        <span>{{ recur_bill.vendor_name.split.1 }}</span>
+                                        <span style="display: none;">{{ recur_bill.vendor_name.split.2 }}</span>
                                        
                                 </div>
                             </div>
@@ -674,7 +685,11 @@
                                     <h5 style="color: #ccc;">Vendor :</h5>
                                 </div><br>
                                 <div class="col-md-12 my-0 mx-5">
-                                    <h6 class="text-capitalize" style="color: azure;">{{ b.company_name }}</h6>
+                                    <h6 class="text-capitalize" style="color: azure;">
+                                        <span>{{ recur_bill.vendor_name.split.0 }}</span>
+                                        <span>{{ recur_bill.vendor_name.split.1 }}</span>
+                                        <span style="display: none;">{{ recur_bill.vendor_name.split.2 }}</span>
+                                    </h6>
                                 </div>
                             </div>
                             <!-- <div class="d-flex justify-content-between mb-5">
@@ -698,7 +713,7 @@
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between mb-5">
+                            <!-- <div class="d-flex justify-content-between mb-5">
                                 <div class="col-md-5 mt-3">
                                     <h6 style="color: #ccc;">Item :</h5><br>
                                 </div>
@@ -706,7 +721,7 @@
                                     <input type="text" value="{{ bill_item.item }}" class="amnt"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="justify-content-between mb-5 d-none" id="igst">
                                 <div class="col-md-4 mt-3">
                                     <h6 style="color: #ccc;">IGST :</h5><br>
@@ -1103,58 +1118,46 @@ $(document).ready(function () {
   </script>
 
   <script>
-  function myFunction(){
-    var input,filter,table,tr,td,i,txtValue;
-    input=document.getElementById("myInput");
-    filter=input.value.toUpperCase();
-    table=document.getElementById("myTable");
-    tr=table.getElementsByTagName("tr");
-    for(i = 0; i < tr.length; i++)
-    {
-        td=tr[i].getElementsByTagName("td")[0];
-        if(td){
-            txtValue=td.textContent || td.innerText;
-            if(txtValue.toUpperCase().indexOf(filter) > -1){
-                tr[i].style.display="";
+    var ascending = true; // Initialize sorting order as ascending
+
+    function sortTable(ascendingOrder) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.querySelector(".bills");
+        switching = true;
+        
+        while (switching) {
+            switching = false;
+            rows = table.querySelectorAll(".row");
+            for (i = 0; i < rows.length - 1; i++) {
+                shouldSwitch = false;
+                x = rows[i].querySelector(".pname span:first-child");
+                y = rows[i + 1].querySelector(".pname span:first-child");
+                
+                var xText = x.textContent.toLowerCase();
+                var yText = y.textContent.toLowerCase();
+                
+                if (ascendingOrder) {
+                    if (xText > yText) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if (xText < yText) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
             }
-            else{
-                tr[i].style.display="none";
+            
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
             }
         }
+        
+        // Update the ascending variable based on the selected sorting order
+        ascending = ascendingOrder;
     }
-}
-
-function sortTable()
-{
-    var table,i,x,y;
-    table=document.getElementById("myTable");
-    var switching=true;
-    while(switching)
-    {
-        switching=false;
-        var rows=table.rows
-        for(i = 0 ; i < (rows.length - 1) ; i++)
-        {
-            var Switch=false;
-            x = rows[i].getElementsByTagName("TD") [0];
-            y = rows[i + 1].getElementsByTagName("TD") [0];
-            if(x.innerText.toLowerCase() > y.innerText.toLowerCase())
-            {
-                Switch=true;
-                break;
-            }
-
-        }
-        if(Switch)
-        {
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching=true
-        }
-    }
-}
-  
-
-  
 </script>
 
 {% endblock %}

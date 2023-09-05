@@ -162,7 +162,7 @@
                     <div class="col-md-6"></div>
                     <div class="col-md-3">
                         
-                        <a class="btn text-center px-3 py-2 " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        <!-- <a class="btn text-center px-3 py-2 " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         role="button"><i class="fa fa-filter mx-3"></i>
                         </a>
                         <div class="dropdown-menu ">
@@ -174,7 +174,7 @@
                             <a class="dropdown-item" href="{% url 'recur_profileasc' %}">Profile A-Z</a>
                             <a class="dropdown-item" href="{% url 'recur_profiledesc' %}">Profile Z-A</a>
 
-                        </div>
+                        </div> -->
                         <a href="{% url 'add_vendor_credits' %}" class="btn fa fa-plus text-right px-3 py-2" role="button">
                             <span class="mt-2">&nbsp;&nbsp;NEW</span>
                         </a>
@@ -186,8 +186,8 @@
                         <thead>
                             <tr>
                                 <th>DATE</th>
-                                <th>PROFILE NAME</th>
                                 <th>VENDOR NAME</th>
+                                <th>VENDOR EMAIL</th>
                                 <th>TAX AMOUNT</th>
                                 <th>AMOUNT</th>
                                 <th>ACTION</th>
@@ -197,8 +197,11 @@
                             {% for r in recur_bill %}
                             <tr >
                                 <th><a href="{% url 'view_vendor_credits' r.id %}">{{ r.vendor_date }}</a></th>
-                                <td><a href="{% url 'view_vendor_credits' r.id %}"> {{ r.vendor_email }}</a></td>
-                                <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.company_name }}</a></td>
+                                <td><a href="{% url 'view_vendor_credits' r.id %}"> 
+                                    <span>{{ r.vendor_name.split.0 }}</span>
+                                    <span>{{ r.vendor_name.split.1 }}</span>
+                                    <span style="display: none;">{{ r.vendor_name.split.2 }}</span></a></td>
+                                <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.vendor_email }}</a></td>
                                 <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.tax_amount }}</a></td>
                                 <td><a href="{% url 'view_vendor_credits' r.id %}">{{ r.grand_total|floatformat:2 }}</a></td>
                                 <td class="text-right">

@@ -6063,12 +6063,12 @@ def edit_Purchase_order(request,id):
         discount = request.POST.getlist("discount[]")
         amount = request.POST.getlist("amount[]")
 
-        obj_dele = Vendor_Credits_Bills_items_bills.objects.filter(PO=p_bill.id)
+        obj_dele = Purchase_Order_items.objects.filter(PO=p_bill.id)
         obj_dele.delete()
 
         if len(item) == len(accounts) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
             for i in range(len(item)):
-                created = Vendor_Credits_Bills_items_bills.objects.create(
+                created = Purchase_Order_items.objects.create(
                     item=item[i],
                     account=accounts[i],
                     quantity=quantity[i],
@@ -6831,11 +6831,11 @@ def vendor_credits_home(request):
     company = company_details.objects.get(user = request.user)
     recur = Vendor_Credits_Bills.objects.filter(user = request.user.id).values()
     for r in recur:
-        vn = r['company_name'].split()[1:]
+        vn = r['vendor_name'].split()[1:]
         r['vend_name'] = " ".join(vn)
         
 
-    sorted_recur = sorted(recur, key=lambda r: r['company_name'],reverse=True) 
+    sorted_recur = sorted(recur, key=lambda r: r['vendor_name'],reverse=True) 
 
     context = {
                 'company' : company,
@@ -6983,25 +6983,25 @@ def vendor_credits_home(request):
 
 
 
-@login_required(login_url='login')
-def get_customer_credit_det(request):
+# @login_required(login_url='login')
+# def get_customer_credit_det(request):
 
-    company= company_details.objects.get(user = request.user)
+#     company= company_details.objects.get(user = request.user)
 
-    name = request.POST.get('name')
-    id = request.POST.get('id')
-    # print(name)
+#     name = request.POST.get('name')
+#     id = request.POST.get('id')
+#     # print(name)
 
-    cust = customer.objects.get(user=company.user_id,id= id)
-    email = cust.customerEmail
-    gstin = 0
-    gsttr = cust.GSTTreatment
-    cstate = cust.placeofsupply.split("] ")[1:]
-    print(email)
-    print(gstin)
-    state = 'Not Specified' if cstate == "" else cstate
+#     cust = customer.objects.get(user=company.user_id,id= id)
+#     email = cust.customerEmail
+#     gstin = 0
+#     gsttr = cust.GSTTreatment
+#     cstate = cust.placeofsupply.split("] ")[1:]
+#     print(email)
+#     print(gstin)
+#     state = 'Not Specified' if cstate == "" else cstate
 
-    return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr, 'gstin': gstin , 'state' : state},safe=False)
+#     return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr, 'gstin': gstin , 'state' : state},safe=False)
 
 @login_required(login_url='login')
 def vendor_credit_vendor(request):
@@ -7069,63 +7069,63 @@ def vendor_credit_dropdown(request):
 
 
 
-@login_required(login_url='login')
-def vendor_credit_pay(request):
+# @login_required(login_url='login')
+# def vendor_credit_pay(request):
     
-    company = company_details.objects.get(user = request.user)
+#     company = company_details.objects.get(user = request.user)
 
-    if request.method=='POST':
+#     if request.method=='POST':
 
-        name=request.POST.get('name')
-        days=request.POST.get('days')
+#         name=request.POST.get('name')
+#         days=request.POST.get('days')
         
-        u = User.objects.get(id = request.user.id)
+#         u = User.objects.get(id = request.user.id)
 
-        pay = payment_terms(Terms=name, Days=days, user = u)
-        pay.save()
+#         pay = payment_terms(Terms=name, Days=days, user = u)
+#         pay.save()
 
-        return HttpResponse({"message": "success"})
+#         return HttpResponse({"message": "success"})
         
-@login_required(login_url='login')
-def vendor_credit_pay_dropdown(request):
+# @login_required(login_url='login')
+# def vendor_credit_pay_dropdown(request):
 
-    user = User.objects.get(id=request.user.id)
+#     user = User.objects.get(id=request.user.id)
 
-    options = {}
-    option_objects = payment_terms.objects.filter(user = user)
-    for option in option_objects:
-        options[option.id] = [option.Terms,option.Days]
+#     options = {}
+#     option_objects = payment_terms.objects.filter(user = user)
+#     for option in option_objects:
+#         options[option.id] = [option.Terms,option.Days]
 
-    return JsonResponse(options)
+#     return JsonResponse(options)
 
 
-@login_required(login_url='login')
-def vendor_credit_unit(request):
+# @login_required(login_url='login')
+# def vendor_credit_unit(request):
     
-    company = company_details.objects.get(user = request.user)
+#     company = company_details.objects.get(user = request.user)
 
-    if request.method=='POST':
+#     if request.method=='POST':
 
-        unit =request.POST.get('unit')
+#         unit =request.POST.get('unit')
         
-        u = User.objects.get(id = request.user.id)
+#         u = User.objects.get(id = request.user.id)
 
-        unit = Unit(unit= unit)
-        unit.save()
+#         unit = Unit(unit= unit)
+#         unit.save()
 
-        return HttpResponse({"message": "success"})
+#         return HttpResponse({"message": "success"})
         
-@login_required(login_url='login')
-def vendor_credit_unit_dropdown(request):
+# @login_required(login_url='login')
+# def vendor_credit_unit_dropdown(request):
 
-    user = User.objects.get(id=request.user.id)
+#     user = User.objects.get(id=request.user.id)
 
-    options = {}
-    option_objects = Unit.objects.all()
-    for option in option_objects:
-        options[option.id] = [option.unit,option.id]
+#     options = {}
+#     option_objects = Unit.objects.all()
+#     for option in option_objects:
+#         options[option.id] = [option.unit,option.id]
 
-    return JsonResponse(options)
+#     return JsonResponse(options)
 
 @login_required(login_url='login')
 def vendor_credit_item(request):
@@ -7177,61 +7177,61 @@ def vendor_credit_item_dropdown(request):
     return JsonResponse(options)
 
 
-@login_required(login_url='login')
-def vendor_credit_account(request):
+# @login_required(login_url='login')
+# def vendor_credit_account(request):
 
-    company = company_details.objects.get(user = request.user)
+#     company = company_details.objects.get(user = request.user)
 
 
-    if request.method=='POST':
-        type=request.POST.get('actype')
-        name=request.POST['acname']
-        u = User.objects.get(id = request.user.id)
+#     if request.method=='POST':
+#         type=request.POST.get('actype')
+#         name=request.POST['acname']
+#         u = User.objects.get(id = request.user.id)
         
-        acnt=Account(accountType=type,accountName=name,user = u)
+#         acnt=Account(accountType=type,accountName=name,user = u)
 
-        acnt.save()
+#         acnt.save()
 
-        return HttpResponse({"message": "success"})
+#         return HttpResponse({"message": "success"})
         
-@login_required(login_url='login')
-def vendor_credit_account_dropdown(request):
+# @login_required(login_url='login')
+# def vendor_credit_account_dropdown(request):
 
-    user = User.objects.get(id=request.user.id)
+#     user = User.objects.get(id=request.user.id)
 
-    options = {}
-    option_objects = Chart_of_Account.objects.filter(user = user)
-    for option in option_objects:
-        options[option.id] = [option.account_name,option.id]
+#     options = {}
+#     option_objects = Chart_of_Account.objects.filter(user = user)
+#     for option in option_objects:
+#         options[option.id] = [option.account_name,option.id]
 
-    return JsonResponse(options)
+#     return JsonResponse(options)
 
 
-@login_required(login_url='login')
-def vendor_credit_get_rate(request):
+# @login_required(login_url='login')
+# def vendor_credit_get_rate(request):
 
-    user = User.objects.get(id=request.user.id)
-    if request.method=='POST':
-        id=request.POST.get('id')
+#     user = User.objects.get(id=request.user.id)
+#     if request.method=='POST':
+#         id=request.POST.get('id')
 
-        item = AddItem.objects.get( id = id, user = user)
+#         item = AddItem.objects.get( id = id, user = user)
          
-        rate = 0 if item.s_price == "" else item.s_price
+#         rate = 0 if item.s_price == "" else item.s_price
 
-        return JsonResponse({"rate": rate},safe=False)
+#         return JsonResponse({"rate": rate},safe=False)
     
-@login_required(login_url='login')
-def vendor_credit_get_cust_state(request):
+# @login_required(login_url='login')
+# def vendor_credit_get_cust_state(request):
 
-    user = User.objects.get(id=request.user.id)
-    if request.method=='POST':
+#     user = User.objects.get(id=request.user.id)
+#     if request.method=='POST':
 
-        id=request.POST.get('id')
-        cust = customer.objects.get(id = id, user = user)
-        cstate = cust.placeofsupply.split("] ")[1]
-        state = 'Not Specified' if cstate == "" else cstate
+#         id=request.POST.get('id')
+#         cust = customer.objects.get(id = id, user = user)
+#         cstate = cust.placeofsupply.split("] ")[1]
+#         state = 'Not Specified' if cstate == "" else cstate
 
-        return JsonResponse({"state": state},safe=False)
+#         return JsonResponse({"state": state},safe=False)
 
 
 
@@ -7249,7 +7249,7 @@ def get_vendor_credit_det(request):
     gsttr = vdr.gst_treatment
     baddress = vdr.baddress
 
-    return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr, 'vendor_name' : baddress},safe=False)
+    return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr, 'baddress' : baddress},safe=False)
 
 @login_required(login_url='login')
 def get_vendor_credit_det1(request):
@@ -7273,6 +7273,25 @@ def get_vendor_credit_det1(request):
     baddress = vdr.baddress
 
     return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr, 'vendor_name' : baddress},safe=False)
+
+
+def itemdata_vendor_credit(request):
+    cur_user = request.user
+    user = User.objects.get(id=cur_user.id)
+    company = company_details.objects.get(user=user)
+    print(company.state)
+    id = request.GET.get('id')
+    
+
+    
+
+    item = AddItem.objects.get(Name=id, user=user)
+    name=item.Name
+    rate = item.p_price
+    place = company.state
+
+    return JsonResponse({"status": " not", 'place': place, 'rate': rate})
+    return redirect('/')
 
 # @login_required(login_url='login')
 # def vendor_credits_home(request):
@@ -7468,7 +7487,8 @@ def vendor_credit_comment(request):
         r_bill.comments = cmnt
         r_bill.save()
 
-        return HttpResponse({"message": "success"})
+        return redirect('vendor_credits_home',id)
+    return redirect('vendor_credits_home')
 
 @login_required(login_url='login')
 def vendor_credit_add_file(request,id):
@@ -7589,7 +7609,7 @@ def vc_view_vendorasc(request,id):
 @login_required(login_url='login')
 def vc_view_vendordesc(request,id):
     company = company_details.objects.get(user = request.user)
-    bills =Vendor_Credits_Bills.objects.filter(user = request.user).order_by('-company_name')
+    bills =Vendor_Credits_Bills.objects.filter(user = request.user).order_by('-vendor_name')
 
     rbill=Vendor_Credits_Bills.objects.get(user = request.user, id= id)
     billitem = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills=id)
@@ -7632,50 +7652,50 @@ def delete_vendor_credits(request, id):
 
 
 
-@login_required(login_url='login')
-def edit_vendor_credits(request,id):
+# @login_required(login_url='login')
+# def edit_vendor_credits(request,id):
 
-    company = company_details.objects.get(user = request.user)
-    vendor = vendor_table.objects.filter(user = request.user)
-    acnt = Chart_of_Account.objects.filter(user = request.user)
-    acnt_type = Chart_of_Account.objects.filter(user = request.user).values('account_type').distinct()
-    # cust = customer.objects.filter(user = request.user)
-    item = AddItem.objects.filter(user = request.user)
-    payments = payment_terms.objects.filter(user = request.user)
-    units = Unit.objects.all()
-    sales=Sales.objects.all()
-    purchase=Purchase.objects.all()
+#     company = company_details.objects.get(user = request.user)
+#     vendor = vendor_table.objects.filter(user = request.user)
+#     acnt = Chart_of_Account.objects.filter(user = request.user)
+#     acnt_type = Chart_of_Account.objects.filter(user = request.user).values('account_type').distinct()
+#     # cust = customer.objects.filter(user = request.user)
+#     item = AddItem.objects.filter(user = request.user)
+#     payments = payment_terms.objects.filter(user = request.user)
+#     units = Unit.objects.all()
+#     sales=Sales.objects.all()
+#     purchase=Purchase.objects.all()
     
-    sales_type = set(Sales.objects.values_list('Account_type', flat=True))
-    purchase_type = set(Purchase.objects.values_list('Account_type', flat=True))
-    recur_bills = Vendor_Credits_Bills.objects.get(user = request.user,id=id)
-    recur_item = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills = id)   
+#     sales_type = set(Sales.objects.values_list('Account_type', flat=True))
+#     purchase_type = set(Purchase.objects.values_list('Account_type', flat=True))
+#     recur_bills = Vendor_Credits_Bills.objects.get(user = request.user,id=id)
+#     recur_item = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills = id)   
 
-    # c = customer.objects.filter(user = request.user).get(id = recur_bills.customer_name.split(' ')[0])
-    v = vendor_table.objects.filter(user = request.user)
-    # print(recur_bills.customer_name.split(" ")[2:])
-    context = {
-        'company' : company,
-        'vendor' : vendor,
-        'account': acnt,
-        'account_type' : acnt_type,
-        # 'customer' : cust,
-        'item' : item,
-        'payments' :payments,
-        'units' :units,
-        'sales' :sales,
-        'purchase':purchase,
-        'sales_type':sales_type,
-        'purchase_type':purchase_type,
-        'recur_bills': recur_bills,
-        'recur_items' : recur_item,
-        # 'cust':c,
-        'vend' : v,
-        'vend_name' : " ".join(recur_bills.company_name.split(" ")[1:]),
-        # 'cust_name' : " ".join(recur_bills.customer_name.split(" ")[2:])
-    }
+#     # c = customer.objects.filter(user = request.user).get(id = recur_bills.customer_name.split(' ')[0])
+#     v = vendor_table.objects.filter(user = request.user)
+#     # print(recur_bills.customer_name.split(" ")[2:])
+#     context = {
+#         'company' : company,
+#         'vendor' : vendor,
+#         'account': acnt,
+#         'account_type' : acnt_type,
+#         # 'customer' : cust,
+#         'item' : item,
+#         'payments' :payments,
+#         'units' :units,
+#         'sales' :sales,
+#         'purchase':purchase,
+#         'sales_type':sales_type,
+#         'purchase_type':purchase_type,
+#         'recur_bills': recur_bills,
+#         'recur_items' : recur_item,
+#         # 'cust':c,
+#         'vend' : v,
+#         'vend_name' : " ".join(recur_bills.company_name.split(" ")[1:]),
+#         # 'cust_name' : " ".join(recur_bills.customer_name.split(" ")[2:])
+#     }
 
-    return render(request,'edit_vendor_credits_3.html',context)
+#     return render(request,'edit_vendor_credits_3.html',context)
 
 
 # def change_vendor_credits(request,id):
@@ -7944,37 +7964,43 @@ def create_vendor_credit(request):
         vmail = request.POST.get('email_inp')
         vgst_t = request.POST.get('gst_trt_inp')
         vgst_n = request.POST.get('gstin_inp')
+        vaddress = request.POST.get('address_inp')
+        
+        credit_note = request.POST.get('credit_note')
+        order_no = request.POST.get('order_number')
+        vendor_date = request.POST.get('credit_date')
             
-        orgname = request.POST.get('orgName')
-        org_gst = request.POST.get('gstNumber')
-        org_address = request.POST.get('orgAddress')
-        org_street = request.POST.get('orgstreet')
-        org_city = request.POST.get('orgcity')
-        org_state = request.POST.get('orgstate')
+        # orgname = request.POST.get('orgName')
+        # org_gst = request.POST.get('gstNumber')
+        # org_address = request.POST.get('orgAddress')
+        # org_street = request.POST.get('orgstreet')
+        # org_city = request.POST.get('orgcity')
+        # org_state = request.POST.get('orgstate')
             
-        cname = request.POST.get('custom')
-        cmail = request.POST.get('custMail')
-        caddress = request.POST.get('custAddress')
-        cstreet = request.POST.get('custStreet')
-        ccity = request.POST.get('custcity')
-        cstate = request.POST.get('custstate')
+        # cname = request.POST.get('custom')
+        # cmail = request.POST.get('custMail')
+        # caddress = request.POST.get('custAddress')
+        # cstreet = request.POST.get('custStreet')
+        # ccity = request.POST.get('custcity')
+        # cstate = request.POST.get('custstate')
 
         src_supply = request.POST.get('srcofsupply')
-        po = request.POST['pur_ord']
-        ref = request.POST['ref']
-        terms = request.POST['terms']
-        start = request.POST.get('start_date')
-        end =  request.POST.get('end_date')
+        # po = request.POST['pur_ord']
+        # ref = request.POST['ref']
+        # terms = request.POST['terms']
+        # start = request.POST.get('start_date')
+        # end =  request.POST.get('end_date')
         sub_total =request.POST['subtotal']
         sgst=request.POST['sgst']
         cgst=request.POST['cgst']
         igst=request.POST['igst']
         tax = request.POST['total_taxamount']
-        shipping_charge= request.POST['shipping_charge']
+        # shipping_charge= request.POST['shipping_charge']
+        adjustment=request.POST['add_round_off']
         grand_total=request.POST['grandtotal']
         note=request.POST['customer_note']
-        terms_con = request.POST['tearms_conditions']
-        orgMail=request.POST.get('orgMail')
+        # terms_con = request.POST['tearms_conditions']
+        # orgMail=request.POST.get('orgMail')
         u = User.objects.get(id = request.user.id)
         print('yes')
         print(typ)
@@ -7982,39 +8008,47 @@ def create_vendor_credit(request):
            
 
             purchase = Vendor_Credits_Bills(vendor_name=vname,
-                                    vendor_mail=vmail,
-                                    vendor_gst_traet=vgst_t,
-                                    vendor_gst_no=vgst_n,
-                                    Org_name=orgname,
-                                    Org_address=org_address,
-                                    Org_gst=org_gst,
-                                    Org_street=org_street,
-                                    Org_city=org_city,
-                                    Org_state=org_state,
-                                    Org_mail=orgMail,
-                                    Pur_no=po,
-                                    ref=ref,
-                                    customer_name = '',
-                                    customer_mail='',
-                                    customer_address='',
-                                    customer_street='',
-                                    customer_city='',
-                                    customer_state='',
+                                    vendor_email=vmail,
+                                    gst_treatment=vgst_t,
+                                    gst_number=vgst_n,
+                                    address=vaddress,
+                                        
+                                    vendor_date=vendor_date,
+                                    order_no=order_no,
+                                    credit_note=credit_note,
+                                        
+                                        
+                                        # Org_name=orgname,
+                                        # Org_address=org_address,
+                                        # Org_gst=org_gst,
+                                        # Org_street=org_street,
+                                        # Org_city=org_city,
+                                        # Org_state=org_state,
+                                        # Org_mail=orgMail,
+                                        # Pur_no=po,
+                                        # ref=ref,
+                                        # customer_name = '',
+                                        # customer_mail='',
+                                        # customer_address='',
+                                        # customer_street='',
+                                        # customer_city='',
+                                        # customer_state='',
                                     source_supply=src_supply,
-                                    payment_terms = terms,
-                                    Ord_date = start,
-                                    exp_date = end,
+                                        # payment_terms = terms,
+                                        # Ord_date = start,
+                                        # exp_date = end,
                                     sub_total=sub_total,
                                     sgst=sgst,
                                     cgst=cgst,
                                     igst=igst,
                                     tax_amount=tax,
-                                    shipping_charge = shipping_charge,
+                                        # shipping_charge = shipping_charge,
+                                    adjustment=adjustment,
                                     grand_total=grand_total,
                                     note=note,
-                                    term=terms_con,
+                                        # term=terms_con,
                                     company=company,
-                                    user = u,typ=typ  )
+                                    user = u )
             purchase.save()
 
             p_bill = Vendor_Credits_Bills.objects.get(id=purchase.id)
@@ -8025,60 +8059,66 @@ def create_vendor_credit(request):
                 print('save')
         else:
             purchase = Vendor_Credits_Bills(vendor_name=vname,
-                                    vendor_mail=vmail,
-                                    vendor_gst_traet=vgst_t,
-                                    vendor_gst_no=vgst_n,
-                                    customer_name = cname,
-                                    customer_mail=cmail,
-                                    customer_street=cstreet,
-                                    customer_city=ccity,
-                                    customer_state=cstate,
-                                    Pur_no=po,
-                                    ref=ref,
-                                    Org_name='',
-                                    Org_address='',
-                                    Org_gst='',
-                                    Org_street='',
-                                    Org_city='',
-                                    Org_state='',
-                                    Org_mail='',
-                                    customer_address=caddress,
+                                    vendor_email=vmail,
+                                    gst_treatment=vgst_t,
+                                    gst_number=vgst_n,
+                                    address=vaddress,
+                                        
+                                    vendor_date=vendor_date,
+                                    order_no=order_no,
+                                    credit_note=credit_note,
+                                        # customer_name = cname,
+                                        # customer_mail=cmail,
+                                        # customer_street=cstreet,
+                                        # customer_city=ccity,
+                                        # customer_state=cstate,
+                                        # Pur_no=po,
+                                        # ref=ref,
+                                        # Org_name='',
+                                        # Org_address='',
+                                        # Org_gst='',
+                                        # Org_street='',
+                                        # Org_city='',
+                                        # Org_state='',
+                                        # Org_mail='',
+                                        # customer_address=caddress,
                                     source_supply=src_supply,
-                                    payment_terms = terms,
-                                    Ord_date = start,
-                                    exp_date = end,
+                                        # payment_terms = terms,
+                                        # Ord_date = start,
+                                        # exp_date = end,
                                     sub_total=sub_total,
                                     sgst=sgst,
                                     cgst=cgst,
                                     igst=igst,
                                     tax_amount=tax,
-                                    shipping_charge = shipping_charge,
+                                        # shipping_charge = shipping_charge,
+                                    adjustment=adjustment,
                                     grand_total=grand_total,
                                     note=note,
-                                    term=terms_con,
+                                        # term=terms_con,
                                     company=company,
-                                    user = u,typ=typ)
+                                    user = u)
             purchase.save()
 
             p_bill = Vendor_Credits_Bills.objects.get(id=purchase.id)
 
-    
+        
             if len(request.FILES) != 0:
                 p_bill.document=request.FILES['file'] 
                 p_bill.save()
                 print('save')
             item = request.POST.getlist("item[]")
-            accounts = request.POST.getlist("account[]")
+            hsn = request.POST.getlist("hsn[]")
             quantity = request.POST.getlist("quantity[]")
             rate = request.POST.getlist("rate[]")
             tax = request.POST.getlist("tax[]")
             discount = request.POST.getlist("discount[]")
             amount = request.POST.getlist("amount[]")
-            if len(item) == len(accounts) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
+            if len(item) == len(hsn) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
                 for i in range(len(item)):
                     created = Vendor_Credits_Bills_items_bills.objects.create(
                         item=item[i],
-                        account=accounts[i],
+                        hsn=hsn[i],
                         quantity=quantity[i],
                         rate=rate[i],
                         tax=tax[i],
@@ -8086,10 +8126,139 @@ def create_vendor_credit(request):
                         amount=amount[i],
                         user=u,
                         company=company,
-                        PO=p_bill
+                        recur_bills=p_bill
                     )
                 print('Done')
 
-        return redirect('purchaseView')
-    return render(request,'create_purchase_order.html')
+        return redirect('vendor_credits_home')
+    return render(request,'create_vendor_credits.html')
+
+
+def edit_vendor_credits(request,pk):
+    vendor=vendor_table.objects.all()
+    cust=customer.objects.filter(user = request.user)
+    payment=payment_terms.objects.all()
+    item=AddItem.objects.all()
+    account=Account.objects.all()
+    unit=Unit.objects.all()
+    sales=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    po=Vendor_Credits_Bills.objects.get(id=pk)
+    po_tabl=Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=pk)
+    context={
+        'vendor':vendor,
+        'customer':cust,
+        'payment':payment,
+        'item':item,
+        'account':account,
+        'units':unit,
+        'sales':sales,
+        'purchase':purchase,
+        'po':po,        
+        'po_table':po_tabl,
+    }
+    return render(request,'edit_vendor_credits.html',context)
+    
+    
+def change_vendor_credits(request,id):
+
+    company = company_details.objects.get(user = request.user)
+    po_id=Vendor_Credits_Bills.objects.get(id=id)
+    if request.method == 'POST':
+    
+        po_id.vendor_name = request.POST.get('vendor')
+        po_id.vendor_mail = request.POST.get('email_inp')
+        po_id.vendor_gst_traet = request.POST.get('gst_trt_inp')
+        po_id.vendor_gst_no = request.POST.get('gstin_inp')
+            
+        po_id.vaddress = request.POST.get('address_inp')       
+        po_id.credit_note = request.POST.get('credit_note')
+        po_id.order_no = request.POST.get('order_number')
+        po_id.vendor_date = request.POST.get('credit_date')
+
+        po_id.source_supply = request.POST.get('srcofsupply')
+
+        po_id.sub_total =request.POST['subtotal']
+        po_id.sgst=request.POST['sgst']
+        po_id.cgst=request.POST['cgst']
+        po_id.igst=request.POST['igst']
+        po_id.tax_amount = request.POST['total_taxamount']
+        po_id.grand_total=request.POST['grandtotal']
+        po_id.note=request.POST['customer_note']
+        po_id.adjustment=request.POST['add_round_off']
+        
+        u = User.objects.get(id = request.user.id)
+
+            
+        po_id.save()
+
+        p_bill = Vendor_Credits_Bills.objects.get(id=po_id.id)
+
+        if len(request.FILES) != 0:
+            p_bill.document=request.FILES['file'] 
+            p_bill.save()
+            print('save')
+    else:
+        po_id.vendor_name = request.POST.get('vendor')
+        po_id.vendor_mail = request.POST.get('email_inp')
+        po_id.vendor_gst_traet = request.POST.get('gst_trt_inp')
+        po_id.vendor_gst_no = request.POST.get('gstin_inp')
+            
+        po_id.vaddress = request.POST.get('address_inp')       
+        po_id.credit_note = request.POST.get('credit_note')
+        po_id.order_no = request.POST.get('order_number')
+        po_id.vendor_date = request.POST.get('credit_date')
+        po_id.source_supply = request.POST.get('srcofsupply')
+        po_id.sub_total =request.POST['subtotal']
+        po_id.sgst=request.POST['sgst']
+        po_id.cgst=request.POST['cgst']
+        po_id.igst=request.POST['igst']
+        po_id.tax_amount = request.POST['total_taxamount']
+        po_id.grand_total=request.POST['grandtotal']
+        po_id.note=request.POST['customer_note']
+        po_id.adjustment=request.POST['add_round_off']
+            
+        u = User.objects.get(id = request.user.id)
+
+            
+        po_id.save()
+
+        p_bill = Vendor_Credits_Bills.objects.get(id=po_id.id)
+
+    if request.FILES.get('file') is not None:
+        po_id.file = request.FILES['file']
+    else:
+        po_id.file = "/static/images/default.jpg"
+    po_id.save()
+    item = request.POST.getlist("item[]")
+    hsn = request.POST.getlist("hsn[]")
+    quantity = request.POST.getlist("quantity[]")
+    rate = request.POST.getlist("rate[]")
+    tax = request.POST.getlist("tax[]")
+    discount = request.POST.getlist("discount[]")
+    amount = request.POST.getlist("amount[]")
+
+    obj_dele = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=p_bill.id)
+    obj_dele.delete()
+
+    if len(item) == len(hsn) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
+        for i in range(len(item)):
+            created = Vendor_Credits_Bills_items_bills.objects.create(
+                item=item[i],
+                hsn=hsn[i],
+                quantity=quantity[i],
+                rate=rate[i],
+                tax=tax[i],
+                discount=discount[i],
+                amount=amount[i],
+                user=u,
+                company=company,
+                recur_bills=p_bill
+            )
+
+            print('Done')
+
+        return redirect('view_vendor_credits',id)
+    return redirect('vendor_credits_home')
+
 

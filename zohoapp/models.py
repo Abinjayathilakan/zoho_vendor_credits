@@ -701,8 +701,9 @@ class Vendor_Credits_Bills(models.Model):
 
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
+    vendor_name = models.CharField(max_length=100,null=True,blank=True)
     source_supply = models.CharField(max_length=100,null=True,blank=True)
-    company_name=models.CharField(max_length=150)
+    gst_number=models.CharField(max_length=150, null=True, blank=True)
     vendor_email=models.CharField(max_length=250)
     gst_treatment=models.CharField(max_length=100)
     
@@ -710,18 +711,16 @@ class Vendor_Credits_Bills(models.Model):
     order_no = models.CharField(max_length=100, null=True, blank=True)
 
     vendor_date = models.DateField(null=True,blank=True)
-    
-    vendor_name = models.CharField(max_length=100,null=True,blank=True)
-    customer_name = models.CharField(max_length=100,null=True,blank=True)
+    address = models.CharField(max_length=100,null=True,blank=True)
 
 
-    payment_terms = models.CharField(max_length=100,null=True,blank=True)
+
+    # payment_terms = models.CharField(max_length=100,null=True,blank=True)
     sub_total = models.FloatField(null=True,blank=True)
     igst = models.FloatField(null=True,blank=True)
     cgst = models.FloatField(null=True,blank=True)
     sgst = models.FloatField(null=True,blank=True)
     tax_amount =  models.FloatField(null=True,blank=True)
-    shipping_charge = models.FloatField(null=True,blank=True)
     adjustment = models.FloatField(null=True,blank=True)
     grand_total = models.FloatField(null=True,blank=True)
     note = models.CharField(max_length=255,null=True,blank=True)
