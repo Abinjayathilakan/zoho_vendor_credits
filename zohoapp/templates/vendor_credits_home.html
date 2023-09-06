@@ -55,9 +55,35 @@
         justify-content: space-between;
         align-items: center;
         margin: 20px;
-}
+        flex-direction: column;
+    }
 
     .flowchart-item {
+        text-align: center;
+        padding: 10px;
+        background-color: lightblue;
+        border: 3px solid rgb(25, 91, 145);
+        border-radius: 5px;
+        width: 200px;
+        color: black;
+        font-size: 12px;
+        margin-top: 10px;
+    }
+
+    .flowchart-item i {
+        font-size: 15px;
+        color: #daa430;
+    }
+
+    .flowchart-connector {
+        flex-grow: 1;
+        height: 2px;
+        background-color: #f5f2f2;
+        color: #f1f1f1;
+        margin-top: 0%;
+    }
+
+    .box {
         text-align: center;
         padding: 10px;
         background-color: lightblue;
@@ -66,34 +92,62 @@
         width: 150px;
         color: black;
         font-size: 12px;
-    }
-    .flowchart-item i{
-        font-size: 15px;
+        margin-top: 10px;
+        margin-left: 10px;
     }
 
-    .flowchart-connector {
-        flex-grow: 1;
-        height: 2px;
-        background-color: #ccc;
-        margin-top: 0%;
-
+    .connector-line {
+        font-size: 0;
+        width: 1px;
+        height: 20px;
+        color: #fff;
+        background-color: #ebe8e8;
+        margin: auto;
     }
-    
-    @media (max-width: 768px) {
-        .flowchart {
-            flex-direction: column;
-            align-items: center;
-        }
 
-        .flowchart-item {
-            width: 120px;
-        }
-        .flowchart-connector {
-            height: 50px;
-            width: 2px; 
-            margin-left: 0%; 
-            transform: translateX(-50%);
-        }
+    .connector-line1 {
+        font-size: 0;
+        width: 1px;
+        height: 30px;
+        color: #fff;
+        background-color: #ebe8e8;
+        margin-bottom: 70px;
+        margin: auto;
+    }
+    .connector-line2 {
+        font-size: 0;
+        width: 1px;
+        height: 20px;
+        color: #fff;
+        background-color: #ebe8e8;
+        margin: auto;
+    }
+
+    .line {
+        content: "";
+        margin-top: 1px;
+        width: 34%;
+        height: 1px;
+        color: #f1f1f1;
+        background-color: #fff;
+        margin-right: 80px;
+    }
+
+    .branch {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .branch .connector {
+        width: 0;
+        height: 50px;
+        border-top: 2px solid black;
+    }
+
+    .branch .box {
+        margin-top: 10px;
     }
     .btn{
         color: rgb(218, 164, 48);
@@ -224,33 +278,38 @@
                     <h3 class="mb-0 text-center">Life cycle of a Vendor Credit</h3>
                     <br>
                     <div class="flowchart">
-                        <div class="flowchart-item text-uppercase" style="width: 200px;" class="routine-purchase">
-                            <i class="fa-sharp fa-solid fa-bag-shopping" style="color: #daa430;"></i> PRODUCT<br>RETURNED/CANCELLED
+                        <div class="flowchart-item text-uppercase" style="width: 200px;">
+                            <i class="fa-sharp fa-solid fa-bag-shopping" style="color: #daa430;"></i> PRODUCT RETURNED/CANCELLED
                         </div>
-                        <div class="flowchart-connector"></div>
-                        <div class="flowchart-item text-uppercase" style="width: 210px;" class="create-recurring-profile">
-                            <i class="fa-sharp fa-solid fa-file" style="color: #daa430;"></i> CREDIT NOTE <br>RECEIVED
+                        <div class="connector-line"></div>
+                        <div class="flowchart-item text-uppercase" style="width: 210px;">
+                            <i class="fa-sharp fa-solid fa-file" style="color: #daa430;"></i> CREDIT NOTE RECEIVED
                         </div>
-                        <div class="flowchart-connector"></div>
-                        <div class="flowchart-item text-uppercase" class="generated-bill">
-                            <i class="fa-sharp fa-solid fa-receipt" style="color: #daa430;"></i> RECORD <br> VENDOR CREDITS
+                        <div class="connector-line"></div>
+                        <div class="flowchart-item text-uppercase" style="width: 210px;">
+                            <i class="fa-sharp fa-solid fa-file" style="color: #daa430;"></i> RECORD VENDOR CREDITS
                         </div>
-                        <div class="flowchart-connector"></div>
-                        <div class="flowchart-item text-uppercase" class="record-payment">
-                            <i class="fa-sharp fa-solid fa-money-check-dollar" style="color: #3ec61c;"></i> APPLY TO FUTURE BILLS
+                        <div class="connector-line"></div>
+        
+                        <div class="connector-line"></div>
+                        <div class="line" style="margin-top: 1px; width: 34%; height: 1px; color: #f1f1f1; background-color: #fff; margin-right: 80px;"></div>
+        
+                        <div class="connector-line2"></div>
+        
+                        <div class="branches" style="display: flex; flex-direction: row; margin-top: -31px;">
+                            <div class="branch">
+                                <div style="margin-right: -100px; margin-top: -10px;"></div>
+                                <div class="box" style="margin-right: 30px;">APPLY TO FUTURE BILLS</div>
+                            </div>
+                            <div class="branch">
+                                <div style="margin-top: -10px; margin-left: 80px;"></div>
+                                <div class="box" style="margin-left: 100px;">RECORD REFUND</div>
+                            </div>
                         </div>
-                        <div class="flowchart-connector"></div>
-                        <div class="flowchart-item text-uppercase" class="pending">
-                            <i class="fa-sharp fa-solid fa-check-circle" style="color: #16a085;"></i> RECORD REFUND
-                        </div>
-                        
                     </div>
                 </div>
             </div>
         </div>
-        
-    
-</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>

@@ -7969,27 +7969,9 @@ def create_vendor_credit(request):
         credit_note = request.POST.get('credit_note')
         order_no = request.POST.get('order_number')
         vendor_date = request.POST.get('credit_date')
-            
-        # orgname = request.POST.get('orgName')
-        # org_gst = request.POST.get('gstNumber')
-        # org_address = request.POST.get('orgAddress')
-        # org_street = request.POST.get('orgstreet')
-        # org_city = request.POST.get('orgcity')
-        # org_state = request.POST.get('orgstate')
-            
-        # cname = request.POST.get('custom')
-        # cmail = request.POST.get('custMail')
-        # caddress = request.POST.get('custAddress')
-        # cstreet = request.POST.get('custStreet')
-        # ccity = request.POST.get('custcity')
-        # cstate = request.POST.get('custstate')
 
         src_supply = request.POST.get('srcofsupply')
-        # po = request.POST['pur_ord']
-        # ref = request.POST['ref']
-        # terms = request.POST['terms']
-        # start = request.POST.get('start_date')
-        # end =  request.POST.get('end_date')
+     
         sub_total =request.POST['subtotal']
         sgst=request.POST['sgst']
         cgst=request.POST['cgst']
@@ -7999,8 +7981,7 @@ def create_vendor_credit(request):
         adjustment=request.POST['add_round_off']
         grand_total=request.POST['grandtotal']
         note=request.POST['customer_note']
-        # terms_con = request.POST['tearms_conditions']
-        # orgMail=request.POST.get('orgMail')
+      
         u = User.objects.get(id = request.user.id)
         print('yes')
         print(typ)
@@ -8016,37 +7997,19 @@ def create_vendor_credit(request):
                                     vendor_date=vendor_date,
                                     order_no=order_no,
                                     credit_note=credit_note,
-                                        
-                                        
-                                        # Org_name=orgname,
-                                        # Org_address=org_address,
-                                        # Org_gst=org_gst,
-                                        # Org_street=org_street,
-                                        # Org_city=org_city,
-                                        # Org_state=org_state,
-                                        # Org_mail=orgMail,
-                                        # Pur_no=po,
-                                        # ref=ref,
-                                        # customer_name = '',
-                                        # customer_mail='',
-                                        # customer_address='',
-                                        # customer_street='',
-                                        # customer_city='',
-                                        # customer_state='',
+                             
                                     source_supply=src_supply,
-                                        # payment_terms = terms,
-                                        # Ord_date = start,
-                                        # exp_date = end,
+                                      
                                     sub_total=sub_total,
                                     sgst=sgst,
                                     cgst=cgst,
                                     igst=igst,
                                     tax_amount=tax,
-                                        # shipping_charge = shipping_charge,
+                                     
                                     adjustment=adjustment,
                                     grand_total=grand_total,
                                     note=note,
-                                        # term=terms_con,
+                                   
                                     company=company,
                                     user = u )
             purchase.save()
@@ -8067,31 +8030,15 @@ def create_vendor_credit(request):
                                     vendor_date=vendor_date,
                                     order_no=order_no,
                                     credit_note=credit_note,
-                                        # customer_name = cname,
-                                        # customer_mail=cmail,
-                                        # customer_street=cstreet,
-                                        # customer_city=ccity,
-                                        # customer_state=cstate,
-                                        # Pur_no=po,
-                                        # ref=ref,
-                                        # Org_name='',
-                                        # Org_address='',
-                                        # Org_gst='',
-                                        # Org_street='',
-                                        # Org_city='',
-                                        # Org_state='',
-                                        # Org_mail='',
-                                        # customer_address=caddress,
+                              
                                     source_supply=src_supply,
-                                        # payment_terms = terms,
-                                        # Ord_date = start,
-                                        # exp_date = end,
+                                  
                                     sub_total=sub_total,
                                     sgst=sgst,
                                     cgst=cgst,
                                     igst=igst,
                                     tax_amount=tax,
-                                        # shipping_charge = shipping_charge,
+                                    
                                     adjustment=adjustment,
                                     grand_total=grand_total,
                                     note=note,

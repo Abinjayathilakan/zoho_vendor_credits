@@ -713,9 +713,6 @@ class Vendor_Credits_Bills(models.Model):
     vendor_date = models.DateField(null=True,blank=True)
     address = models.CharField(max_length=100,null=True,blank=True)
 
-
-
-    # payment_terms = models.CharField(max_length=100,null=True,blank=True)
     sub_total = models.FloatField(null=True,blank=True)
     igst = models.FloatField(null=True,blank=True)
     cgst = models.FloatField(null=True,blank=True)

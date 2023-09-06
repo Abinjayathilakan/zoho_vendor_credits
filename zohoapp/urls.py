@@ -325,32 +325,28 @@ urlpatterns = [
     # Vendor Credits
     
     path('vendor_credits_home',views.vendor_credits_home,name='vendor_credits_home'),
-    # path('vendor_credits',views.vendor_credits,name='vendor_credits'),
+
     
     path('create_vendor_credit',views.create_vendor_credit,name='create_vendor_credit'),
     path('add_vendor_credits',views.add_vendor_credits,name='add_vendor_credits'),
     path('get_vendor_credit_det',views.get_vendor_credit_det,name='get_vendor_credit_det'),
     path('get_vendor_credit_det1',views.get_vendor_credit_det1,name='get_vendor_credit_det1'),
     
-    # path('get_customer_credit_det',views.get_customer_credit_det,name='get_customer_credit_det'),
+
     path('vendor_credit_vendor',views.vendor_credit_vendor,name='vendor_credit_vendor'),
     path('vendor_credit_dropdown',views.vendor_credit_dropdown,name = 'vendor_credit_dropdown'),
-    # path('vendor_credit_pay',views.vendor_credit_pay,name='vendor_credit_pay'),
-    # path('vendor_credit_pay_dropdown',views.vendor_credit_pay_dropdown,name = 'vendor_credit_pay_dropdown'),
-    # path('vendor_credit_unit',views.vendor_credit_unit,name='vendor_credit_unit'),
-    # path('vendor_credit_unit_dropdown',views.vendor_credit_unit_dropdown,name = 'vendor_credit_unit_dropdown'),
+    
+    path('itemdata_vendor_credit',views.itemdata_vendor_credit,name='itemdata_vendor_credit'),
+
     path('vendor_credit_item',views.vendor_credit_item,name='vendor_credit_item'),
     path('vendor_credit_item_dropdown',views.vendor_credit_item_dropdown ,name = 'vendor_credit_item_dropdown'),
-    # path('vendor_credit_account',views.vendor_credit_account,name='vendor_credit_account'),
-    # path('vendor_credit_account_dropdown',views.vendor_credit_account_dropdown ,name = 'vendor_credit_account_dropdown'),
-    # path('vendor_credit_get_rate',views.vendor_credit_get_rate ,name = 'vendor_credit_get_rate'),
-    # path('vendor_credit_get_cust_state',views.vendor_credit_get_cust_state,name = "vendor_credit_get_cust_state"),
+
     
-    #path('view_vendor_credits/<int:pk>/', views.view_vendor_credits, name='view_vendor_credits'),
+
     path('view_vendor_credits/<id>',views.view_vendor_credits,name='view_vendor_credits'),
     
     path('vendor_credit_comment',views.vendor_credit_comment,name = "vendor_credit_comment"),
-    # path('vendor_credit_add_file/<id>',views.vendor_credit_add_file,name = "vendor_credit_add_file"),
+
     path('vendor_credit_add_file/<id>',views.vendor_credit_add_file,name = "vendor_credit_add_file"),
     path('vendor_credit_email/<id>', views.vendor_credit_email, name='vendor_credit_email'),
     
@@ -359,26 +355,12 @@ urlpatterns = [
     
     path('delete_vendor_credits/<id>',views.delete_vendor_credits,name='delete_vendor_credits'),
     
-    # path('edit_vendor_credits/<id>',views.edit_vendor_credits,name='edit_vendor_credits'),
-    # path('change_vendor_credits/<id>',views.change_vendor_credits,name='change_vendor_credits'),
+
     
     path('edit_vendor_credits/<int:pk>',views.edit_vendor_credits,name='edit_vendor_credits'),
     path('change_vendor_credits/<int:id>',views.change_vendor_credits,name='change_vendor_credits'),
     
-    # path('view_vendordesc/<id>',views.view_vendordesc,name='view_vendordesc'),
-    # path('view_profileasc/<id>',views.view_profileasc,name='view_profileasc'),
-    # path('view_profiledesc/<id>',views.view_profiledesc,name='view_profiledesc'),
     
-    
-    
-    # path('show_credits/<int:pk>/', views.show_credits, name='show_credits'),
-    # path('commentdb/<int:pk>/', views.commentdb, name='commentdb'),
-    # path('delete_comment_credit/<int:pk>/<int:vid>', views.delete_comment_credit, name='delete_comment_credit'),
-    # path('credit_sendmail/<int:pk>',views.credit_sendmail,name='credit_sendmail'),
-    # path('credit_upload_document/<int:pk>',views.credit_upload_document,name='credit_upload_document'),
-    # path('credit_download_doc/<int:pk>',views.credit_download_doc,name='credit_download_doc'),
-    # path('credit_delete_vendor/<int:pk>',views.credit_delete_vendor,name='credit_delete_vendor'),
-    # path('credits_statement/<int:id>',views.credits_statement,name='credits_statement'),
 	
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
