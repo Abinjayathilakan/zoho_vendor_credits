@@ -619,21 +619,21 @@
                     <td><input type="number" id="total_taxamount" name="total_taxamount" step="any" value="{{po.tax_amount}}" 
                         class="total_taxamount form-control bg-transparent border-0 text-right  text-white"></td>
                 </tr>
-                <!-- <tr>
-                  <td>Shipping Charges</td>
+                <tr>
+                  <td>Adjustment</td>
                   
                   <td><input type="hidden" id="shipping_charge" name="shipping_charge" step="any" value="0.00" 
                       class="form-control bg-transparent border-0 text-right shipping_charge  "></td>
                       <td><input type="number" class="form-control  bg-transparent border-0  text-light" id="shipping" value="0"> </td>
-              </tr> -->
+              </tr>
 
-              <tr>
+              <!-- <tr>
                 <td>Adjustment</td>
                 
                 <td><input type="hidden" id="add_round_off" name="add_round_off" step="any" 
                     class="form-control bg-transparent border-0 text-right add_round_off  "></td>
                     <td><input type="number" class="form-control  bg-transparent border-0  text-light" step="any"  id="adjustment" value="{{po.adjustment}}"> </td>
-            </tr>
+            </tr> -->
 
                 <tr>
                     <td></td>
@@ -2656,7 +2656,7 @@ function calculateGrandTotal() {
     grandTotal += taxAmount;
     totalTaxAmount += taxAmount;
   });
-  var shippingCharges = parseFloat($('#adjustment').val());
+  var shippingCharges = parseFloat($('#shipping').val());
   grandTotal += shippingCharges;
 
   $('#grandtotal').val(grandTotal.toFixed(2));
@@ -2801,9 +2801,9 @@ function calculateGrandTotal() {
     calculateTaxAmount();
   });
 
-  $('#adjustment').on('input', function () {
+  $('#shipping').on('input', function () {
     var shippingAmount = parseFloat($(this).val());5
-    $('#add_round_off').val(shippingAmount.toFixed(2));
+    $('#shipping_charge').val(shippingAmount.toFixed(2));
     calculateGrandTotal();
   });
 
@@ -2862,7 +2862,7 @@ function calculateTaxAmount() {
   var companyState = "[KL] Kerala"; // Replace with the actual value of company state
 
   var subtotal = parseFloat(document.getElementById("subtotal").value);
-  var adjustment = parseFloat(document.getElementById("adjustment").value);
+  var shipping = parseFloat(document.getElementById("shipping").value);
   var tax = parseFloat(document.getElementById("total_taxamount").value);
 
   var tax_rate = 0.0; // Default tax rate for IGST
@@ -2901,7 +2901,7 @@ function calculateTaxAmount() {
   var taxamount_value = total_taxamount.toFixed(2);
   taxamount_input.value = taxamount_value;
 
-  var grandtotal = subtotal + total_taxamount + adjustment;
+  var grandtotal = subtotal + total_taxamount + shipping;
   document.getElementById("grandtotal").value = grandtotal.toFixed(2);
 }
 

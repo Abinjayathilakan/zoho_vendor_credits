@@ -7136,6 +7136,7 @@ def vendor_credit_item(request):
         
         type=request.POST.get('type')
         name=request.POST.get('name')
+        # hsn=request.POST['hsn']
         ut=request.POST.get('unit')
         inter=request.POST.get('inter')
         intra=request.POST.get('intra')
@@ -7288,9 +7289,10 @@ def itemdata_vendor_credit(request):
     item = AddItem.objects.get(Name=id, user=user)
     name=item.Name
     rate = item.p_price
+    hsn = item.hsn
     place = company.state
 
-    return JsonResponse({"status": " not", 'place': place, 'rate': rate})
+    return JsonResponse({"status": " not", 'place': place, 'rate': rate, 'hsn': hsn})
     return redirect('/')
 
 # @login_required(login_url='login')
@@ -7977,8 +7979,8 @@ def create_vendor_credit(request):
         cgst=request.POST['cgst']
         igst=request.POST['igst']
         tax = request.POST['total_taxamount']
-        # shipping_charge= request.POST['shipping_charge']
-        adjustment=request.POST['add_round_off']
+        adjustment= request.POST['shipping_charge']
+        # adjustment=request.POST['adjustment_charge']
         grand_total=request.POST['grandtotal']
         note=request.POST['customer_note']
       
@@ -8132,7 +8134,8 @@ def change_vendor_credits(request,id):
         po_id.tax_amount = request.POST['total_taxamount']
         po_id.grand_total=request.POST['grandtotal']
         po_id.note=request.POST['customer_note']
-        po_id.adjustment=request.POST['add_round_off']
+        # po_id.adjustment=request.POST['add_round_off']
+        po_id.adjustment=request.POST['shipping_charge']
         
         u = User.objects.get(id = request.user.id)
 
@@ -8163,7 +8166,8 @@ def change_vendor_credits(request,id):
         po_id.tax_amount = request.POST['total_taxamount']
         po_id.grand_total=request.POST['grandtotal']
         po_id.note=request.POST['customer_note']
-        po_id.adjustment=request.POST['add_round_off']
+        # po_id.adjustment=request.POST['add_round_off']
+        po_id.adjustment=request.POST['shipping_charge']
             
         u = User.objects.get(id = request.user.id)
 
@@ -8209,3 +8213,89 @@ def change_vendor_credits(request,id):
     return redirect('vendor_credits_home')
 
 
+@login_required(login_url='login')
+def vendor_credits_pay(request):
+    
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+
+        name=request.POST.get('name')
+        days=request.POST.get('days')
+        
+        u = User.objects.get(id = request.user.id)
+
+        pay = payment_terms(Terms=name, Days=days, user = u)
+        pay.save()
+
+        return HttpResponse({"message": "success"})
+    
+@login_required(login_url='login')
+def vendor_credits_pay_dropdown(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = payment_terms.objects.filter(user = user)
+    for option in option_objects:
+        options[option.id] = option.Terms + str(option.Days)
+
+    return JsonResponse(options)
+
+@login_required(login_url='login')
+def vendor_credits_unit(request):
+    
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+
+        unit =request.POST.get('unit')
+        
+        u = User.objects.get(id = request.user.id)
+
+        unit = Unit(unit= unit)
+        unit.save()
+
+        return HttpResponse({"message": "success"})
+        
+@login_required(login_url='login')        
+def vendor_credits_unit_dropdown(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = Unit.objects.all()
+    for option in option_objects:
+        options[option.id] = option.unit
+
+    return JsonResponse(options)
+
+@login_required(login_url='login')    
+def vendor_credits_account(request):
+
+    company = company_details.objects.get(user = request.user)
+
+
+    if request.method=='POST':
+        type=request.POST.get('actype')
+        name=request.POST['acname']
+        u = User.objects.get(id = request.user.id)
+
+        acnt=Account(accountType=type,accountName=name,user = u)
+
+        acnt.save()
+
+        return HttpResponse({"message": "success"})
+        
+
+@login_required(login_url='login')
+def vendor_credits_account_dropdown(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = Account.objects.filter(user = user)
+    for option in option_objects:
+        options[option.id] = option.accountName
+
+    return JsonResponse(options)

@@ -337,10 +337,20 @@ urlpatterns = [
     path('vendor_credit_dropdown',views.vendor_credit_dropdown,name = 'vendor_credit_dropdown'),
     
     path('itemdata_vendor_credit',views.itemdata_vendor_credit,name='itemdata_vendor_credit'),
+    
+    # path('vendor_credits_pay',views.vendor_credits_pay,name = 'vendor_credits_pay'),
+    # path('vendor_credits_pay_dropdown',views.vendor_credits_pay_dropdown,name = 'vendor_credits_pay_dropdown'),
+    # path('vendor_credits_unit',views.vendor_credits_unit,name = 'vendor_credits_unit'),
+    # path('vendor_credits_unit_dropdown',views.vendor_credits_unit_dropdown,name = 'vendor_credits_unit_dropdown'),
+    
+    
 
-    path('vendor_credit_item',views.vendor_credit_item,name='vendor_credit_item'),
-    path('vendor_credit_item_dropdown',views.vendor_credit_item_dropdown ,name = 'vendor_credit_item_dropdown'),
-
+    # path('vendor_credit_item',views.vendor_credit_item,name='vendor_credit_item'),
+    # path('vendor_credit_item_dropdown',views.vendor_credit_item_dropdown ,name = 'vendor_credit_item_dropdown'),
+    
+    # path('vendor_credits_account',views.vendor_credits_account,name='vendor_credits_account'),
+    # path('vendor_credits_account_dropdown',views.vendor_credits_account_dropdown,name='vendor_credits_account_dropdown'),
+    
     
 
     path('view_vendor_credits/<id>',views.view_vendor_credits,name='view_vendor_credits'),
@@ -360,6 +370,19 @@ urlpatterns = [
     path('edit_vendor_credits/<int:pk>',views.edit_vendor_credits,name='edit_vendor_credits'),
     path('change_vendor_credits/<int:id>',views.change_vendor_credits,name='change_vendor_credits'),
     
+    
+    path('vendor_credits_pay',views.vendor_credits_pay,name = 'vendor_credits_pay'),
+    path('vendor_credits_pay_dropdown',views.vendor_credits_pay_dropdown,name = 'vendor_credits_pay_dropdown'),
+    path('vendor_credits_unit',views.vendor_credits_unit,name = 'vendor_credits_unit'),
+    path('vendor_credits_unit_dropdown',views.vendor_credits_unit_dropdown,name = 'vendor_credits_unit_dropdown'),
+    
+    
+
+    path('vendor_credit_item',views.vendor_credit_item,name='vendor_credit_item'),
+    path('vendor_credit_item_dropdown',views.vendor_credit_item_dropdown ,name = 'vendor_credit_item_dropdown'),
+    
+    path('vendor_credits_account',views.vendor_credits_account,name='vendor_credits_account'),
+    path('vendor_credits_account_dropdown',views.vendor_credits_account_dropdown,name='vendor_credits_account_dropdown'),
     
 	
     

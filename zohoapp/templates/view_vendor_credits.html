@@ -364,14 +364,14 @@
                             data-toggle="modal" data-target="#cmnts"> </a>
                     </div>
 
-                    <div class="mx-4">
+                    <div class="mx-1">
                         <a href=" {% url 'edit_vendor_credits' recur_bill.id %}" class=" fa fa-pencil btns px-2 py-2"
                               data-toggle="tooltip" title="EDIT"> </a>
                         <a href="{% url 'delete_vendor_credits' recur_bill.id %} " class="delete fa fa-trash btns px-2 py-2"
                          data-toggle="tooltip" title="DELETE" onclick="return confirm('Do you want to Delete this Vendor Credit?');"> </a>
                     </div>
 
-                    <div class="mx-1">
+                    <div class="mx-0">
                    
                         <a href=" " class="fa fa-file-pdf btns toPDF px-2 py-2" id="toPDF"
                         data-toggle="tooltip" title="PDF"></a>
@@ -384,7 +384,7 @@
 
                         
                     </div>
-                    <div class="m-0">
+                    <div class="mx-0">
                         <div class="dropdown m-0 p-0">
                             <a href=" " class=" fas fa-paperclip dropdown-toggle btns px-2 py-2"  
                                 data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
@@ -534,25 +534,25 @@
                                     <td style="font-weight:bold">Sub Total :</td>
                                     <td style="font-weight:bold">{{recur_bill.sub_total|floatformat:2}}</td>
                                 </tr>
-                                {% if recur_bill.igst != "" %}
+                                {% if recur_bill.igst != 0 %}
                                 <tr>
                                     <td style="font-weight:bold">IGST :</td>
                                     <td style="font-weight:bold">{% if recur_bill.igst == None %} 0 {% else %} {{recur_bill.igst|floatformat:2}} {% endif %}</td>
                                 </tr>
                                 {% endif %}
-                                {% if recur_bill.cgst != "" %}
+                                {% if recur_bill.cgst != 0 %}
                                 <tr>
                                     <td style="font-weight:bold">CGST :</td>
                                     <td style="font-weight:bold">{% if recur_bill.cgst == None %} 0 {% else %} {{recur_bill.cgst|floatformat:2}} {% endif %}</td>
                                 </tr>
                                 {% endif %}
-                                {% if recur_bill.sgst != "" %}
+                                {% if recur_bill.sgst != 0 %}
                                 <tr>
                                     <td style="font-weight:bold">SGST:</td>
                                     <td style="font-weight:bold">{% if recur_bill.sgst == None %} 0 {% else %} {{recur_bill.sgst|floatformat:2}} {% endif %}</td>
                                 </tr>
                                 {% endif %}
-                                {% if recur_bill.shipping_charge != "" %}
+                                {% if recur_bill.adjustment != 0 %}
                                 <tr>
                                     <td style="font-weight:bold">Adjustment Charge:</td>
                                     <td style="font-weight:bold">{{recur_bill.adjustment|floatformat:2}}</td>
