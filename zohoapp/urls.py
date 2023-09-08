@@ -383,6 +383,7 @@ urlpatterns = [
     
     path('vendor_credits_account',views.vendor_credits_account,name='vendor_credits_account'),
     path('vendor_credits_account_dropdown',views.vendor_credits_account_dropdown,name='vendor_credits_account_dropdown'),
+    path('export_vendor_credit_pdf/<id>',views.export_vendor_credit_pdf,name = "export_vendor_credit_pdf"),
     
 	
     

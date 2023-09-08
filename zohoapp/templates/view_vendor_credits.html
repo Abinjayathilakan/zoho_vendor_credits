@@ -384,7 +384,7 @@
 
                         
                     </div>
-                    <div class="mx-0">
+                    <div class="mx-1">
                         <div class="dropdown m-0 p-0">
                             <a href=" " class=" fas fa-paperclip dropdown-toggle btns px-2 py-2"  
                                 data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
@@ -437,15 +437,14 @@
                         <section class="d-flex justify-content-between">
                             <div class="top-right">
                                 <div class="graphic-path text-center">
-                                  <h3 class="text-uppercase" style="color: black;"> <span>{{ recur_bill.vendor_name.split.0 }}</span>
-                                    <span>{{ recur_bill.vendor_name.split.1 }}</span>
-                                    <span style="display: none;">{{ recur_bill.vendor_name.split.2 }}</span>
+                                    <h5 class="text-capitalize"  >{{recur_bill.profile_name}}</h5>
+                                    <p class="text-capitalize" id="pid" hidden>{{recur_bill.id}}</p>
 
-                                </div></h3> 
+                                </div>
                                 <div class="position-relative">
-                                    <p><span style="color: black;">{{recur_bill.vendor_email}}</span></p>
-                                    <p>Credit Date : &nbsp <span style="color: black;">{{recur_bill.vendor_date|date:'d-m-Y'}}</span></p>
-                                    <p>Term : &nbsp <span style="color: black;">NET {{recur_bill.payment_terms}}</span></p> 
+                                    <p>Credit Note : &nbsp <span style="color: black;">{{recur_bill.credit_note}}</span></p>
+                                    <p>Order No : &nbsp <span style="color: black;">{{recur_bill.order_no}}</span></p>
+                                    <p>Vendor Date : &nbsp <span style="color: black;"> {{recur_bill.vendor_date|date:'d-m-Y'}}</span></p> 
                                 </div>
                             </div>
                         </section>
@@ -461,11 +460,14 @@
                             <div class="col-1 "></div>
                             <div class="col-5">
                                 <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Bill To,</p>
-                                <h6  class="mx-3 text-capitalize" style="color: black; ">{{recur_bill.address}}</h6>
-                                <p class="address col-6 mx-4 p-2" style="margin-left: -14px;">{{vendor.baddress}}<br>
-                                    {{vendor.bcity}}<br>
-                                    {{vendor.bstate}}<br> 
+                                <h6  class="mx-3 text-capitalize" style="color: black; "><span>{{ recur_bill.vendor_name.split.0 }}</span>
+                                    <span>{{ recur_bill.vendor_name.split.1 }}</span>
+                                    <span style="display: none;">{{ recur_bill.vendor_name.split.2 }}</span></h6>
+                                <p class="address col-6 mx-4 p-2" style="margin-left: -14px;">{{recur_bill.address}}<br>
+                                    {{recur_bill.vendor_email}}<br>
+                                    {{recur_bill.source_supply}}<br> 
                                 </p>
+                                
                             </div>
                             <div class="col-1"></div>
                             <!-- <div class="col-5 mt-5">
@@ -475,15 +477,18 @@
 
                             </div> -->
 
-                            <div class="col-5">
-                                <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Vendor Details,</p>
-                                <div class="position-relative">
-                                    <p>Credit Note : &nbsp <span style="color: black;">{{recur_bill.credit_note}}</span></p>
-                                    <p>Order Number : &nbsp <span style="color: black;">{{recur_bill.order_no}}</span></p>
-                                    <p>Source of Supply : &nbsp <span style="color: black;">{{recur_bill.source_supply}}</span></p> 
-                                </div>
+                            <!-- <div class="col-5">
+                                <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Deliver To,</p>
+                                <h6  class="mx-2 text-capitalize" style="color: black;">{{customer.customerName}}</h6>
+                                <p class="address col-6 mx-3 p-2" style="margin-left: -14px;">{{customer.Address1}} <br>
+                                    {{customer.Address2}}<br>
+                                    {{customer.city}}<br>
+                                    {{customer.state}}<br>
 
-                            </div>
+                                    
+                                </p>
+
+                            </div> -->
                         </div>
 
                     </div>
@@ -495,6 +500,7 @@
                             <tr>
                                 <td>#</td>
                                 <td>Item</td>
+                                <td>Account</td>
                                 <td>Hsn</td>
                                 <td>Rate</td>
                                 <td>Quantity</td>
@@ -509,6 +515,7 @@
                             <tr >
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{b.item}}</td>
+                                <td>{{b.account}}</td>
                                 <td>{{b.hsn}} </td>
                                 <td>{{b.rate}}</td>
                                 <td>{{b.quantity}}</td>
@@ -550,6 +557,12 @@
                                 <tr>
                                     <td style="font-weight:bold">SGST:</td>
                                     <td style="font-weight:bold">{% if recur_bill.sgst == None %} 0 {% else %} {{recur_bill.sgst|floatformat:2}} {% endif %}</td>
+                                </tr>
+                                {% endif %}
+                                {% if recur_bill.tax_amount != 0 %}
+                                <tr>
+                                    <td style="font-weight:bold">Tax Amount:</td>
+                                    <td style="font-weight:bold">{{recur_bill.tax_amount|floatformat:2}}</td>
                                 </tr>
                                 {% endif %}
                                 {% if recur_bill.adjustment != 0 %}
@@ -597,7 +610,7 @@
 
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
                                 <div class="col-md-6 mt-3">
-                                    <h6 class="mb-0 text-grey ">Company Name :</h6>
+                                    <h6 class="mb-0 text-grey ">Vendor Name :</h6>
                                 </div>
                                 <div class="col-md-6 mt-3">
                                     <p class="mb-0 " style="font-size: 18px; color: #434141;">
@@ -641,11 +654,33 @@
                                     <h6 class="mb-0 text-grey">E-Mail :</h6>
                                 </div>
                                 <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color: #434141;"> NET {{ recur_bill.vendor_email }}</p>
+                                    <p class="mb-0" style="font-size: 18px; color: #434141;">  {{ recur_bill.vendor_email }}</p>
                                 </div>
                             </div>
 
-                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                            <!-- <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    {% for item in bill_item %}
+                                    <h6 class="mb-0 text-grey">Items :</h6>
+                                    
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p class="mb-0" style="font-size: 18px; color: #434141;"> {{ item.item }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div> -->
+                            <!-- {% for item in bill_item %}
+                                            <li class="text-capitalize " style="color: azure;">Item: {{ item.item }}</li>
+                                            <li class="text-capitalize " style="color: azure;">Account: {{ item.account }}</li>
+                                            <li class="text-capitalize " style="color: azure;">Hsn: {{ item.hsn }}</li>
+                                            <li class="text-capitalize " style="color: azure;">Quantity: {{ item.quantity }}</li>
+                                            <li class="text-capitalize " style="color: azure;">Tax: {{ item.tax }}</li>
+                                            <li class="text-capitalize " style="color: azure;">Discount: {{ item.discount }}</li>
+                                            <li class="text-capitalize " style="color: azure;">Amount: {{ item.amount }}</li>
+                                        {% endfor %} -->
+
+                            
+                            <!-- <div class="row mb-4 d-flex justify-content-between align-items-center">
                                 <div class="col-md-6 mt-3">
                                     <h6 class="mb-0 text-grey">Tax :</h6>
                                 </div>
@@ -656,7 +691,7 @@
                                     <span class="text-muted">%</span><br><span style="margin-left: 55px;"></span>
                                     {% endfor %}
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
                                 <div class="col-md-6 mt-3">
                                     <h6 class="mb-0 text-grey">Source of Supply :</h6>
@@ -675,9 +710,112 @@
                                 </div>
 
                             </div>
-                            <hr class="my-4">
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-grey">Items :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <ul>
+                                    {% for item in bill_item %}
+                                    <li class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{ item.item }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-grey">Accounts :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <ul>
+                                    {% for item in bill_item %}
+                                    <li class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{ item.account }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-grey">Hsn :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <ul>
+                                    {% for item in bill_item %}
+                                    <li class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{ item.hsn }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-grey">Quantity :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <ul>
+                                    {% for item in bill_item %}
+                                    <li class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{ item.quantity }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-grey">Rate :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <ul>
+                                    {% for item in bill_item %}
+                                    <li class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{ item.rate }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-grey">Tax :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <ul>
+                                    <span style="font-size: 18px; color: #434141;">{{ gst_or_igst }} - </span>
+                                    {% for bi in tax %}
+                                    <!-- <li> -->
+                                        <input type="text" value="{{ bi|floatformat:2 }}" style="font-size: 18px; color: #434141; width: 55px;" class="tax 1 tx">
+                                    <span class="text-muted">%</span><br><span style="margin-left: 55px;"></span>
+                                <!-- </li> -->
+                                    {% endfor %}
+                                </ul>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-grey">Amount :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <ul>
+                                    {% for item in bill_item %}
+                                    <li class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{ item.amount }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+
+                            </div>
+
+                            <!-- <hr class="my-4"> -->
                         </div>
                     </div>
+
+
                     <div class="col-md-5  " style="background-color:#8b3131; border-radius: 5px;" >
                         <div class="p-5">
                             <div class="d-block justify-content-between mb-5">
@@ -685,22 +823,26 @@
                                     <h5 style="color: #ccc;">Vendor :</h5>
                                 </div><br>
                                 <div class="col-md-12 my-0 mx-5">
-                                    <h6 class="text-capitalize" style="color: azure;">
-                                        <span>{{ recur_bill.vendor_name.split.0 }}</span>
+                                    <h6 class="text-capitalize" style="color: azure;"><span>{{ recur_bill.vendor_name.split.0 }}</span>
                                         <span>{{ recur_bill.vendor_name.split.1 }}</span>
-                                        <span style="display: none;">{{ recur_bill.vendor_name.split.2 }}</span>
-                                    </h6>
+                                        <span style="display: none;">{{ recur_bill.vendor_name.split.2 }}</span></h6>
                                 </div>
                             </div>
-                            <!-- <div class="d-flex justify-content-between mb-5">
-                                <div class="col-md-5 mt-3">
-                                    <h6 style="color: #ccc;">Item :</h5><br>
-                                </div>
-                                <div class="col-md-7 mt-3 mx-3">
-                                    <input type="text" value="{{ bill_item.item }}" class="amnt"
-                                        style="font-size: 16px; color: azure;" readonly>
-                                </div>
+                            <!-- <div class="mb-5">
+                                <ul>
+                                    {% for item in bill_item %}
+                                        <li class="text-capitalize" style="color: azure;font-weight:bold;">Item: {{ item.item }}</li>
+                                        <li class="text-capitalize" style="color: azure;">Account: {{ item.account }}</li>
+                                        <li class="text-capitalize" style="color: azure;">Hsn: {{ item.hsn }}</li>
+                                        <li class="text-capitalize" style="color: azure;">Quantity: {{ item.quantity }}</li>
+                                        <li class="text-capitalize" style="color: azure;">Tax: {{ item.tax }} %</li>
+                                        <li class="text-capitalize" style="color: azure;">Discount: {{ item.discount }}</li>
+                                        <li class="text-capitalize" style="color: azure;">Amount: {{ item.amount }}</li>
+                                    {% endfor %}
+                                </ul>
                             </div> -->
+                            
+                            
 
                             <hr class="my-4">
 
@@ -713,15 +855,6 @@
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
-                            <!-- <div class="d-flex justify-content-between mb-5">
-                                <div class="col-md-5 mt-3">
-                                    <h6 style="color: #ccc;">Item :</h5><br>
-                                </div>
-                                <div class="col-md-7 mt-3 mx-3">
-                                    <input type="text" value="{{ bill_item.item }}" class="amnt"
-                                        style="font-size: 16px; color: azure;" readonly>
-                                </div>
-                            </div> -->
                             <div class="justify-content-between mb-5 d-none" id="igst">
                                 <div class="col-md-4 mt-3">
                                     <h6 style="color: #ccc;">IGST :</h5><br>
@@ -746,6 +879,15 @@
                                 </div>
                                 <div class="col-md-8 mt-3 mx-3">
                                     <input type="text" value="{{ recur_bill.sgst|floatformat:2 }} INR" class="amnt"
+                                        style="font-size: 16px; color: azure;" readonly>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mb-5">
+                                <div class="col-md-8 mt-3">
+                                    <h6 style="color: #ccc;">Tax Amount :</h5><br>
+                                </div>
+                                <div class="col-md-4 mt-3 mx-3">
+                                    <input type="text" value="{{ recur_bill.tax_amount }} INR" class="amnt"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -776,7 +918,6 @@
 
         </div>
     </div>
-
     <!-- comment modal -->
 
     <div class="modal fade " id="cmnts"

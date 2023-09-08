@@ -7133,47 +7133,42 @@ def vendor_credit_item(request):
     company = company_details.objects.get(user = request.user)
 
     if request.method=='POST':
-        
         type=request.POST.get('type')
-        name=request.POST.get('name')
-        # hsn=request.POST['hsn']
-        ut=request.POST.get('unit')
-        inter=request.POST.get('inter')
-        intra=request.POST.get('intra')
+        name=request.POST['name']
+        hsn=request.POST['hsn']
+        ut=request.POST['unit']
+        inter=request.POST['inter']
+        intra=request.POST['intra']
         sell_price=request.POST.get('sell_price')
         sell_acc=request.POST.get('sell_acc')
         sell_desc=request.POST.get('sell_desc')
         cost_price=request.POST.get('cost_price')
         cost_acc=request.POST.get('cost_acc')      
         cost_desc=request.POST.get('cost_desc')
-        
         units=Unit.objects.get(id=ut)
         sel=Sales.objects.get(id=sell_acc)
         cost=Purchase.objects.get(id=cost_acc)
 
         history="Created by " + str(request.user)
+        user = User.objects.get(id = request.user.id)
 
-        u  = User.objects.get(id = request.user.id)
-
-        item=AddItem(type=type,Name=name,p_desc=cost_desc,s_desc=sell_desc,s_price=sell_price,p_price=cost_price,
-                     user=u ,creat=history,interstate=inter,intrastate=intra,unit = units,sales = sel, purchase = cost)
+        item=AddItem(type=type,unit=units,sales=sel,purchase=cost,Name=name,hsn=hsn,p_desc=cost_desc,s_desc=sell_desc,s_price=sell_price,p_price=cost_price,
+                    user=user,creat=history,interstate=inter,intrastate=intra)
 
         item.save()
 
-        return HttpResponse({"message": "success"})
-    
-    return HttpResponse("Invalid request method.")
 
+        return HttpResponse({"message": "success"})
         
-@login_required(login_url='login')
+@login_required(login_url='login')        
 def vendor_credit_item_dropdown(request):
 
     user = User.objects.get(id=request.user.id)
 
     options = {}
-    option_objects = AddItem.objects.filter(user = request.user)
+    option_objects = AddItem.objects.all()
     for option in option_objects:
-        options[option.id] = [option.Name,option.id]
+        options[option.id] = option.Name
 
     return JsonResponse(options)
 
@@ -7441,38 +7436,43 @@ def itemdata_vendor_credit(request):
 #     return render(request,'vender_credit_state.html',context)
 
 
+from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
+from .models import company_details, Vendor_Credits_Bills, Vendor_Credits_Bills_items_bills
+
 @login_required(login_url='login')
-def view_vendor_credits(request,id):
+def view_vendor_credits(request, id):
+    # Fetch the company details for the logged-in user
+    company = get_object_or_404(company_details, user=request.user)
 
-    company = company_details.objects.get(user = request.user)
-    bills = Vendor_Credits_Bills.objects.filter(user = request.user)
-    rbill=Vendor_Credits_Bills.objects.get(user = request.user, id= id)
-    billitem = Vendor_Credits_Bills_items_bills.objects.filter(user = request.user,recur_bills=id)
-    
-    #cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
-    # vend = vendor_table.objects.get(id = rbill.company_name.split(" ")[0])
-    gst_or_igst = "GST" if company.state == (" ".join(rbill.source_supply.split(" ")[1:])) else "IGST"
-    tax_total = [] 
-    for b in billitem:
-        if b.tax not in tax_total: 
-            tax_total.append(b.tax)
-    
-    #cust_name = cust.customerName
-    # vend_name = vend.salutation+ " " +vend.first_name + " " +vend.last_name
+    # Fetch all vendor credit bills for the user
+    bills = Vendor_Credits_Bills.objects.filter(user=request.user)
+
+    # Fetch the specific vendor credit bill with the given ID
+    rbill = get_object_or_404(Vendor_Credits_Bills, user=request.user, id=id)
+
+    # Fetch all bill items associated with the specific bill
+    billitem = Vendor_Credits_Bills_items_bills.objects.filter(user=request.user, recur_bills=id)
+
+    # Determine whether to use GST or IGST based on the company's state and source supply
+    gst_or_igst = "GST" if company.state == " ".join(rbill.source_supply.split(" ")[1:]) else "IGST"
+
+    # Collect unique tax values
+    tax_total = set(b.tax for b in billitem)
+
     context = {
-                'company' : company,
-                'recur_bills' : bills,
-                'recur_bill' : rbill,
-                'bill_item' : billitem,
-                'tax' : tax_total,
-                "gst_or_igst" : gst_or_igst,
-                #'customer' : cust,
-                # 'vendor' : vend,
-                #'customer_name' : cust_name,
-                # 'vendor_name' : vend_name,
-            }
+        'company': company,
+        'recur_bills': bills,
+        'recur_bill': rbill,
+        'bill_item': billitem,
+        'tax': tax_total,
+        "gst_or_igst": gst_or_igst,
+    }
 
-    return render(request, 'view_vendor_credits.html',context)
+    return render(request, 'view_vendor_credits.html', context)
+
+
+
 
 
 @login_required(login_url='login')
@@ -8057,16 +8057,19 @@ def create_vendor_credit(request):
                 p_bill.save()
                 print('save')
             item = request.POST.getlist("item[]")
+            accounts = request.POST.getlist("account[]")
             hsn = request.POST.getlist("hsn[]")
             quantity = request.POST.getlist("quantity[]")
             rate = request.POST.getlist("rate[]")
             tax = request.POST.getlist("tax[]")
             discount = request.POST.getlist("discount[]")
             amount = request.POST.getlist("amount[]")
-            if len(item) == len(hsn) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
+            if len(item) == len(accounts) == len(hsn) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
                 for i in range(len(item)):
                     created = Vendor_Credits_Bills_items_bills.objects.create(
                         item=item[i],
+                        account=accounts[i],
+                        
                         hsn=hsn[i],
                         quantity=quantity[i],
                         rate=rate[i],
@@ -8182,6 +8185,7 @@ def change_vendor_credits(request,id):
         po_id.file = "/static/images/default.jpg"
     po_id.save()
     item = request.POST.getlist("item[]")
+    accounts = request.POST.getlist("account[]")
     hsn = request.POST.getlist("hsn[]")
     quantity = request.POST.getlist("quantity[]")
     rate = request.POST.getlist("rate[]")
@@ -8192,10 +8196,11 @@ def change_vendor_credits(request,id):
     obj_dele = Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=p_bill.id)
     obj_dele.delete()
 
-    if len(item) == len(hsn) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
+    if len(item) == len(accounts) == len(hsn) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
         for i in range(len(item)):
             created = Vendor_Credits_Bills_items_bills.objects.create(
                 item=item[i],
+                account=accounts[i],
                 hsn=hsn[i],
                 quantity=quantity[i],
                 rate=rate[i],
@@ -8299,3 +8304,42 @@ def vendor_credits_account_dropdown(request):
         options[option.id] = option.accountName
 
     return JsonResponse(options)
+
+def export_vendor_credit_pdf(request,id):
+
+    user = request.user
+    company = company_details.objects.get(user=user)
+    challn_on = Vendor_Credits_Bills.objects.filter(user=user)
+    challan = Vendor_Credits_Bills.objects.get(id=id)
+    items = Vendor_Credits_Bills_items_bills.objects.filter(PO=challan)
+    print(challan.customer_name) 
+    print(challan.customer_name)
+    total = challan.grand_total
+
+    template_path = 'pdfchallan.html'
+    context = {
+        'company': company,
+        'pot':challn_on,
+        'po_item': challan,
+        'po_table': items, 
+    }
+    fname=challan.Pur_no
+   
+    # Create a Django response object, and specify content_type as pdftemp_creditnote
+    response = HttpResponse(content_type='application/pdf')
+    #response['Content-Disposition'] = 'attachment; filename="certificate.pdf"'
+    response['Content-Disposition'] =f'attachment; filename= {fname}.pdf'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    
+
+
+    # if error then show some funy view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response

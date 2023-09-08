@@ -63,7 +63,7 @@
     .table th a{
       color:rgb(218, 164, 48);
       font-size: 11px;
-      margin-left: 100px;
+      margin-left: 60px;
     }
 
 
@@ -105,7 +105,7 @@
       {% csrf_token %}
       <div class="row">
         <div class="col-md-3">
-          <label style="color: rgb(190, 88, 88);">Vendor Name *</label>
+          <label>Vendor Name *</label>
         </div>
         <div class="col-md-6">
           <select name="vendor" id="vendor" class="form-control bg-light text-dark">
@@ -142,6 +142,15 @@
         </div>
         <div class="col-md-6">
           <input type="text" class="form-control bg-light text-dark"  id="gstin_inp" name="gstin_inp">
+        </div>
+      </div>
+
+      <div class="row mt-2 mb-2 d-none" id="address_row">
+        <div class="col-md-3">
+          <label for="address_inp">Address </label>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control bg-light text-dark"  id="address_inp" name="address_inp">
         </div>
       </div>
 
@@ -423,7 +432,7 @@
   
       <div class="row mt-2">
         <div class="col-md-12 table-responsive-md mt-3">
-          <table class="table table-bordered " id="item_table" onclick='toggleDateInput()'>
+          <table class="table table-bordered " style="width: 103%;" id="item_table" onclick='toggleDateInput()'>
             <thead>
               <tr>
                 <th>Item<br><a href="" data-toggle="modal" data-target="#newitem" class="text-capitalize">+ Item</a></th>
@@ -438,7 +447,7 @@
             </thead>
             <tbody>
               <tr id="row1">
-                  <td style="width: 9%;">
+                  <td style="width: 5%;">
                       <div ><select
                               class='form-control bg-light text-dark border-0 item_select itm'
                               name='item[]' id='item1'>
@@ -449,7 +458,7 @@
                           </select></div>
                   </td>
                   
-                  <td  style="width: 15%;">
+                  <td  style="width: 13%;">
                     <div class="d-flex">
                       <select name='account[]' id="account1" class="form-control acnt bg-light text-dark">
                         <option value=" " selected disabled >Select Account</option>
@@ -585,22 +594,22 @@
                     </div>  
                   </td>
 
-                  <td style="width: 16%;" class='text-right'><input type='number' id='hsn1'
+                  <td style="width: 13%;" class='text-right'><input type='number' id='hsn1'
                     class=' text-right hsn form-control bg-light text-dark' name='hsn[]'>
             </td>
-                  <td style="width: 8%;" class='text-right'><input type='number' id='qty1'
+                  <td style="width: 9%;" class='text-right'><input type='number' id='qty1'
                           class=' text-right qty form-control bg-light text-dark' name='quantity[]'
                           value='0'>
                   </td>
-                  <td style="width: 12%;" class='text-right'><input type='number' id='rate1'
+                  <td style="width: 10%;" class='text-right'><input type='number' id='rate1'
                           class=' text-right rate form-control bg-light text-dark' name='rate[]'
                           value='0'>
                   </td>
-                  <td style="width: 10%;" class='text-right text-dark'><input type='number' id='discount1'
+                  <td style="width: 9%;" class='text-right text-dark'><input type='number' id='discount1'
                           class=' text-right discount bg-light text-dark form-control' name='discount[]'
                           value='0'>
                   </td>
-                  <td style="width: 15%;" class='text-right '> <select name='tax[]' id='tax1'
+                  <td style="width: 12%;" class='text-right '> <select name='tax[]' id='tax1'
                           class='form-control bg-light text-dark  text-right border-0 tax' onclick="toggleDateInput()">
                           <optgroup class="text-center" label="GST">
                             <option value="0" selected></option>
@@ -627,13 +636,14 @@
                   <td style="width: 15%;" class='text-right'><input type='number' id='amount1'
                           class=' text-right form-control amount bg-light text-dark' name='amount[]'
                           value='0.00'></td>
-                  <td class='text-center'><button type='button' id='del_btn1'
-                          class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
-                          style='width:30px'>X</button></td>
-                          <td class='text-center'>
-                            <button type='button' class='btn btn-transparent text-primary btn-sm btn-outline-primary rounded-circle clone-row' data-row=1 style='width:30px'><i class="fa fa-clone"></i>
-                            </button>
-                          </td>
+                  <td class='text-center'>
+  <button type='button' id='del_btn1'
+          class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
+          style='width:30px'>X</button>
+  <button type='button' class='btn btn-transparent text-primary btn-sm btn-outline-primary rounded-circle clone-row' data-row=1 style='width:30px'><i class="fa fa-clone"></i>
+  </button>
+</td>
+
  </tr>
       </tbody>
     </table>
@@ -644,9 +654,9 @@
       <div class="row border-bottom pb-5">
         <div class="col-sm-5 d-flex flex-column mt-auto">
 
-            <label for="">Customer Notes</label>
+            <label for="">Vendors Credit Note</label>
             <textarea name="customer_note" id="" cols="8" rows="8"
-                placeholder=" Will be Displayed on the Purchase Order"></textarea>
+                placeholder=" Vendor Credit Notes"></textarea>
         </div>
         <div class="col-sm-6 " >
             <table class=" table  text-white" style="background-color: rgba(58, 57, 57, 0.8);">
@@ -692,7 +702,7 @@
                   
                   <td><input type="hidden" id="shipping_charge" name="shipping_charge" step="any" value="0.00" 
                       class="form-control bg-transparent border-0 text-right shipping_charge  "></td>
-                      <td><input type="number" class="form-control  bg-transparent border-0  text-light" id="shipping" value="0"> </td>
+                      <td><input type="number" class="form-control  bg-transparent border-0  text-light" id="shipping" step="any" value="0"> </td>
               </tr>
                 <tr>
                     <td></td>
@@ -1948,14 +1958,39 @@
                     <input type="text" class="form-control bg-light text-dark" id="item_name" name="item_name" required>
                   </div>
                 </div>
-                <!-- <div class="row mt-2">
+                <div class="row mt-2">
                   <div class="col-md-3">
-                    <label for="name" style="color: rgb(190, 88, 88);">HSN Code *</label>
+                    <label for="hsn" style="color: rgb(190, 88, 88);">HSN Code *</label>
                   </div>
                   <div class="col-md-6">
-                    <input type="number" class="form-control bg-light text-dark" id="hsn" name="hsn" maxlength="6" required>
+                    <input type="number" class="form-control bg-light text-dark" id="hsn" name="hsn" maxlength="6" oninput="validateInput(this)" required>
                   </div>
-                </div> -->
+                </div>
+                
+                <div id="validationResult"></div>
+                
+                <script>
+                  function validateSixDigits(field) {
+                    // Define the regular expression pattern for exactly six digits
+                    var pattern = /^\d{6}$/;
+                
+                    // Check if the field matches the pattern
+                    return pattern.test(field);
+                  }
+                
+                  function validateInput(inputField) {
+                    var inputValue = inputField.value;
+                    var validationResultDiv = document.getElementById("validationResult");
+                
+                    if (validateSixDigits(inputValue)) {
+                      validationResultDiv.textContent = "Valid: The field contains exactly six digits.";
+                    } else {
+                      validationResultDiv.textContent = "Invalid: The field does not contain exactly six digits.";
+                    }
+                  }
+                </script>
+                
+
                 <div class="row mt-2">
                   <div class="col-md-3 ">
                     <label for="units">Unit</label>
@@ -2281,43 +2316,56 @@
  
 
 
-
-$(document).ready(function() {
+  $(document).ready(function() {
     $('#vendor').change(function() {
-
         var name = $("#vendor").val();
-        var na = name.split(' ')
+        var na = name.split(' ');
         $.ajax({
-
-            url: "{% url 'get_vendor_credit_det' %}", 
-
+            url: "{% url 'get_vendor_credit_det' %}",
             data: { 
-                    fname : na[0],
-                    lname : na[1],
-                    id :na[2],
-                    csrfmiddlewaretoken: '{{ csrf_token }}' 
-                },
-
+                fname : na[0],
+                lname : na[1],
+                id : na[2],
+                csrfmiddlewaretoken: '{{ csrf_token }}' 
+            },
             type : 'POST',
-
             success: function(data) {
-              // console.log(data.vendor_email);
                 $("#email_row").removeClass('d-none');
                 $("#email_row").addClass('d-flex');
-                $("#gstin_row").removeClass('d-none');
-                $("#gstin_row").addClass('d-flex');
                 $("#gst_trt_row").removeClass('d-none');
                 $("#gst_trt_row").addClass('d-flex');
+                $("#address_row").removeClass('d-none');
+                $("#address_row").addClass('d-flex');
+                
+                // Check if any input box is empty in the GSTIN row
+                if (!data.gst_number || !data.vendor_email || !data.gst_treatment) {
+                    $("#gstin_row").removeClass('d-flex');
+                    $("#gstin_row").addClass('d-none');
+                } else {
+                    $("#gstin_row").removeClass('d-none');
+                    $("#gstin_row").addClass('d-flex');
+                }
 
-                $('#email_inp').val(" " +data.vendor_email);
-                $('#gstin_inp').val(" " +data.gst_number);
-                $('#gst_trt_inp').val(" "+data.gst_treatment);
+                // Check if any input box is empty in the Address row
+                if (!data.baddress) {
+                    $("#address_row").removeClass('d-flex');
+                    $("#address_row").addClass('d-none');
+                } else {
+                    $("#address_row").removeClass('d-none');
+                    $("#address_row").addClass('d-flex');
+                }
 
+                $('#email_inp').val(" " + data.vendor_email);
+                $('#gst_trt_inp').val(" " + data.gst_treatment);
+                $('#gstin_inp').val(" " + data.gst_number);
+                $('#address_inp').val(" " + data.baddress);
             }
         });
-    
     });
 });
+
+
+
 
 $(document).ready(function() {
   $('#custom').change(function() {
@@ -2852,7 +2900,8 @@ $(document).on("click","#itemSave",function(){
     data:{
         type : itemtype,
         name : $("#item_name").val(),
-        <!-- hsn : $("#hsn").val(), -->
+        hsn : $("#hsn").val(),
+
         unit : $("#item_units").val(),
         inter : inter,
         intra : intra,
@@ -3007,7 +3056,7 @@ function calculateGrandTotal() {
     rowCount++; // Increment row counter
     var newRow = `
       <tr id='row${rowCount}'>
-        <td style="width: 10%;">
+        <td style="width: 9%;">
           <div>
             <select class='form-control bg-light text-dark  border-0 item_select itm' name='item[]' id='item${rowCount}'>
               <option value=" " selected disabled>Select Item</option>
@@ -3018,7 +3067,7 @@ function calculateGrandTotal() {
           </div>
         </td>
 
-        <td  style="width: 15%;">
+        <td  style="width: 12%;">
           <div class="d-flex">
             <select name='account[]' id="account${rowCount}" class="form-control bg-light text-dark acnt">
               <option value=" " selected disabled >Select Account</option>
@@ -3154,24 +3203,24 @@ function calculateGrandTotal() {
           </div>  
         </td>
         
-        <td style="width: 13%;" class='text-right'>
+        <td style="width: 14%;" class='text-right'>
           <input type='number' id='hsn${rowCount}' class='text-right bg-light text-dark hsn form-control' name='hsn[]'>
         </td>
 
         
-        <td style="width: 13%;" class='text-right'>
+        <td style="width: 9%;" class='text-right'>
           <input type='number' id='qty${rowCount}' class='text-right bg-light text-dark qty form-control' name='quantity[]' value='0'>
         </td>
         
-        <td style="width: 15%;" class='text-right'>
+        <td style="width: 12%;" class='text-right'>
           <input type='number' id='rate${rowCount}' class='text-right bg-light text-dark rate form-control' name='rate[]' value='0'>
         </td>
         
-        <td style="width: 12%;" class='text-right'>
+        <td style="width: 9%;" class='text-right'>
           <input type='number' id='discount${rowCount}' class='text-right bg-light text-dark discount form-control' name='discount[]' value='0'>
         </td>
         
-        <td style="width: 15%;" class='text-right'>
+        <td style="width: 14%;" class='text-right'>
           <select name='tax[]'  id='tax${rowCount}' class='form-control bg-light text-dark text-right border-0 tax' onclick=' toggleDateInput()'>
             <optgroup class="text-center" label="GST">
                             <option value="0">0% GST(0%)</option>
@@ -3197,17 +3246,15 @@ function calculateGrandTotal() {
           <input type="text" name='taxamount' id="taxamount${rowCount}" class="form-control bg-light text-dark taxamount" />
         </td>
         
-        <td style="width: 15%;" class='text-right'>
+        <td style="width: 25%;" class='text-right'>
           <input type='number' id='amount${rowCount}' class='text-right bg-light text-dark form-control amount' name='amount[]' value='0.00'>
         </td>
         
         <td class='text-center'>
-          <button type='button' id='del_btn${rowCount}' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'>X</button>
-        </td>
-        <td class='text-center'>
-        <button type='button' class='btn btn-transparent text-primary btn-sm btn-outline-primary rounded-circle clone-row' data-row='${rowCount}' style='width:30px'><i class="fa fa-clone"></i>
-</button>
-      </td>
+  <button type='button' id='del_btn${rowCount}' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'>X</button>
+  <button type='button' class='btn btn-transparent text-primary btn-sm btn-outline-primary rounded-circle clone-row' data-row='${rowCount}' style='width:30px'><i class="fa fa-clone"></i></button>
+</td>
+
       </tr>
     `;
   $('#item_table tbody').append(newRow);

@@ -698,21 +698,17 @@ class Comments_item(models.Model):
 
 
 class Vendor_Credits_Bills(models.Model):
-
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
     vendor_name = models.CharField(max_length=100,null=True,blank=True)
     source_supply = models.CharField(max_length=100,null=True,blank=True)
     gst_number=models.CharField(max_length=150, null=True, blank=True)
     vendor_email=models.CharField(max_length=250)
-    gst_treatment=models.CharField(max_length=100)
-    
+    gst_treatment=models.CharField(max_length=100) 
     credit_note = models.CharField(max_length=100, null=True, blank=True)
     order_no = models.CharField(max_length=100, null=True, blank=True)
-
     vendor_date = models.DateField(null=True,blank=True)
     address = models.CharField(max_length=100,null=True,blank=True)
-
     sub_total = models.FloatField(null=True,blank=True)
     igst = models.FloatField(null=True,blank=True)
     cgst = models.FloatField(null=True,blank=True)
@@ -727,11 +723,11 @@ class Vendor_Credits_Bills(models.Model):
     
     
 class Vendor_Credits_Bills_items_bills (models.Model):
-
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
     recur_bills = models.ForeignKey(Vendor_Credits_Bills,on_delete=models.CASCADE,null=True,blank=True)
     item = models.CharField(max_length=100,null=True,blank=True)
+    account = models.CharField(max_length=100,null=True,blank=True)
     hsn = models.CharField(max_length=100,null=True,blank=True)
     quantity = models.IntegerField(null=True,blank=True)
     rate=models.FloatField(null=True,blank=True)
@@ -739,22 +735,22 @@ class Vendor_Credits_Bills_items_bills (models.Model):
     discount = models.FloatField(null=True,blank=True)
     amount = models.FloatField(null=True,blank=True)
     
-class Credits_comments_table(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
-    vendor=models.ForeignKey(Vendor_Credits_Bills,on_delete=models.CASCADE,null=True)
-    comment=models.TextField(max_length=500)
+# class Credits_comments_table(models.Model):
+#     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
+#     vendor=models.ForeignKey(Vendor_Credits_Bills,on_delete=models.CASCADE,null=True)
+#     comment=models.TextField(max_length=500)
 
-class Credits_mail_table(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
-    vendor=models.ForeignKey(Vendor_Credits_Bills,on_delete=models.CASCADE,null=True)
-    mail_from=models.TextField(max_length=300)
-    mail_to=models.TextField(max_length=300)
-    subject=models.TextField(max_length=250)
-    content=models.TextField(max_length=900)
-    mail_date=models.DateTimeField(auto_now_add=True)
+# class Credits_mail_table(models.Model):
+#     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
+#     vendor=models.ForeignKey(Vendor_Credits_Bills,on_delete=models.CASCADE,null=True)
+#     mail_from=models.TextField(max_length=300)
+#     mail_to=models.TextField(max_length=300)
+#     subject=models.TextField(max_length=250)
+#     content=models.TextField(max_length=900)
+#     mail_date=models.DateTimeField(auto_now_add=True)
 
-class Credits_doc_upload_table(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
-    vendor=models.ForeignKey(Vendor_Credits_Bills,on_delete=models.CASCADE,null=True)
-    title=models.TextField(max_length=200)
-    document=models.FileField(upload_to='doc/')
+# class Credits_doc_upload_table(models.Model):
+#     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
+#     vendor=models.ForeignKey(Vendor_Credits_Bills,on_delete=models.CASCADE,null=True)
+#     title=models.TextField(max_length=200)
+#     document=models.FileField(upload_to='doc/')
