@@ -7934,6 +7934,7 @@ def delete_vendor_credits(request, id):
 #     return redirect('vendor_credits_home')
 
 def add_vendor_credits(request):
+    company = company_details.objects.get(user = request.user)
     vendor=vendor_table.objects.all()
     cust=customer.objects.filter(user = request.user)
     payment=payment_terms.objects.all()
@@ -7943,6 +7944,7 @@ def add_vendor_credits(request):
     sales=Sales.objects.all()
     purchase=Purchase.objects.all()
     context={
+        'company' : company,
         'vendor':vendor,
         'customer':cust,
         'payment':payment,
@@ -8086,7 +8088,8 @@ def create_vendor_credit(request):
     return render(request,'create_vendor_credits.html')
 
 
-def edit_vendor_credits(request,pk):
+def edit_vendor_credits(request,id):
+    company = company_details.objects.get(user = request.user)
     vendor=vendor_table.objects.all()
     cust=customer.objects.filter(user = request.user)
     payment=payment_terms.objects.all()
@@ -8095,9 +8098,10 @@ def edit_vendor_credits(request,pk):
     unit=Unit.objects.all()
     sales=Sales.objects.all()
     purchase=Purchase.objects.all()
-    po=Vendor_Credits_Bills.objects.get(id=pk)
-    po_tabl=Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=pk)
+    po=Vendor_Credits_Bills.objects.get(id=id)
+    po_tabl=Vendor_Credits_Bills_items_bills.objects.filter(recur_bills=id)
     context={
+        'company' : company,
         'vendor':vendor,
         'customer':cust,
         'payment':payment,
@@ -8120,7 +8124,7 @@ def change_vendor_credits(request,id):
     
         po_id.vendor_name = request.POST.get('vendor')
         po_id.vendor_mail = request.POST.get('email_inp')
-        po_id.vendor_gst_traet = request.POST.get('gst_trt_inp')
+        po_id.vendor_gst_treat = request.POST.get('gst_trt_inp')
         po_id.vendor_gst_no = request.POST.get('gstin_inp')
             
         po_id.vaddress = request.POST.get('address_inp')       
@@ -8134,7 +8138,7 @@ def change_vendor_credits(request,id):
         po_id.sgst=request.POST['sgst']
         po_id.cgst=request.POST['cgst']
         po_id.igst=request.POST['igst']
-        po_id.tax_amount = request.POST['total_taxamount']
+        po_id.tax_amount=request.POST['total_taxamount']
         po_id.grand_total=request.POST['grandtotal']
         po_id.note=request.POST['customer_note']
         # po_id.adjustment=request.POST['add_round_off']
@@ -8166,7 +8170,7 @@ def change_vendor_credits(request,id):
         po_id.sgst=request.POST['sgst']
         po_id.cgst=request.POST['cgst']
         po_id.igst=request.POST['igst']
-        po_id.tax_amount = request.POST['total_taxamount']
+        po_id.tax_amount=request.POST['total_taxamount']
         po_id.grand_total=request.POST['grandtotal']
         po_id.note=request.POST['customer_note']
         # po_id.adjustment=request.POST['add_round_off']

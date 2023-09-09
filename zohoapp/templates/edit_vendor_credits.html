@@ -406,7 +406,7 @@
 
       <div class="row mt-2">
         <div class="col-md-12 table-responsive-md mt-3">
-          <table class="table table-bordered" id="item_table" onclick='toggleDateInput()' onselect="calculateTaxAmount()">
+          <table class="table table-bordered" style="width: 103%;" id="item_table" onclick='toggleDateInput()' onselect="calculateTaxAmount()">
             <thead>
               <tr>
                 <th>Item<br><a href="" data-toggle="modal" data-target="#newitem" class="text-capitalize">+ Item</a></th>
@@ -422,7 +422,7 @@
             <tbody>
                 {% for i in po_table %}
               <tr id="row{{forloop.counter}}">
-                  <td style="width: 10%;">
+                  <td style="width: 5%;">
                       <div ><select
                               class='form-control bg-light text-dark  border-0 item_select itm'
                               name='item[]' id='item{{forloop.counter}}'>
@@ -434,7 +434,7 @@
                           </select></div>
                   </td>
                   
-                  <td  style="width: 10%;">
+                  <td  style="width: 13%;">
                     <div class="d-flex">
                       <select name='account[]' id="account{{forloop.counter}}" class="form-control acnt bg-light text-dark">
                         <option value="{{i.account}} " selected  >{{i.account}}</option>
@@ -573,11 +573,11 @@
                     class=' text-right hsn form-control bg-light text-dark' name='hsn[]'
                     value='{{i.hsn}}'>
             </td>
-                  <td style="width: 8%;" class='text-right'><input type='number' id='qty{{forloop.counter}}'
+                  <td style="width: 10%;" class='text-right'><input type='number' id='qty{{forloop.counter}}'
                           class=' text-right qty form-control bg-light text-dark' name='quantity[]'
                           value='{{i.quantity}}'>
                   </td>
-                  <td style="width: 15%;" class='text-right'><input type='number' id='rate{{forloop.counter}}'
+                  <td style="width: 13%;" class='text-right'><input type='number' id='rate{{forloop.counter}}'
                           class=' text-right rate form-control bg-light text-dark' name='rate[]'
                           value='{{i.rate}}'>
                   </td>
@@ -585,7 +585,7 @@
                           class=' text-right discount form-control bg-light text-dark' name='discount[]'
                           value='{{i.discount}}'>
                   </td>
-                  <td style="width: 15%;" class='text-right'> <select name='tax[]' id='tax{{forloop.counter}}'
+                  <td style="width: 13%;" class='text-right'> <select name='tax[]' id='tax{{forloop.counter}}'
                           class='form-control bg-light text-dark text-right border-0 tax'>
                             {% if i.PO.source_supply == "[KL] Kerala" %}
                           <option value="{{i.tax}} ">{{i.tax}}  GST</option>
@@ -614,7 +614,7 @@
                       <input type="text" name='taxamount' id="taxamount{{forloop.counter}}"
                           class=" taxamount" />
                   </td>
-                  <td style="width: 20%;" class='text-right'><input type='number' id='amount{{forloop.counter}}'
+                  <td style="width: 15%;" class='text-right'><input type='number' id='amount{{forloop.counter}}'
                           class=' text-right form-control amount bg-light text-dark' name='amount[]'
                           value="{{i.amount}}"></td>
                   <td class='text-center'><button onclick="calculateTaxAmount()" type='button' id='del_btn{{forloop.counter}}'
@@ -1935,11 +1935,11 @@
                     <label for="hsn" style="color: rgb(190, 88, 88);">HSN Code *</label>
                   </div>
                   <div class="col-md-6">
-                    <input type="number" class="form-control bg-light text-dark" id="hsn" name="hsn" maxlength="6" oninput="validateInput(this)" required>
+                    <input type="number" class="form-control bg-light text-dark" id="hsn" name="hsn" maxlength="6"  required>
                   </div>
                 </div>
                 
-                <div id="validationResult"></div>
+                <!-- <div id="validationResult"></div>
                 
                 <script>
                   function validateSixDigits(field) {
@@ -1960,7 +1960,7 @@
                       validationResultDiv.textContent = "Invalid: The field does not contain exactly six digits.";
                     }
                   }
-                </script>
+                </script> -->
                 <div class="row mt-2">
                   <div class="col-md-3 ">
                     <label for="units">Unit</label>
@@ -2913,7 +2913,6 @@ function reloadItem() {
     }
   });
 }
-
 // account modal
 
 $(document).on("click","#accountSave",function(){
@@ -3024,7 +3023,7 @@ function calculateGrandTotal() {
     rowCount++; // Increment row counter
     var newRow = `
       <tr id='row${rowCount}'>
-        <td style="width: 10%;">
+        <td style="width: 9%;">
           <div>
             <select class='form-control bg-light text-dark  border-0 item_select itm' name='item[]' id='item${rowCount}'>
               <option value=" " selected disabled>Select Item</option>
@@ -3035,7 +3034,7 @@ function calculateGrandTotal() {
           </div>
         </td>
 
-        <td  style="width: 15%;">
+        <td  style="width: 12%;">
           <div class="d-flex">
             <select name='account[]' id="account${rowCount}" class="form-control bg-light text-dark acnt">
               <option value=" " selected disabled >Select Account</option>
@@ -3172,18 +3171,18 @@ function calculateGrandTotal() {
         </td>
         
 
-        <td style="width: 15%;" class='text-right'>
-          <input type='number' id='hsn${rowCount}' class='text-right bg-light text-dark hsn form-control' name='hsn[]' value='0'>
+        <td style="width: 14%;" class='text-right'>
+          <input type='number' id='hsn${rowCount}' class='text-right bg-light text-dark hsn form-control' name='hsn[]' >
         </td>
-        <td style="width: 13%;" class='text-right'>
+        <td style="width: 9%;" class='text-right'>
           <input type='number' id='qty${rowCount}' class='text-right bg-light text-dark qty form-control' name='quantity[]' value='0'>
         </td>
         
-        <td style="width: 15%;" class='text-right'>
+        <td style="width: 14%;" class='text-right'>
           <input type='number' id='rate${rowCount}' class='text-right bg-light text-dark rate form-control' name='rate[]' value='0'>
         </td>
         
-        <td style="width: 12%;" class='text-right'>
+        <td style="width: 10%;" class='text-right'>
           <input type='number' id='discount${rowCount}' class='text-right bg-light text-dark discount form-control' name='discount[]' value='0'>
         </td>
         
@@ -3213,7 +3212,7 @@ function calculateGrandTotal() {
           <input type="text" name='taxamount' id="taxamount${rowCount}" class="form-control bg-light text-dark taxamount" />
         </td>
         
-        <td style="width: 15%;" class='text-right'>
+        <td style="width: 25%;" class='text-right'>
           <input type='number' id='amount${rowCount}' class='text-right bg-light text-dark form-control amount' name='amount[]' value='0.00'>
         </td>
         
@@ -3339,21 +3338,18 @@ $('#item_table').on('click', '.clone-row', function () {
 
 });
 function calculateTaxAmount() {
-  var checkbox = document.getElementById("srcofsupply");
-  var vale = checkbox.value;
-  var srcofsupply = vale; // Replace with the actual value of srcofsupply
+  var srcofsupply = document.getElementById("srcofsupply").value;
   var companyState = "[KL] Kerala"; // Replace with the actual value of company state
 
-  var subtotal = parseFloat(document.getElementById("subtotal").value);
-  var shipping = parseFloat(document.getElementById("shipping").value);
-  var tax = parseFloat(document.getElementById("total_taxamount").value);
+  var subtotal = parseFloat(document.getElementById("subtotal").value) || 0;
+  var shipping = parseFloat(document.getElementById("shipping").value) || 0;
+  var total_taxamount = parseFloat(document.getElementById("total_taxamount").value) || 0;
 
   var tax_rate = 0.0; // Default tax rate for IGST
   if (srcofsupply === companyState) {
-    tax_rate = tax; // Tax rate for CGST/SGST
+    // Tax rate for CGST/SGST
+    tax_rate = total_taxamount;
   }
-
-  var total_taxamount = tax_rate;
 
   var cgst = 0.00;
   var sgst = 0.00;
@@ -3363,7 +3359,7 @@ function calculateTaxAmount() {
     cgst = total_taxamount / 2;
     sgst = total_taxamount / 2;
   } else {
-    igst = tax;
+    igst = total_taxamount;
   }
 
   document.getElementById("cgst").value = cgst.toFixed(2);
@@ -3380,13 +3376,10 @@ function calculateTaxAmount() {
     document.getElementById("tr_sgst").style.display = "none";
   }
 
-  var taxamount_input = document.getElementById("total_taxamount");
-  var taxamount_value = total_taxamount.toFixed(2);
-  taxamount_input.value = taxamount_value;
-
   var grandtotal = subtotal + total_taxamount + shipping;
   document.getElementById("grandtotal").value = grandtotal.toFixed(2);
 }
+
 
 
 function toggleDateInput() {
@@ -3484,8 +3477,10 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
-                  data4=response.place
+                  data4 = response.place
+                  data5 = response.hsn
                   document.getElementById('rate1').value = data
+                  document.getElementById('hsn1').value = data
                   var checkbox = document.getElementById("srcofsupply");
                   var vale=checkbox.value;
                   pos="[KL] Kerala"
@@ -3530,7 +3525,10 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  
                   document.getElementById('rate2').value = data
+                  document.getElementById('hsn2').value = data4
                   var checkbox = document.getElementById("srcofsupply");
                   var vale=checkbox.value;
                   pos="[KL] Kerala"
@@ -3572,7 +3570,10 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn3').value = data4
                   document.getElementById('rate3').value = data
+                  
                   var checkbox = document.getElementById("srcofsupply");
                   var vale=checkbox.value;
                   pos="[KL] Kerala"
@@ -3614,7 +3615,10 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  
                   document.getElementById('rate4').value = data
+                  document.getElementById('hsn4').value = data4
                   var checkbox = document.getElementById("srcofsupply");
                   var vale=checkbox.value;
                   pos="[KL] Kerala"
@@ -3656,7 +3660,9 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
-                  document.getElementById('rate5').value = data
+                  data4 = response.hsn
+                  document.getElementById('hsn5').value = data
+                  document.getElementById('rate5').value = data4
                   var checkbox = document.getElementById("srcofsupply");
                   var vale=checkbox.value;
                   pos="[KL] Kerala"
@@ -3698,6 +3704,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn6').value = data4
                   document.getElementById('rate6').value = data
                   var checkbox = document.getElementById("srcofsupply");
                   var vale=checkbox.value;
@@ -3740,6 +3748,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn7').value = data4
                   document.getElementById('rate7').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -3772,6 +3782,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn8').value = data4
                   document.getElementById('rate8').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -3804,6 +3816,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn9').value = data4
                   document.getElementById('rate9').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -3836,6 +3850,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn10').value = data4
                   document.getElementById('rate10').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -3868,6 +3884,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn11').value = data4
                   document.getElementById('rate11').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -3900,6 +3918,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn12').value = data4
                   document.getElementById('rate12').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -3932,6 +3952,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn13').value = data4
                   document.getElementById('rate13').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -3964,6 +3986,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn14').value = data4
                   document.getElementById('rate14').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -3996,6 +4020,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn15').value = data4
                   document.getElementById('rate15').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -4028,6 +4054,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn16').value = data4
                   document.getElementById('rate16').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -4060,6 +4088,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn17').value = data4
                   document.getElementById('rate17').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -4092,6 +4122,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn18').value = data4
                   document.getElementById('rate18').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -4124,6 +4156,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn19').value = data4
                   document.getElementById('rate19').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -4156,6 +4190,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn20').value = data4
                   document.getElementById('rate20').value = data
 
                   if (data3 == '{{ company.state }}') {
@@ -4188,6 +4224,8 @@ function toggleDateInput() {
                   data1 = response.gst
                   data2 = response.igst
                   data3 = response.pos
+                  data4 = response.hsn
+                  document.getElementById('hsn21').value = data4
                   document.getElementById('rate21').value = data
 
                   if (data3 == '{{ company.state }}') {

@@ -367,7 +367,7 @@ urlpatterns = [
     
 
     
-    path('edit_vendor_credits/<int:pk>',views.edit_vendor_credits,name='edit_vendor_credits'),
+    path('edit_vendor_credits/<int:id>',views.edit_vendor_credits,name='edit_vendor_credits'),
     path('change_vendor_credits/<int:id>',views.change_vendor_credits,name='change_vendor_credits'),
     
     
